@@ -146,6 +146,14 @@ export function DamageLab() {
             <td>{Math.max(0, report.capacity - report.corruptCodewords)}</td>
           </tr>
           <tr>
+            <th scope="row">{t('damage.syndromes')}</th>
+            <td className="damage__positions">
+              {result.syndromesByBlock
+                .map((s, block) => `${block}: ${[...s].every((v) => v === 0) ? '0' : '≠0'}`)
+                .join(' · ')}
+            </td>
+          </tr>
+          <tr>
             <th scope="row">{t('damage.errorPositions')}</th>
             <td className="damage__positions">
               {result.errorPositions.length > 0 ? result.errorPositions.join(', ') : '—'}
@@ -153,6 +161,10 @@ export function DamageLab() {
           </tr>
         </tbody>
       </table>
+
+      <p className="damage__headline" data-failed={result.failed || undefined}>
+        {clean ? t('damage.clean') : result.failed ? t('damage.failed') : t('damage.recovered')}
+      </p>
 
       <p className={result.failed ? 'damage__failed' : 'gloss'} role="status">
         {clean

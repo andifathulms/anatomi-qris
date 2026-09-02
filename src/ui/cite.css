@@ -38,3 +38,7 @@
   line-height: var(--t-body-lh);
   color: var(--ink-soft);
 }
+
+.cite__close {
+  justify-self: start;
+}

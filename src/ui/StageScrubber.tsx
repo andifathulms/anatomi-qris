@@ -76,6 +76,24 @@ export function StageScrubber() {
 
   return (
     <div className="scrubber">
+      <div className="scrubber__steps">
+        <button
+          type="button"
+          className="button"
+          onClick={() => setStage(Math.round(state.stage) - 1)}
+          disabled={Math.round(state.stage) <= 1}
+        >
+          {t('stage.previous')}
+        </button>
+        <button
+          type="button"
+          className="button"
+          onClick={() => setStage(Math.round(state.stage) + 1)}
+          disabled={Math.round(state.stage) >= STAGE_COUNT}
+        >
+          {t('stage.next')}
+        </button>
+      </div>
       <div
         ref={trackRef}
         className="scrubber__track"

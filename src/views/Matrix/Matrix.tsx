@@ -179,7 +179,7 @@ export function Matrix({
         <rect x={0} y={0} width={extent} height={extent} fill="#ffffff" />
         <g>{cells}</g>
       </svg>
-      <figcaption className="matrix__readout" aria-live="polite">
+      <figcaption className="matrix__readout" aria-live="polite" aria-label={t('matrix.readout')}>
         {readout && build ? <Readout module={readout} build={build} /> : (
           <span className="label">{t('matrix.none')}</span>
         )}

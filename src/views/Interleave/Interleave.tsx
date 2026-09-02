@@ -68,6 +68,7 @@ export function Interleave() {
               {t('interleave.block')} {block.index}
             </span>
             <div className="interleave__cells">
+              <span className="visually-hidden">{t('interleave.data')}</span>
               {Array.from(block.data, (byte, i) => (
                 <span
                   key={`d${i}`}
@@ -79,6 +80,7 @@ export function Interleave() {
                   {toHex(byte)}
                 </span>
               ))}
+              <span className="visually-hidden">{t('interleave.ecc')}</span>
               {Array.from(block.ecc, (byte, i) => (
                 <span
                   key={`e${i}`}

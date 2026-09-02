@@ -4,11 +4,18 @@ import { useCopy, type CopyKey } from '../../copy';
 import { useActions, useStore } from '../../state/store';
 import './mask-gallery.css';
 
-const RULE_KEYS: Record<PenaltyRule, CopyKey> = {
+const RULE_SHORT: Record<PenaltyRule, CopyKey> = {
   1: 'mask.rule1Short',
   2: 'mask.rule2Short',
   3: 'mask.rule3Short',
   4: 'mask.rule4Short',
+};
+
+const RULE_FULL: Record<PenaltyRule, CopyKey> = {
+  1: 'mask.rule1',
+  2: 'mask.rule2',
+  3: 'mask.rule3',
+  4: 'mask.rule4',
 };
 
 /**
@@ -59,6 +66,12 @@ export function MaskGallery() {
       </div>
       <p className="label">{t('mask.forceHint')}</p>
 
+      <ol className="mask-gallery__rules">
+        {([1, 2, 3, 4] as PenaltyRule[]).map((rule) => (
+          <li key={rule} className="label">{t(RULE_FULL[rule])}</li>
+        ))}
+      </ol>
+
       <ul className="mask-gallery__grid">
         {build.maskScores.map((score) => {
           const isWinner = score.mask === build.chosenMask;
@@ -73,14 +86,17 @@ export function MaskGallery() {
                 <span className="mask-card__head">
                   <span className="mask-card__marker" data-filled={isWinner || undefined} />
                   <span>{score.mask}</span>
-                  <span className="mask-card__total">{score.total}</span>
+                  <span className="mask-card__total">
+                    <span className="visually-hidden">{t('mask.total')} </span>
+                    {score.total}
+                  </span>
                 </span>
                 <MaskThumbnail grid={build.maskGrids[score.mask]} size={build.size} />
                 <span className="mask-card__rules">
-                  <Rule label={t(RULE_KEYS[1])} value={score.rule1} />
-                  <Rule label={t(RULE_KEYS[2])} value={score.rule2} />
-                  <Rule label={t(RULE_KEYS[3])} value={score.rule3} />
-                  <Rule label={t(RULE_KEYS[4])} value={score.rule4} />
+                  <Rule label={t(RULE_SHORT[1])} value={score.rule1} />
+                  <Rule label={t(RULE_SHORT[2])} value={score.rule2} />
+                  <Rule label={t(RULE_SHORT[3])} value={score.rule3} />
+                  <Rule label={t(RULE_SHORT[4])} value={score.rule4} />
                   <span className="mask-card__balance">
                     <span className="label">{t('mask.dark')}</span>
                     <span

@@ -58,6 +58,9 @@ export function Cite({ citation }: { citation: Citation }) {
         <span className="cite__popover" id={id} role="note">
           <span className="cite__source">{label} §{citation.clause}</span>
           <span className="cite__summary">{citation.summary}</span>
+          <button type="button" className="cite__close button" onClick={() => setOpen(false)}>
+            {t('cite.close')}
+          </button>
         </span>
       )}
     </span>

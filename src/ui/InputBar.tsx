@@ -53,6 +53,7 @@ export function InputBar() {
             onChange={setEcLevel}
             options={EC_LEVELS.map((ec) => ({ value: ec, label: ec }))}
           />
+          <p className="label">{t(`ec.${state.ecLevel}` as 'ec.L')}</p>
         </div>
 
         <div className="input-bar__group">
