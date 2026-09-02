@@ -2,6 +2,8 @@
 
 How a QR code is built, and what a QRIS payload says.
 
+**[andifathulms.github.io/anatomi-qris](https://andifathulms.github.io/anatomi-qris/)**
+
 Two questions, one engine. A string of text becomes a grid of black squares —
 almost everyone has scanned tens of thousands of QR codes and nobody has seen
 one built. And the QRIS sticker on the counter is not an opaque token: it is a
