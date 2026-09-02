@@ -18,7 +18,7 @@ export function FinalStage() {
 
   return (
     <div className="stage">
-      <p className="gloss"><Cite citation={CITATIONS.format} /></p>
+      <p className="gloss">{t('final.gloss')} <Cite citation={CITATIONS.format} /></p>
 
       <dl className="figures">
         <Figure label={t('summary.version')} value={String(build.version)} />

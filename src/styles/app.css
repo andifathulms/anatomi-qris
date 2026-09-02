@@ -123,10 +123,10 @@
   border-bottom: 1px solid var(--rule);
 }
 
-.specimen__controls {
+.specimen__head-row {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--space-2);
   flex-wrap: wrap;
 }

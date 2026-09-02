@@ -28,6 +28,8 @@ export const id = {
   'input.empty': 'Ketik sesuatu untuk mulai.',
 
   'ec.label': 'Tingkat koreksi',
+  'place.gloss': 'Pola fungsi dilewati, bukan ditimpa. Urutan penempatan di bawah menghitung modul yang sudah ditulis, dari kanan bawah ke kiri atas.',
+  'final.gloss': 'Info format mengulang dirinya di dua tempat agar satu sudut yang rusak tidak membuat kodenya mustahil dibaca.',
   'ec.gloss': 'Makin tinggi tingkat koreksi, makin banyak kerusakan yang bisa dipulihkan, dan makin sedikit ruang untuk teks.',
   'ec.L': 'L — pulih 7%',
   'ec.M': 'M — pulih 15%',

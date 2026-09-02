@@ -131,7 +131,20 @@ function Shell() {
             transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
         <section className="specimen card" id="matrix" aria-label={t('app.specimen')}>
           <div className="specimen__head">
-            <h2 className="eyebrow">{t('app.specimen')}</h2>
+            <div className="specimen__head-row">
+              <h2 className="eyebrow">{t('app.specimen')}</h2>
+              {/* The view control sits with the facts it applies to, and above
+                  the fold on a laptop, rather than below the readout. */}
+              <Toggle<'printed' | 'anatomy'>
+                label={t('matrix.caption')}
+                value={state.rendering}
+                onChange={setRendering}
+                options={[
+                  { value: 'printed', label: t('matrix.asPrinted') },
+                  { value: 'anatomy', label: t('matrix.anatomy') },
+                ]}
+              />
+            </div>
             {build && (
               <p className="chips">
                 <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
@@ -152,18 +165,6 @@ function Shell() {
             repaired={repaired}
             {...(inDamageLab ? { onPaint: paint } : {})}
           />
-
-          <div className="specimen__controls">
-            <Toggle<'printed' | 'anatomy'>
-              label={t('matrix.caption')}
-              value={state.rendering}
-              onChange={setRendering}
-              options={[
-                { value: 'printed', label: t('matrix.asPrinted') },
-                { value: 'anatomy', label: t('matrix.anatomy') },
-              ]}
-            />
-          </div>
 
           {state.rendering === 'anatomy' && <Legend />}
 

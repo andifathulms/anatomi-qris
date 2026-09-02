@@ -25,6 +25,8 @@ export const en: Record<CopyKey, string> = {
   'input.empty': 'Type something to begin.',
 
   'ec.label': 'Correction level',
+  'place.gloss': 'Function patterns are skipped, not written over. The placement order below counts modules already written, from bottom right to top left.',
+  'final.gloss': 'Format information repeats itself in two places, so one damaged corner cannot make the code unreadable.',
   'ec.gloss': 'A higher correction level repairs more damage and leaves less room for text.',
   'ec.L': 'L — recovers 7%',
   'ec.M': 'M — recovers 15%',
