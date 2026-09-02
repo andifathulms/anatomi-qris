@@ -3,6 +3,8 @@ import { InputStage } from './InputStage';
 import { EncodeStage } from './EncodeStage';
 import { CorrectionStage } from './CorrectionStage';
 import { InterleaveStage } from './InterleaveStage';
+import { MaskStage } from './MaskStage';
+import { FinalStage } from './FinalStage';
 import { PlaceStage } from './PlaceStage';
 import './stages.css';
 
@@ -26,6 +28,10 @@ export function StagePanel() {
       return <InterleaveStage />;
     case 6:
       return <PlaceStage />;
+    case 7:
+      return <MaskStage />;
+    case 8:
+      return <FinalStage />;
     default:
       return <InputStage />;
   }

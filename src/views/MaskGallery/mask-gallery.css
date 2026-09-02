@@ -1,0 +1,120 @@
+.mask-gallery {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mask-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.mask-card {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  background: none;
+  border: 1px solid var(--rule);
+  padding: var(--space-1);
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+}
+
+.mask-card[aria-pressed='true'] {
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+}
+
+.mask-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--t-small);
+}
+
+.mask-card__total {
+  margin-left: auto;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* The winner carries a filled marker. Nothing else marks it. */
+.mask-card__marker {
+  width: var(--unit);
+  height: var(--unit);
+  border: 1px solid var(--ink-soft);
+  display: block;
+}
+
+.mask-card__marker[data-filled] {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.mask-card__thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+  background: var(--module-light);
+}
+
+.mask-card__rules {
+  display: grid;
+  gap: 1px;
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+}
+
+.mask-card__rule {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.mask-card__rule b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.mask-card__balance {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 4px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.mask-card__bar {
+  height: 3px;
+  background: var(--rule);
+  position: relative;
+  display: block;
+}
+
+.mask-card__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--ratio) * 100%);
+  background: var(--ink-soft);
+}
+
+/* The 50% mark, which is what rule 4 measures the distance from. */
+.mask-card__bar::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 1px;
+  background: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .mask-gallery__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

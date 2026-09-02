@@ -8,6 +8,7 @@ import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
 import { Legend } from './ui/Legend';
 import { StagePanel } from './stages/StagePanel';
 import { blockTintFor } from './views/Interleave/blockTint';
+import { useOffences } from './views/MaskGallery/MaskGallery';
 import './styles/app.css';
 
 export function App() {
@@ -37,6 +38,15 @@ function Shell() {
   // At the interleave stage the matrix carries the same block tints as the
   // grid beside it. That is where the coffee-stain argument actually lands:
   // adjacent modules are visibly different colours.
+  const offences = useOffences();
+
+  // A selected mask card shows that candidate on the main matrix, with its
+  // penalty geometry marked in place.
+  const overrideGrid =
+    build && Math.round(state.stage) === 7 && state.selectedMask !== null
+      ? build.maskGrids[state.selectedMask]
+      : null;
+
   const tint = useMemo(
     () => (build && Math.round(state.stage) === 5 ? blockTintFor(build) : null),
     [build, state.stage],
@@ -68,7 +78,7 @@ function Shell() {
           <h2 className="display">{t(stageNameKey(state.stage))}</h2>
           <p className="prose shell__intro">{t(stageIntroKey(state.stage))}</p>
 
-          <Matrix tint={tint} />
+          <Matrix tint={tint} offences={offences} overrideGrid={overrideGrid} />
 
           <div className="matrix__controls">
             <p className="matrix__summary">
