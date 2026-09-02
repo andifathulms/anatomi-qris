@@ -16,31 +16,51 @@
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 500;
 }
 
 .tlv__table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--t-data);
-  line-height: var(--t-data-lh);
 }
 
 .tlv__table th,
 .tlv__table td {
   text-align: left;
   font-weight: 400;
-  padding: 2px var(--space-1) 2px 0;
+  padding: 5px var(--space-1) 5px 0;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+  font-variant-numeric: tabular-nums;
 }
 
 .tlv__table thead th {
+  font-family: var(--font-sans);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   color: var(--ink-soft);
-  font-size: var(--t-small);
+  border-bottom-color: var(--rule-strong);
 }
 
+.tlv__row {
+  transition: background var(--dur-control) var(--ease-standard);
+}
+
+.tlv__row:hover {
+  background: var(--surface-hover);
+}
+
+/* The selected node is marked the way a selected module is: the marker, on
+   the leading edge, so the two selections read as one idea. */
 .tlv__row[data-selected] {
   background: var(--surface-lift);
+  box-shadow: inset 2px 0 0 var(--marker);
 }
 
 .tlv__button {
@@ -52,23 +72,29 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 /* Nested templates indent by one 8 px unit with a hairline connector. */
 .tlv__connector {
   width: var(--unit);
   height: 1px;
-  background: var(--rule);
+  background: var(--rule-strong);
   display: inline-block;
 }
 
 .tlv__value {
   word-break: break-all;
   max-width: 32ch;
+  color: var(--ink-mid);
 }
 
 .tlv__meaning {
-  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-mid);
 }
 
 .tlv__gloss {
@@ -84,18 +110,22 @@
 
 /* Seeing the string and the structure at once is what teaches TLV. */
 .tlv__raw-string {
+  font-family: var(--font-mono);
   font-size: var(--t-data);
   line-height: var(--t-data-lh);
   word-break: break-all;
   color: var(--ink-soft);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }
 
 .tlv__mark {
-  background: var(--surface-lift);
-  color: var(--ink);
+  background: var(--marker);
+  color: var(--module-light);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 719px) {
   .tlv__table td:nth-child(2),
   .tlv__table th:nth-child(2),
   .tlv__table td:nth-child(3),

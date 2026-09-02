@@ -9,6 +9,9 @@
   gap: 2px;
   max-height: 260px;
   overflow: auto;
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }
 
 .interleave__row {
@@ -20,6 +23,9 @@
 
 .interleave__row-label {
   white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
 }
 
 .interleave__cells {
@@ -35,12 +41,15 @@
 
 .interleave__cell {
   min-width: calc(var(--unit) * 3);
-  padding: 1px 2px;
+  padding: 2px 3px;
+  font-family: var(--font-mono);
   font-size: var(--t-micro);
   line-height: var(--t-micro-lh);
+  font-variant-numeric: tabular-nums;
   text-align: center;
   color: var(--module-light);
-  opacity: 0.35;
+  opacity: 0.3;
+  transition: opacity var(--dur-interleave-col) var(--ease-standard);
 }
 
 .interleave__cell[data-lifted] {

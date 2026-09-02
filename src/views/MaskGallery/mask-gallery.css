@@ -6,9 +6,11 @@
 
 .mask-gallery__rules {
   display: grid;
-  gap: 2px;
-  border-left: 1px solid var(--rule);
-  padding-left: var(--space-1);
+  gap: 4px;
+  border-left: 2px solid var(--rule-strong);
+  padding-left: var(--space-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
 }
 
 .mask-gallery__grid {
@@ -21,17 +23,24 @@
   display: grid;
   gap: var(--space-1);
   width: 100%;
-  background: none;
+  background: var(--surface-lift);
   border: 1px solid var(--rule);
   padding: var(--space-1);
   cursor: pointer;
   color: inherit;
   text-align: left;
+  transition: border-color var(--dur-control) var(--ease-standard),
+    background var(--dur-control) var(--ease-standard);
+}
+
+.mask-card:hover {
+  border-color: var(--ink-soft);
 }
 
 .mask-card[aria-pressed='true'] {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--marker);
   outline-offset: -1px;
+  border-color: var(--marker);
 }
 
 .mask-card__head {
@@ -39,20 +48,25 @@
   align-items: center;
   gap: var(--space-1);
   font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-mid);
 }
 
 .mask-card__total {
   margin-left: auto;
+  font-family: var(--font-mono);
   color: var(--ink);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 /* The winner carries a filled marker. Nothing else marks it. */
 .mask-card__marker {
-  width: var(--unit);
-  height: var(--unit);
+  width: 10px;
+  height: 10px;
   border: 1px solid var(--ink-soft);
   display: block;
+  flex: none;
 }
 
 .mask-card__marker[data-filled] {
@@ -66,13 +80,17 @@
   display: block;
   image-rendering: pixelated;
   background: var(--module-light);
+  border: 1px solid var(--rule);
 }
 
 .mask-card__rules {
   display: grid;
-  gap: 1px;
+  gap: 2px;
+  font-family: var(--font-mono);
   font-size: var(--t-micro);
   line-height: var(--t-micro-lh);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
 }
 
 .mask-card__rule {
@@ -83,7 +101,7 @@
 
 .mask-card__rule b {
   font-weight: 500;
-  color: var(--ink);
+  color: var(--ink-mid);
 }
 
 .mask-card__balance {
@@ -95,8 +113,8 @@
 }
 
 .mask-card__bar {
-  height: 3px;
-  background: var(--rule);
+  height: 4px;
+  background: var(--ground-sunk);
   position: relative;
   display: block;
 }
@@ -118,17 +136,25 @@
   left: 50%;
   width: 1px;
   background: var(--ink);
+  z-index: 1;
 }
 
-@media (max-width: 900px) {
-  .mask-gallery__rules {
-  display: grid;
-  gap: 2px;
-  border-left: 1px solid var(--rule);
-  padding-left: var(--space-1);
-}
-
-.mask-gallery__grid {
+/* Four across needs a genuinely wide panel; below that the thumbnails get
+   too small to read a mask pattern off, which is the whole point of them. */
+@media (max-width: 1400px) {
+  .mask-gallery__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@media (max-width: 460px) {
+  .mask-gallery__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mask-card__ratio {
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  color: var(--ink-soft);
 }

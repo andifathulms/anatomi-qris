@@ -85,7 +85,7 @@ export function DamageLab() {
       <p className="label">{t('damage.hint')}</p>
 
       <label className="damage__slider">
-        <span className="label">{t('damage.noise')}</span>
+        <span className="eyebrow">{t('damage.noise')}</span>
         <input
           type="range"
           min={0}
@@ -94,7 +94,7 @@ export function DamageLab() {
           value={state.noise}
           onChange={(event) => setNoise(Number(event.target.value))}
         />
-        <span className="label">{(state.noise * 100).toFixed(1)}%</span>
+        <span className="mono">{(state.noise * 100).toFixed(1)}%</span>
       </label>
 
       <div className="stage__controls">
@@ -117,7 +117,7 @@ export function DamageLab() {
       */}
       <div className="damage__meter">
         <div className="damage__meter-head">
-          <span className="label">{t('damage.capacityUsed')}</span>
+          <span className="eyebrow">{t('damage.capacityUsed')}</span>
           <span className="figure">
             {report.corruptCodewords} / {report.capacity}
           </span>

@@ -29,22 +29,34 @@
   gap: var(--space-2);
   max-height: 420px;
   overflow-y: auto;
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }
 
 .division__step {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   border-bottom: 1px solid var(--rule);
   padding-bottom: var(--space-1);
+}
+
+.division__steps .division__step:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .division__step-head {
   display: flex;
   justify-content: space-between;
   gap: var(--space-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
 }
 
 .division__step-head b {
+  font-family: var(--font-mono);
   color: var(--ink);
   font-weight: 500;
 }
@@ -64,8 +76,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  font-family: var(--font-mono);
   font-size: var(--t-data);
   line-height: var(--t-data-lh);
+  font-variant-numeric: tabular-nums;
+}
+
+.poly__term {
+  color: var(--ink-soft);
 }
 
 /* Changed bytes are marked by weight and an underline, not by colour: the
@@ -74,8 +92,4 @@
   color: var(--ink);
   font-weight: 500;
   box-shadow: inset 0 -1px 0 var(--ink-soft);
-}
-
-.poly__term {
-  color: var(--ink-soft);
 }

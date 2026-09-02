@@ -7,18 +7,22 @@
 .damage__slider {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: var(--space-1);
+  gap: var(--space-2);
   align-items: center;
 }
 
 .damage__slider input {
   width: 100%;
-  accent-color: var(--ink-soft);
+  accent-color: var(--marker);
+  cursor: pointer;
 }
 
 .damage__meter {
   display: grid;
   gap: var(--space-1);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }
 
 .damage__meter-head {
@@ -29,15 +33,19 @@
 }
 
 .damage__meter-track {
-  height: var(--unit);
+  height: 10px;
   background: var(--surface-lift);
+  border: 1px solid var(--rule);
 }
 
 .damage__meter-fill {
   height: 100%;
-  background: var(--ink-soft);
+  background: var(--repair);
+  transition: width var(--dur-control) var(--ease-standard),
+    background var(--dur-control) var(--ease-standard);
 }
 
+/* Past capacity the meter is the same red as the modules that broke it. */
 .damage__meter-fill[data-over] {
   background: var(--damage);
 }
@@ -47,6 +55,9 @@
   font-size: var(--t-figure);
   line-height: var(--t-figure-lh);
   font-weight: 500;
+  letter-spacing: var(--track-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
 }
 
 .damage__headline[data-failed] {
@@ -55,19 +66,16 @@
 
 .damage__failed {
   color: var(--damage);
-  font-family: var(--font-sans);
   font-size: var(--t-body);
   line-height: var(--t-body-lh);
-  max-width: 66ch;
+  max-width: 60ch;
 }
 
 .damage__positions {
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
   word-break: break-all;
   max-width: 44ch;
-}
-
-.button:disabled {
-  color: var(--ink-soft);
-  cursor: default;
-  opacity: 0.5;
+  color: var(--ink-mid);
 }

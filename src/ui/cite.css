@@ -3,40 +3,52 @@
   display: inline-block;
 }
 
+/*
+ * A spec citation is an inline marker, the way a pasal citation is. It reads
+ * as a footnote, not a link: no colour, just a dotted rule that firms up on
+ * hover.
+ */
 .cite__marker {
   background: none;
   border: 0;
-  border-bottom: 1px solid var(--rule);
-  padding: 0;
-  color: var(--ink-soft);
+  border-bottom: 1px dotted var(--ink-soft);
+  padding: 0 1px;
+  color: var(--ink-mid);
   font-size: var(--t-small);
   cursor: pointer;
+  transition: color var(--dur-control) var(--ease-standard),
+    border-color var(--dur-control) var(--ease-standard);
+}
+
+.cite__marker:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
 }
 
 .cite__popover {
   position: absolute;
-  z-index: 10;
+  z-index: 30;
   top: calc(100% + var(--space-1));
   left: 0;
-  width: min(38ch, 80vw);
+  width: min(40ch, 80vw);
   display: grid;
   gap: var(--space-1);
   background: var(--surface-lift);
-  border: 1px solid var(--rule);
+  border: 1px solid var(--rule-strong);
   padding: var(--space-2);
 }
 
 .cite__source {
+  font-family: var(--font-mono);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
   color: var(--ink);
 }
 
 .cite__summary {
-  font-family: var(--font-sans);
   font-size: var(--t-body);
   line-height: var(--t-body-lh);
-  color: var(--ink-soft);
+  color: var(--ink-mid);
 }
 
 .cite__close {

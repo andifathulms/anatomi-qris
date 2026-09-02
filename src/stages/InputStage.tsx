@@ -57,7 +57,7 @@ export function InputStage() {
 export function Figure({ label, value }: { label: string; value: string }) {
   return (
     <div className="figures__item">
-      <dt className="label">{label}</dt>
+      <dt className="eyebrow">{label}</dt>
       <dd className="figure">{value}</dd>
     </div>
   );

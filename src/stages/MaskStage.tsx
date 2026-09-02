@@ -7,7 +7,7 @@ export function MaskStage() {
   const { t } = useCopy();
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t('mask.heading')}</h2>
+      <h3 className="subheading">{t('mask.heading')}</h3>
       <p className="gloss">{t('mask.gloss')} <Cite citation={CITATIONS.mask} /></p>
       <MaskGallery />
     </div>

@@ -48,11 +48,11 @@ export function PlaceStage() {
 
       <dl className="figures">
         <div className="figures__item">
-          <dt className="label">{t('matrix.placementOrder')}</dt>
+          <dt className="eyebrow">{t('matrix.placementOrder')}</dt>
           <dd className="figure">{Math.round(placed * total)}</dd>
         </div>
         <div className="figures__item">
-          <dt className="label">{t('summary.modules')}</dt>
+          <dt className="eyebrow">{t('summary.modules')}</dt>
           <dd className="figure">{total}</dd>
         </div>
       </dl>

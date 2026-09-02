@@ -40,7 +40,7 @@ export function PayloadTree() {
   return (
     <div className="tlv">
       <div className="tlv__head">
-        <h2 className="panel__heading">{t('tlv.heading')}</h2>
+        <h3 className="subheading">{t('tlv.heading')}</h3>
         <p className={qris.crcOk ? 'label' : 'tlv__crc-bad'}>
           {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}{' '}
           <Cite citation={CITATIONS.crc} />
@@ -103,7 +103,7 @@ export function PayloadTree() {
       </table>
 
       <div className="tlv__raw">
-        <span className="label">{t('tlv.raw')}</span>
+        <span className="eyebrow">{t('tlv.raw')}</span>
         <p className="tlv__raw-string">
           {range ? (
             <>

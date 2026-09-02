@@ -1,43 +1,73 @@
 .stage {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
   align-content: start;
+  min-width: 0;
 }
 
+/*
+ * Stat tiles. The number is the point, so it gets display type at --t-figure
+ * and the label above it shrinks to an eyebrow. Revision 1 set label and value
+ * at nearly the same size and the figure stopped reading as a figure.
+ */
 .figures {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 1px;
   margin: 0;
+  background: var(--rule);
+  border: 1px solid var(--rule);
 }
 
 .figures__item {
   display: grid;
-  gap: 2px;
+  gap: 4px;
+  background: var(--surface);
+  padding: var(--space-2);
 }
 
 .figures__item dd {
   margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-figure);
+  line-height: var(--t-figure-lh);
+  font-weight: 500;
+  letter-spacing: var(--track-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
 }
+
+/* ── Data tables ───────────────────────────────────────────────────────── */
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--t-data);
-  line-height: var(--t-data-lh);
 }
 
 .data-table th,
 .data-table td {
   text-align: left;
-  padding: var(--space-1) var(--space-1) var(--space-1) 0;
+  padding: var(--space-1) var(--space-2) var(--space-1) 0;
   border-bottom: 1px solid var(--rule);
   font-weight: 400;
   vertical-align: top;
 }
 
 .data-table th {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
   color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* Values are data, so they are mono with tabular figures and a column of them
+   lines up on the decimal without any extra work. */
+.data-table td {
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
 }
 
 .data-table tbody tr:last-child th,
@@ -52,6 +82,14 @@
 }
 
 .mono-bits {
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   word-break: break-all;
+}
+
+/* A scroll region inside a panel is a well: sunk ground, hairline border, so
+   its edge is legible and the reader knows there is more below the fold. */
+.well {
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }

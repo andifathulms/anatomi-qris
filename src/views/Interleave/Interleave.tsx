@@ -100,7 +100,7 @@ export function Interleave() {
       </div>
 
       <div className="interleave__output">
-        <span className="label">{t('interleave.output')}</span>
+        <span className="eyebrow">{t('interleave.output')}</span>
         <div className="interleave__cells interleave__cells--output">
           {Array.from(build.interleaved.subarray(0, dealt), (byte, i) => {
             const source = build.blockPlan.sources[i];

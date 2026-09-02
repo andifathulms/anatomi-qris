@@ -7,7 +7,6 @@ export function CorrectionStage() {
   const { t } = useCopy();
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t('stage.4.name')}</h2>
       <p className="gloss">
         {t('division.gloss')} <Cite citation={CITATIONS.errorCorrection} />
       </p>

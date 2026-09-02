@@ -1,16 +1,38 @@
+/*
+ * Every module is also a table row. Folded away by default because it is an
+ * accessibility affordance rather than a view, but it is real markup and it
+ * is complete.
+ */
+.codeword-table {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-1);
+}
+
 .codeword-table summary {
   cursor: pointer;
   padding: var(--space-1) 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
+}
+
+.codeword-table summary:hover {
+  color: var(--ink-mid);
 }
 
 .codeword-table__scroll {
   max-height: 320px;
   overflow: auto;
   margin-top: var(--space-1);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-1);
 }
 
 .codeword-table__coords {
+  font-family: var(--font-mono);
   font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
   color: var(--ink-soft);
   word-break: break-all;
 }

@@ -6,7 +6,7 @@ export function DamageStage() {
   const { t } = useCopy();
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t('damage.heading')}</h2>
+      <h3 className="subheading">{t('damage.heading')}</h3>
       <p className="gloss">{t('damage.gloss')}</p>
       <DamageLab />
     </div>

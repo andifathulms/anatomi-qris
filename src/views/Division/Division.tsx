@@ -81,7 +81,7 @@ export function Division() {
       </div>
 
       <div className="division__generator">
-        <span className="label">{t('division.generator')}</span>
+        <span className="eyebrow">{t('division.generator')}</span>
         <Poly bytes={generator} notation={notation} />
       </div>
 

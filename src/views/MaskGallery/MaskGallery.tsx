@@ -103,7 +103,7 @@ export function MaskGallery() {
                       className="mask-card__bar"
                       style={{ '--ratio': score.darkRatio } as React.CSSProperties}
                     />
-                    <span className="label">{(score.darkRatio * 100).toFixed(1)}%</span>
+                    <span className="mono mask-card__ratio">{(score.darkRatio * 100).toFixed(1)}%</span>
                   </span>
                 </span>
                 {isWinner && <span className="visually-hidden">{t('mask.winner')}</span>}
