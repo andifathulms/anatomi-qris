@@ -66,4 +66,8 @@
   .matrix__svg {
     width: 100%;
   }
+
+  .readout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
