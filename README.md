@@ -17,6 +17,29 @@ those bytes light up in the matrix. That mapping is the product.
 `PRD.md` is what and why. `DESIGN.md` is how it looks. `CLAUDE.md` is how it is
 built.
 
+## The interface
+
+Two registers that never blur. The **specimen** is pure black on pure white
+with hard pixel edges, no radius and no shadow, because a QR code is a printed
+object and anything else would be a lie about the material. The **instrument**
+is everything around it: dark by default, light on request, and forbidden from
+using either pure black or pure white — when you see white on this screen you
+are looking at paper.
+
+The frame is three zones. A stage rail down the left names all nine stages and
+is a slider, not a row of tabs: dragging it moves through them continuously, so
+halfway between *place* and *mask* shows the zigzag complete and the mask half
+applied. The specimen sits in the middle and never moves, because nine stages
+must read as one object being transformed rather than nine illustrations in a
+row. The panel on the right changes around it, and the payload field holds the
+bottom edge.
+
+Colour has a budget: ten module roles split warm for structure and cool for
+content, two functional colours for damage and repair, and one marker hue for
+selection — which is the same magenta whether the thing selected is a codeword
+in the ribbon, a row in the payload tree, a mask card, or a module in the
+matrix. Nothing else gets a hue.
+
 ## Running it
 
 ```

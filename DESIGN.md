@@ -91,7 +91,7 @@ Light:
 | `--rule-strong` | `#bcc2cd` | Seen borders. |
 | `--ink` | `#14171c` | Primary text. Not black. |
 | `--ink-mid` | `#454c58` | Secondary. |
-| `--ink-soft` | `#616a78` | Labels. |
+| `--ink-soft` | `#58616e` | Labels. Meets 4.6:1 on `--ground-sunk`, the tightest pairing. |
 
 The theme follows the system by default and can be overridden; the choice persists in
 `localStorage`, which is not a network request.
@@ -150,7 +150,7 @@ Three colours outside the role palette, and nothing else in the app may use them
 | Token | Dark | Light | Meaning |
 | --- | --- | --- | --- |
 | `--damage` | `#ff4438` | `#d92c1f` | A module the user broke, or a mask-penalty offence. |
-| `--repair` | `#2fd6a8` | `#0f9c78` | A module Reed-Solomon just put back. |
+| `--repair` | `#2fd6a8` | `#0b7d60` | A module Reed-Solomon just put back. |
 | `--marker` | `#f0439a` | `#c2166f` | Selection and focus. Nothing else. |
 
 `--marker` is new in revision 2 and it fixes a real defect. Revision 1 stroked the selected
