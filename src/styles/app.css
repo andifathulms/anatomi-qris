@@ -1,0 +1,84 @@
+.shell {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-3) var(--space-6);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.shell__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--space-2);
+}
+
+.shell__title {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  line-height: var(--t-h2-lh);
+  font-weight: 500;
+}
+
+.shell__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.shell__offline {
+  white-space: nowrap;
+}
+
+/*
+ * The matrix never moves. Everything else changes around it — the single most
+ * important layout decision in the app (DESIGN.md §4.1).
+ */
+.shell__main {
+  display: grid;
+  grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.shell__stage {
+  display: grid;
+  gap: var(--space-2);
+  position: sticky;
+  top: var(--space-2);
+}
+
+.shell__intro {
+  color: var(--ink-soft);
+}
+
+.shell__panel {
+  min-height: 480px;
+}
+
+.shell__footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--ground);
+  border-top: 1px solid var(--rule);
+  padding-bottom: var(--space-2);
+  z-index: 5;
+}
+
+@media (max-width: 900px) {
+  .shell__main {
+    grid-template-columns: 1fr;
+  }
+
+  .shell__stage {
+    position: static;
+  }
+}
+
+@media (max-width: 420px) {
+  .shell {
+    padding: var(--space-2) var(--space-2) var(--space-4);
+  }
+}

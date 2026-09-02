@@ -1,0 +1,52 @@
+.stage {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.figures__item {
+  display: grid;
+  gap: 2px;
+}
+
+.figures__item dd {
+  margin: 0;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: var(--space-1) var(--space-1) var(--space-1) 0;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 400;
+  vertical-align: top;
+}
+
+.data-table th {
+  color: var(--ink-soft);
+}
+
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.stage__controls {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}

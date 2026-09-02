@@ -1,0 +1,24 @@
+.legend__gloss {
+  margin: var(--space-1) 0 var(--space-2);
+}
+
+.legend__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-1) var(--space-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.legend__swatch {
+  width: var(--unit);
+  height: var(--unit);
+  display: block;
+  flex: none;
+}

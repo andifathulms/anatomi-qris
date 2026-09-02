@@ -1,0 +1,77 @@
+.scrubber {
+  padding: var(--space-3) 0 var(--space-1);
+}
+
+.scrubber__track {
+  position: relative;
+  height: var(--space-4);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.scrubber__rail,
+.scrubber__fill {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  height: 1px;
+}
+
+.scrubber__rail {
+  right: 0;
+  background: var(--rule);
+}
+
+.scrubber__fill {
+  background: var(--ink-soft);
+}
+
+.scrubber__station {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  background: none;
+  border: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+
+.scrubber__dot {
+  width: 9px;
+  height: 9px;
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  display: block;
+}
+
+.scrubber__dot[data-active='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.scrubber__label {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  white-space: nowrap;
+}
+
+.scrubber__station[aria-current='step'] .scrubber__label {
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .scrubber__label {
+    display: none;
+  }
+
+  .scrubber__station[aria-current='step'] .scrubber__label {
+    display: block;
+    position: absolute;
+    top: var(--space-2);
+  }
+}

@@ -1,0 +1,69 @@
+.matrix {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/*
+ * Fixed at 480 px on desktop regardless of version, so a version 3 code has
+ * chunky modules and a version 15 code has fine ones. That is honest: it is
+ * the actual difference between them (DESIGN.md §5.1).
+ */
+.matrix__svg {
+  width: min(480px, 100%);
+  height: auto;
+  display: block;
+  background: var(--module-light);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.matrix__readout {
+  min-height: calc(var(--space-4) + var(--space-1));
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.readout dt {
+  color: var(--ink-soft);
+}
+
+.readout dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.matrix__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.matrix__summary {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--t-small);
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+
+.matrix__summary b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .matrix__svg {
+    width: 100%;
+  }
+}

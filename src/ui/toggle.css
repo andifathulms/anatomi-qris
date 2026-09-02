@@ -1,0 +1,24 @@
+.toggle {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+}
+
+.toggle__button {
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--rule);
+  color: var(--ink-soft);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  cursor: pointer;
+}
+
+.toggle__button:last-child {
+  border-right: 0;
+}
+
+.toggle__button[aria-pressed='true'] {
+  background: var(--surface-lift);
+  color: var(--ink);
+}
