@@ -17,6 +17,7 @@ export interface MatrixProps {
   offences?: Set<number>;
   repaired?: Set<number>;
   overrideGrid?: Uint8Array | null;
+  tint?: ((index: number) => string | null) | null;
 }
 
 /**
@@ -34,6 +35,7 @@ export function Matrix({
   offences,
   repaired,
   overrideGrid = null,
+  tint = null,
 }: MatrixProps) {
   const { state, build } = useStore();
   const { setFocusedModule } = useActions();
@@ -62,6 +64,7 @@ export function Matrix({
     focused: state.focusedModule ?? hovered,
     offences: offences ?? EMPTY,
     overrideGrid,
+    tint,
   };
   useMatrixPainter(build, rects, paint);
 

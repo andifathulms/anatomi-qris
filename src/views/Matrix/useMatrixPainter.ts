@@ -19,6 +19,8 @@ export interface PaintState {
   offences: Set<number>;
   /** Show the matrix as a mask candidate rather than the chosen build. */
   overrideGrid: Uint8Array | null;
+  /** Colour a module by something other than its role, e.g. its block. */
+  tint: ((index: number) => string | null) | null;
 }
 
 /**
@@ -101,6 +103,9 @@ export function useMatrixPainter(
         fill = dark ? p.moduleDark : p.moduleLight;
       }
 
+      const tint = visible && state.tint ? state.tint(i) : null;
+      if (tint) fill = dark ? tint : mixToward(tint, p.moduleLight, 0.62);
+
       if (state.offences.has(i)) fill = p.damage;
 
       let stroke = 'none';
@@ -129,6 +134,29 @@ export function useMatrixPainter(
       }
     }
   });
+}
+
+/** Keep a tinted light module clearly lighter than a tinted dark one. */
+function mixToward(color: string, target: string, amount: number): string {
+  const a = rgbOf(color);
+  const b = rgbOf(target);
+  if (!a || !b) return color;
+  return `rgb(${Math.round(a[0] + (b[0] - a[0]) * amount)},${Math.round(
+    a[1] + (b[1] - a[1]) * amount,
+  )},${Math.round(a[2] + (b[2] - a[2]) * amount)})`;
+}
+
+function rgbOf(color: string): [number, number, number] | null {
+  const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (match) return [Number(match[1]), Number(match[2]), Number(match[3])];
+  if (color.startsWith('#') && color.length === 7) {
+    return [
+      parseInt(color.slice(1, 3), 16),
+      parseInt(color.slice(3, 5), 16),
+      parseInt(color.slice(5, 7), 16),
+    ];
+  }
+  return null;
 }
 
 function countPlaced(build: Build): number {
