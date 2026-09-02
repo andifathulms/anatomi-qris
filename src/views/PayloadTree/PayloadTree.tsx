@@ -3,6 +3,7 @@ import type { TlvNode } from '../../qris/tlv';
 import { glossFor } from '../../qris/dictionary';
 import { useCopy } from '../../copy';
 import { highlightFromCodewords, useActions, useStore } from '../../state/store';
+import { CITATIONS, Cite } from '../../ui/Cite';
 import './payload-tree.css';
 
 /**
@@ -41,7 +42,8 @@ export function PayloadTree() {
       <div className="tlv__head">
         <h2 className="panel__heading">{t('tlv.heading')}</h2>
         <p className={qris.crcOk ? 'label' : 'tlv__crc-bad'}>
-          {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}
+          {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}{' '}
+          <Cite citation={CITATIONS.crc} />
           {!qris.crcOk && qris.expectedCrc && (
             <>
               {' '}
@@ -53,7 +55,7 @@ export function PayloadTree() {
           )}
         </p>
       </div>
-      <p className="gloss">{t('tlv.gloss')}</p>
+      <p className="gloss">{t('tlv.gloss')} <Cite citation={CITATIONS.emvco} /></p>
 
       {qris.failedAt !== null && (
         <p className="tlv__crc-bad">

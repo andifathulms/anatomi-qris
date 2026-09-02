@@ -2,6 +2,7 @@ import { useCopy } from '../copy';
 import { useStore } from '../state/store';
 import { formatInfo, hasVersionInfo, versionInfo } from '../engine/tables';
 import { Figure } from './InputStage';
+import { CITATIONS, Cite } from '../ui/Cite';
 
 /**
  * Stage 8. Format and version information are written last, outside the mask,
@@ -18,7 +19,7 @@ export function FinalStage() {
   return (
     <div className="stage">
       <h2 className="panel__heading">{t('stage.8.name')}</h2>
-      <p className="gloss">{t('stage.8.intro')}</p>
+      <p className="gloss">{t('stage.8.intro')} <Cite citation={CITATIONS.format} /></p>
 
       <dl className="figures">
         <Figure label={t('summary.version')} value={String(build.version)} />

@@ -6,6 +6,7 @@ import { Toggle } from './ui/Toggle';
 import { InputBar } from './ui/InputBar';
 import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
 import { Legend } from './ui/Legend';
+import { CodewordTable } from './ui/CodewordTable';
 import { StagePanel } from './stages/StagePanel';
 import { PayloadTree } from './views/PayloadTree/PayloadTree';
 import { blockTintFor } from './views/Interleave/blockTint';
@@ -140,6 +141,8 @@ function Shell() {
           </div>
 
           {state.rendering === 'anatomy' && <Legend />}
+
+          <CodewordTable />
         </section>
 
         <section className="shell__panel panel">

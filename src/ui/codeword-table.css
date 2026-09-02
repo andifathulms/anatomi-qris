@@ -1,0 +1,16 @@
+.codeword-table summary {
+  cursor: pointer;
+  padding: var(--space-1) 0;
+}
+
+.codeword-table__scroll {
+  max-height: 320px;
+  overflow: auto;
+  margin-top: var(--space-1);
+}
+
+.codeword-table__coords {
+  font-size: var(--t-micro);
+  color: var(--ink-soft);
+  word-break: break-all;
+}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useCopy } from '../copy';
 import { useActions, useStore } from '../state/store';
 import { duration, easeStandard, prefersReducedMotion } from '../ui/useTimedValue';
+import { CITATIONS, Cite } from '../ui/Cite';
 
 /**
  * Stage 6, the zigzag — the app's first orchestrated moment (DESIGN.md §6.3).
@@ -42,7 +43,9 @@ export function PlaceStage() {
   return (
     <div className="stage">
       <h2 className="panel__heading">{t('stage.6.name')}</h2>
-      <p className="gloss">{t('stage.6.intro')}</p>
+      <p className="gloss">
+        {t('stage.6.intro')} <Cite citation={CITATIONS.placement} />
+      </p>
 
       <dl className="figures">
         <div className="figures__item">

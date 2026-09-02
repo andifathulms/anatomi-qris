@@ -1,0 +1,40 @@
+.cite {
+  position: relative;
+  display: inline-block;
+}
+
+.cite__marker {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+  cursor: pointer;
+}
+
+.cite__popover {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  width: min(38ch, 80vw);
+  display: grid;
+  gap: var(--space-1);
+  background: var(--surface-lift);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
+}
+
+.cite__source {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink);
+}
+
+.cite__summary {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--ink-soft);
+}
