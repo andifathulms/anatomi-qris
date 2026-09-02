@@ -1,0 +1,81 @@
+.division {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.division__controls {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.division__block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.division__generator {
+  display: grid;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--space-2);
+}
+
+.division__steps {
+  display: grid;
+  gap: var(--space-2);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.division__step {
+  display: grid;
+  gap: 2px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--space-1);
+}
+
+.division__step-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.division__step-head b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.division__row {
+  display: grid;
+  grid-template-columns: 13ch minmax(0, 1fr);
+  gap: var(--space-1);
+  align-items: baseline;
+}
+
+.division__row-label {
+  white-space: nowrap;
+}
+
+.poly {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+}
+
+/* Changed bytes are marked by weight and an underline, not by colour: the
+   palette belongs to the module roles. */
+.poly__term[data-changed] {
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: inset 0 -1px 0 var(--ink-soft);
+}
+
+.poly__term {
+  color: var(--ink-soft);
+}

@@ -1,6 +1,7 @@
 import { useStore } from '../state/store';
 import { InputStage } from './InputStage';
 import { EncodeStage } from './EncodeStage';
+import { CorrectionStage } from './CorrectionStage';
 import { PlaceStage } from './PlaceStage';
 import './stages.css';
 
@@ -18,6 +19,8 @@ export function StagePanel() {
       return <EncodeStage grouping="bits" />;
     case 3:
       return <EncodeStage grouping="codewords" />;
+    case 4:
+      return <CorrectionStage />;
     case 6:
       return <PlaceStage />;
     default:
