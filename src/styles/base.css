@@ -1,0 +1,137 @@
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-sans/latin-400.css';
+@import '@fontsource/martian-mono/latin-500.css';
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+  /* Set explicitly so a fallback face cannot break column alignment
+     mid-animation, even though Plex Mono is already monospaced. */
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+/* Panels are square-cornered because everything here is a square cell, and
+   rounding would be a lie about the material. No shadows anywhere. */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  padding: var(--space-2);
+}
+
+.panel__heading {
+  font-family: var(--font-mono);
+  font-size: var(--t-h2);
+  line-height: var(--t-h2-lh);
+  font-weight: 500;
+}
+
+/* A term of art gets a one-sentence gloss on first appearance, in --ink-soft
+   directly beneath the heading that introduces it. DESIGN.md §7. */
+.gloss {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--ink-soft);
+  max-width: 66ch;
+}
+
+.prose {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  max-width: 66ch;
+}
+
+.label {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
+}
+
+.figure {
+  font-family: var(--font-display);
+  font-size: var(--t-figure);
+  line-height: var(--t-figure-lh);
+  font-weight: 500;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: var(--t-display);
+  line-height: var(--t-display-lh);
+  font-weight: 500;
+}
+
+/* Selection is a 2 px --ink outline. No selection blue, no success green,
+   no hover tints. DESIGN.md §2.4. */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-1);
+  top: -100%;
+  z-index: 20;
+  background: var(--surface-lift);
+  padding: var(--space-1) var(--space-2);
+}
+
+.skip-link:focus {
+  top: var(--space-1);
+}

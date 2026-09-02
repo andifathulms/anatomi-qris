@@ -1,0 +1,103 @@
+/*
+ * Design tokens. DESIGN.md is the authority; this file is its transcription.
+ *
+ * The one rule that governs everything here: the matrix owns pure black and
+ * pure white, so the interface may not use either. Chrome lives strictly
+ * between.
+ */
+
+:root {
+  /* Ground and chrome — DESIGN.md §2.1 */
+  --ground: #1d2320;
+  --surface: #2a312d;
+  --surface-lift: #38403b;
+  --ink: #dde3de;
+  --ink-soft: #96a099;
+  --rule: #454e48;
+
+  /* The artefact's own two colours. Nothing else in the app may use them. */
+  --module-dark: #000000;
+  --module-light: #ffffff;
+
+  /* The anatomy palette — DESIGN.md §2.2. Warm half is structure, cool half
+     is content. A reader learns the split without being told. */
+  --role-finder: #d8452b;
+  --role-separator: #b9ae97;
+  --role-timing: #d69a24;
+  --role-alignment: #a85a2e;
+  --role-darkmodule: #7a2e32;
+  --role-format: #7c5bb8;
+  --role-version: #4759a8;
+  --role-data: #1e8c86;
+  --role-ecc: #5e8f3a;
+  --role-remainder: #5d6b72;
+
+  /* The two functional colours — DESIGN.md §2.4. Used nowhere else. */
+  --damage: #e8543c;
+  --repair: #4fc1a6;
+
+  /* The anatomy lens — DESIGN.md §2.3. Tint rides on the value; it never
+     replaces it, so a tinted light module stays lighter than a tinted dark
+     one of the same hue and the QR silhouette survives. */
+  --lens-light-coverage: 0.25;
+  --lens-dark-coverage: 0.65;
+
+  /* Typography — DESIGN.md §3 */
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-display: 'Martian Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --t-display: 2.441rem;
+  --t-display-lh: 1.05;
+  --t-figure: 1.953rem;
+  --t-figure-lh: 1;
+  --t-h2: 1.25rem;
+  --t-h2-lh: 1.25;
+  --t-body: 0.9375rem;
+  --t-body-lh: 1.6;
+  --t-data: 0.8125rem;
+  --t-data-lh: 1.5;
+  --t-small: 0.75rem;
+  --t-small-lh: 1.4;
+  --t-micro: 0.625rem;
+  --t-micro-lh: 1.2;
+
+  /* Grid and rhythm — DESIGN.md §4.4. 8 px base, matching the module grid, so
+     a byte highlighted in three places is the same width in all three. */
+  --unit: 8px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --space-5: 64px;
+  --space-6: 96px;
+  --max-width: 78rem;
+
+  /* Motion — DESIGN.md §6.2 */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-zigzag: 2400ms;
+  --dur-anatomy: 480ms;
+  --dur-mask: 360ms;
+  --dur-interleave-col: 90ms;
+  --dur-division: 220ms;
+  --dur-repair: 300ms;
+  --dur-popover: 140ms;
+}
+
+/*
+ * Reduced motion — DESIGN.md §6.6. Every transition becomes an immediate
+ * write. The zigzag becomes step-only; that is handled in the animation loop,
+ * which reads the same preference.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-zigzag: 0ms;
+    --dur-anatomy: 0ms;
+    --dur-mask: 0ms;
+    --dur-interleave-col: 0ms;
+    --dur-division: 0ms;
+    --dur-repair: 0ms;
+    --dur-popover: 0ms;
+  }
+}
