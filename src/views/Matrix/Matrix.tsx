@@ -11,9 +11,8 @@ import './matrix.css';
 const QUIET = 4;
 
 export interface MatrixProps {
-  /** Modules the user is currently painting damage onto. */
+  /** Called for each module the brush passes over, while the pointer is down. */
   onPaint?: (index: number) => void;
-  painting?: boolean;
   offences?: Set<number>;
   repaired?: Set<number>;
   overrideGrid?: Uint8Array | null;
@@ -31,7 +30,6 @@ export interface MatrixProps {
  */
 export function Matrix({
   onPaint,
-  painting = false,
   offences,
   repaired,
   overrideGrid = null,
@@ -45,6 +43,7 @@ export function Matrix({
   const rects = useRef<Array<SVGRectElement | null>>([]);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  const pointerDown = useRef(false);
 
   const size = build?.size ?? 21;
   const extent = size + QUIET * 2;
@@ -86,20 +85,29 @@ export function Matrix({
     (event: React.PointerEvent<SVGSVGElement>) => {
       const index = hitTest(event);
       setHovered(index);
-      if (painting && index !== null && onPaint) onPaint(index);
+      if (pointerDown.current && index !== null && onPaint) onPaint(index);
     },
-    [hitTest, painting, onPaint],
+    [hitTest, onPaint],
   );
 
   const handleDown = useCallback(
     (event: React.PointerEvent<SVGSVGElement>) => {
       const index = hitTest(event);
       if (index === null) return;
+      pointerDown.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
       setFocusedModule(index);
       if (onPaint) onPaint(index);
     },
     [hitTest, onPaint, setFocusedModule],
   );
+
+  const handleUp = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
+    pointerDown.current = false;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  }, []);
 
   const handleKey = useCallback(
     (event: React.KeyboardEvent<SVGSVGElement>) => {
@@ -162,7 +170,10 @@ export function Matrix({
         aria-label={`${t('matrix.caption')} ${size}×${size}`}
         onPointerMove={handleMove}
         onPointerLeave={() => setHovered(null)}
+        data-paintable={onPaint ? '' : undefined}
         onPointerDown={handleDown}
+        onPointerUp={handleUp}
+        onPointerCancel={handleUp}
         onKeyDown={handleKey}
       >
         <rect x={0} y={0} width={extent} height={extent} fill="#ffffff" />

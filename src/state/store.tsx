@@ -46,6 +46,9 @@ export interface AppState {
   damage: number[];
   showMaskFeatures: boolean;
   selectedMask: number | null;
+  /** Random noise density, 0 to 1. Kept apart from painted damage so the
+      slider maps the pointer directly and is reversible. */
+  noise: number;
 }
 
 type Action =
@@ -60,15 +63,31 @@ type Action =
   | { type: 'setSelectedMask'; mask: number | null }
   | { type: 'toggleMaskFeatures' }
   | { type: 'damage'; indices: number[] }
+  | { type: 'setNoise'; noise: number }
+  | { type: 'repair'; indices: number[] }
   | { type: 'clearDamage' };
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'setInput':
       // A new input invalidates every view-state layered on the old build.
-      return { ...state, input: action.input, highlight: null, damage: [], focusedModule: null };
+      return {
+        ...state,
+        input: action.input,
+        highlight: null,
+        damage: [],
+        noise: 0,
+        focusedModule: null,
+      };
     case 'setEcLevel':
-      return { ...state, ecLevel: action.ecLevel, highlight: null, damage: [], forceMask: null };
+      return {
+        ...state,
+        ecLevel: action.ecLevel,
+        highlight: null,
+        damage: [],
+        noise: 0,
+        forceMask: null,
+      };
     case 'setStage':
       return { ...state, stage: Math.min(STAGE_COUNT, Math.max(1, action.stage)) };
     case 'setRendering':
@@ -90,8 +109,14 @@ function reducer(state: AppState, action: Action): AppState {
       for (const i of action.indices) next.add(i);
       return { ...state, damage: [...next] };
     }
+    case 'setNoise':
+      return { ...state, noise: Math.min(1, Math.max(0, action.noise)) };
+    case 'repair': {
+      const repaired = new Set(action.indices);
+      return { ...state, damage: state.damage.filter((i) => !repaired.has(i)) };
+    }
     case 'clearDamage':
-      return { ...state, damage: [] };
+      return { ...state, damage: [], noise: 0 };
     default:
       return state;
   }
@@ -118,6 +143,7 @@ function initialState(): AppState {
     damage: [],
     showMaskFeatures: true,
     selectedMask: null,
+    noise: 0,
   };
 }
 
@@ -203,6 +229,8 @@ export function useActions() {
       setSelectedMask: (mask: number | null) => dispatch({ type: 'setSelectedMask', mask }),
       toggleMaskFeatures: () => dispatch({ type: 'toggleMaskFeatures' }),
       damage: (indices: number[]) => dispatch({ type: 'damage', indices }),
+      setNoise: (noise: number) => dispatch({ type: 'setNoise', noise }),
+      repair: (indices: number[]) => dispatch({ type: 'repair', indices }),
       clearDamage: () => dispatch({ type: 'clearDamage' }),
     }),
     [dispatch],
@@ -215,9 +243,38 @@ export function useHighlightSet(): Set<number> {
   return useMemo(() => new Set(state.highlight?.modules ?? []), [state.highlight]);
 }
 
+/**
+ * Painted damage plus whatever the noise slider currently selects.
+ *
+ * Noise draws from a fixed shuffle of the data-region modules, so a given
+ * slider position always picks the same modules and dragging the slider back
+ * removes damage rather than leaving it behind. That is what makes the slider
+ * a direct mapping rather than an accumulator (DESIGN.md §6.1).
+ */
 export function useDamageSet(): Set<number> {
-  const { state } = useStore();
-  return useMemo(() => new Set(state.damage), [state.damage]);
+  const { state, build } = useStore();
+  const shuffled = useMemo(() => (build ? shuffledDataModules(build) : []), [build]);
+  return useMemo(() => {
+    const out = new Set(state.damage);
+    const count = Math.round(state.noise * shuffled.length);
+    for (let i = 0; i < count; i++) out.add(shuffled[i]);
+    return out;
+  }, [state.damage, state.noise, shuffled]);
+}
+
+/** A deterministic shuffle. The engine stays pure; randomness lives here. */
+function shuffledDataModules(build: Build): number[] {
+  const indices: number[] = [];
+  for (const m of build.modules) {
+    if (m.role.kind === 'data' || m.role.kind === 'ecc') indices.push(m.y * build.size + m.x);
+  }
+  let seed = build.size * 2654435761;
+  for (let i = indices.length - 1; i > 0; i--) {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    const j = seed % (i + 1);
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
 }
 
 /** Build a Highlight from data codeword indices, via the provenance map. */

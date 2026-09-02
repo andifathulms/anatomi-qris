@@ -6,6 +6,7 @@ import { InterleaveStage } from './InterleaveStage';
 import { MaskStage } from './MaskStage';
 import { FinalStage } from './FinalStage';
 import { PlaceStage } from './PlaceStage';
+import { DamageStage } from './DamageStage';
 import './stages.css';
 
 /**
@@ -32,6 +33,8 @@ export function StagePanel() {
       return <MaskStage />;
     case 8:
       return <FinalStage />;
+    case 9:
+      return <DamageStage />;
     default:
       return <InputStage />;
   }
