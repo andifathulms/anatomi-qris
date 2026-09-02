@@ -112,7 +112,7 @@ export function encode(input: string, opts: EncodeOptions = {}): Build {
     const grid = new Uint8Array(size * size);
     for (let i = 0; i < grid.length; i++) grid[i] = canvas.values[i] === 1 ? 1 : 0;
     maskGrids.push(grid);
-    maskScores.push(scoreMask((x, y) => grid[y * size + x] === 1, size, mask));
+    maskScores.push(scoreMask(grid, size, mask));
   }
 
   const forcedMask = opts.forceMask !== undefined;

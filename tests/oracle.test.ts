@@ -1,10 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import QRCode from 'qrcode';
+import QRCode, { type QRCodeMaskPattern } from 'qrcode';
 import { createRequire } from 'module';
 import { encode, toGrid } from '../src/engine/encode';
 import { chooseMode, chooseVersion } from '../src/engine/segments';
 import { EC_LEVELS, MAX_VERSION, dataCodewordCount, charCountBits } from '../src/engine/tables';
 import { SAMPLES } from '../samples/index';
+
+/**
+ * `qrcode` accepts a single-mode segment list, which is how we stop it from
+ * splitting the input into mixed segments we do not emit. Its own types insist
+ * byte data is a buffer, so the segment list is cast at this one boundary.
+ */
+function segment(text: string, mode: string) {
+  return [{ data: text, mode }] as unknown as Parameters<typeof QRCode.create>[0];
+}
 
 /**
  * The reference matrix, as `qrcode` builds it with our mode and mask forced.
@@ -18,10 +27,9 @@ import { SAMPLES } from '../samples/index';
  * claim about the construction. Mask *selection* is checked separately below.
  */
 function oracleGrid(text: string, ec: 'L' | 'M' | 'Q' | 'H', mask: number) {
-  const mode = chooseMode(text);
-  const qr = QRCode.create([{ data: text, mode }], {
+  const qr = QRCode.create(segment(text, chooseMode(text)), {
     errorCorrectionLevel: ec,
-    maskPattern: mask,
+    maskPattern: mask as QRCodeMaskPattern,
   });
   const size = qr.modules.size;
   const grid: boolean[][] = [];
@@ -131,9 +139,9 @@ describe('oracle agreement with qrcode', () => {
       for (const ec of EC_LEVELS) {
         for (let mask = 0; mask < 8; mask++) {
           const ours = encode(sample.payload, { ecLevel: ec, forceMask: mask });
-          const ref = QRCode.create([{ data: sample.payload, mode: chooseMode(sample.payload) }], {
+          const ref = QRCode.create(segment(sample.payload, chooseMode(sample.payload)), {
             errorCorrectionLevel: ec,
-            maskPattern: mask,
+            maskPattern: mask as QRCodeMaskPattern,
           });
           const score = ours.maskScores[mask];
           const where = `${sample.id} @${ec} mask ${mask}`;
