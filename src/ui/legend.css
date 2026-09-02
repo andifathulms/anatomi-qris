@@ -1,13 +1,25 @@
+/*
+ * The ten roles, warm half then cool half — structure, then content. The
+ * swatch is a square because a module is a square.
+ */
+.legend {
+  display: grid;
+  gap: var(--space-1);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+
 .legend__gloss {
-  margin: var(--space-1) 0 var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .legend__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--space-1) var(--space-2);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  color: var(--ink-mid);
 }
 
 .legend__item {
@@ -17,8 +29,8 @@
 }
 
 .legend__swatch {
-  width: var(--unit);
-  height: var(--unit);
+  width: 10px;
+  height: 10px;
   display: block;
   flex: none;
 }

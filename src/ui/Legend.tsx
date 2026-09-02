@@ -21,7 +21,7 @@ export function Legend() {
   const { t } = useCopy();
   return (
     <div className="legend">
-      <h3 className="label">{t('role.legend')}</h3>
+      <h3 className="eyebrow">{t('role.legend')}</h3>
       <p className="gloss legend__gloss">{t('role.legendGloss')}</p>
       <ul className="legend__list">
         {ROLE_KEYS.map((key) => (

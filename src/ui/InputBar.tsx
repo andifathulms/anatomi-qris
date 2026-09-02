@@ -41,7 +41,7 @@ export function InputBar() {
   return (
     <div className="input-bar">
       <div className="input-bar__field">
-        <label className="label" htmlFor="payload">{t('input.label')}</label>
+        <label className="eyebrow" htmlFor="payload">{t('input.label')}</label>
         <input
           id="payload"
           ref={field}
@@ -53,25 +53,21 @@ export function InputBar() {
           value={state.input}
           onChange={(event) => setInput(event.target.value)}
         />
-        <p className="input-bar__note">{t('app.offlineNote')}</p>
       </div>
 
       <div className="input-bar__controls">
-        <StageSteps />
-
         <div className="input-bar__group">
-          <span className="label" id="ec-label">{t('ec.label')}</span>
+          <span className="eyebrow" id="ec-label">{t('ec.label')}</span>
           <Toggle<EcLevel>
             label={t('ec.label')}
             value={state.ecLevel}
             onChange={setEcLevel}
             options={EC_LEVELS.map((ec) => ({ value: ec, label: ec }))}
           />
-          <p className="label">{t(`ec.${state.ecLevel}` as 'ec.L')}</p>
         </div>
 
         <div className="input-bar__group">
-          <label className="label" htmlFor="sample">{t('input.samples')}</label>
+          <label className="eyebrow" htmlFor="sample">{t('input.samples')}</label>
           <select
             id="sample"
             className="input-bar__select"
@@ -88,16 +84,28 @@ export function InputBar() {
           </select>
         </div>
 
-        {linkable ? (
-          <button type="button" className="button" onClick={copyLink}>
-            {copied ? t('input.copied') : t('input.copyLink')}
-          </button>
-        ) : (
-          <p className="input-bar__suppressed label" title={t('input.linkSuppressedWhy')}>
-            {t('input.linkSuppressed')}
-          </p>
-        )}
+        <div className="input-bar__group">
+          <span className="eyebrow">{t('stage.scrubber')}</span>
+          <StageSteps />
+        </div>
+
+        <div className="input-bar__group input-bar__group--link">
+          <span className="eyebrow" aria-hidden="true">&nbsp;</span>
+          {linkable ? (
+            <button type="button" className="button" onClick={copyLink}>
+              {copied ? t('input.copied') : t('input.copyLink')}
+            </button>
+          ) : (
+            <p className="input-bar__suppressed label" title={t('input.linkSuppressedWhy')}>
+              {t('input.linkSuppressed')}
+            </p>
+          )}
+        </div>
       </div>
+
+      <p className="input-bar__note label">
+        {t(`ec.${state.ecLevel}` as 'ec.L')} · {t('app.offlineNote')}
+      </p>
 
       {buildError && (
         <p className="input-bar__error" role="status">

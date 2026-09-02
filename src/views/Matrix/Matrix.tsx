@@ -69,6 +69,7 @@ export function Matrix({
     offences: offences ?? EMPTY,
     overrideGrid,
     tint,
+    paletteKey: state.theme,
   };
   useMatrixPainter(build, rects, paint);
 

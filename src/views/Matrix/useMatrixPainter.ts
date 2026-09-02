@@ -21,6 +21,9 @@ export interface PaintState {
   overrideGrid: Uint8Array | null;
   /** Colour a module by something other than its role, e.g. its block. */
   tint: ((index: number) => string | null) | null;
+  /** Changes when the token values behind the palette change, i.e. on a
+      theme switch. --damage, --repair and --marker differ between themes. */
+  paletteKey: string;
 }
 
 /**
@@ -42,7 +45,10 @@ export function useMatrixPainter(
 
   useEffect(() => {
     palette.current = readPalette();
-  }, []);
+    // Force a full repaint: the cached fills were mixed from the old tokens.
+    lastFill.current = [];
+    lastStroke.current = [];
+  }, [state.paletteKey]);
 
   useEffect(() => {
     if (!build) return;

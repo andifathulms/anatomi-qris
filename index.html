@@ -3,7 +3,31 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e9ebef" media="(prefers-color-scheme: light)" />
+    <!--
+      Set the theme before the first paint. The store reads the same key and
+      the same system preference; this only exists so the reader never sees a
+      dark flash on the way to a light page. localStorage is not a network
+      request, so PRD §9.1 still holds.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('anatomi-qris:theme');
+          var theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Bagaimana sebuah kode QR dibangun, dan apa isi payload QRIS. Semua diproses di perangkat ini."

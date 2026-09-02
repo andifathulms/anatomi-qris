@@ -1,37 +1,44 @@
 /*
- * One row. The footer is sticky, so every pixel it takes is a pixel of the
- * stage panel the reader cannot see.
+ * The console — DESIGN.md §4.5.
+ *
+ * One row. The console is sticky, so every pixel it takes is a pixel of the
+ * panel the reader cannot see. The payload field is set in mono because what
+ * goes into it is data, not language.
  */
 .input-bar {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-end;
-  flex-wrap: wrap;
-  padding-top: var(--space-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-1) var(--space-3);
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 .input-bar__field {
   display: grid;
-  gap: 2px;
-  flex: 1 1 22rem;
+  gap: 4px;
   min-width: 0;
 }
 
 .input-bar__input {
   width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--rule);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule-strong);
   border-radius: 0;
   color: var(--ink);
-  padding: var(--space-1) var(--space-2);
+  padding: 9px var(--space-2);
+  font-family: var(--font-mono);
   font-size: var(--t-data);
   line-height: var(--t-data-lh);
+  transition: border-color var(--dur-control) var(--ease-standard);
 }
 
-.input-bar__note {
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
+.input-bar__input::placeholder {
   color: var(--ink-soft);
+}
+
+.input-bar__input:hover {
+  border-color: var(--ink-soft);
 }
 
 .input-bar__controls {
@@ -42,46 +49,68 @@
 }
 
 .input-bar__group {
-  gap: 2px;
-}
-
-.input-bar__group {
   display: grid;
-  gap: var(--space-1);
+  gap: 4px;
+  justify-items: start;
 }
 
-.input-bar__select,
-.button {
-  background: var(--surface);
-  border: 1px solid var(--rule);
+.input-bar__select {
+  background: var(--surface-lift);
+  border: 1px solid var(--rule-strong);
   border-radius: 0;
-  color: var(--ink);
-  padding: var(--space-1) var(--space-2);
+  color: var(--ink-mid);
+  padding: 7px var(--space-2);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 500;
   cursor: pointer;
+  max-width: 16rem;
+  transition: background var(--dur-control) var(--ease-standard),
+    border-color var(--dur-control) var(--ease-standard);
 }
 
-.button:hover,
 .input-bar__select:hover {
-  background: var(--surface-lift);
+  background: var(--surface-hover);
+  border-color: var(--ink-soft);
+}
+
+/* The EC gloss and the offline guarantee share one quiet line under the row.
+   The guarantee belongs here because this is where someone pastes a real
+   payment payload. */
+.input-bar__note {
+  grid-column: 1 / -1;
+  color: var(--ink-soft);
 }
 
 .input-bar__suppressed {
-  max-width: 42ch;
+  max-width: 34ch;
   align-self: center;
 }
 
 .input-bar__error {
-  flex: 1 0 100%;
+  grid-column: 1 / -1;
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 500;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   .input-bar {
-    display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 719px) {
+  .input-bar__controls {
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .input-bar__group--link {
+    flex: 1 0 100%;
+  }
+
+  .input-bar__group--link .eyebrow {
+    display: none;
   }
 }

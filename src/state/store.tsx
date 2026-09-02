@@ -16,6 +16,8 @@ import { type Locale } from '../copy';
 
 export const STAGE_COUNT = 9;
 
+export type Theme = 'dark' | 'light';
+
 /**
  * What is currently highlighted, and where the highlight came from. One
  * structure, so a selection made in the tree, the ribbon or the matrix binds
@@ -40,6 +42,8 @@ export interface AppState {
   stage: number;
   rendering: 'printed' | 'anatomy';
   locale: Locale;
+  /** Dark is the instrument, light is the lab notebook. DESIGN.md §2.1. */
+  theme: Theme;
   highlight: Highlight | null;
   focusedModule: number | null;
   /** Row-major indices of modules the user has flipped in the damage lab. */
@@ -57,6 +61,7 @@ type Action =
   | { type: 'setStage'; stage: number }
   | { type: 'setRendering'; rendering: 'printed' | 'anatomy' }
   | { type: 'setLocale'; locale: Locale }
+  | { type: 'setTheme'; theme: Theme }
   | { type: 'setHighlight'; highlight: Highlight | null }
   | { type: 'setFocusedModule'; index: number | null }
   | { type: 'setForceMask'; mask: number | null }
@@ -94,6 +99,8 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, rendering: action.rendering };
     case 'setLocale':
       return { ...state, locale: action.locale };
+    case 'setTheme':
+      return { ...state, theme: action.theme };
     case 'setHighlight':
       return { ...state, highlight: action.highlight };
     case 'setFocusedModule':
@@ -138,6 +145,7 @@ function initialState(): AppState {
     stage: 1,
     rendering: 'printed',
     locale: 'id',
+    theme: initialTheme(),
     highlight: null,
     focusedModule: null,
     damage: [],
@@ -146,6 +154,22 @@ function initialState(): AppState {
     noise: 0,
   };
 }
+
+/**
+ * Follow the system unless the reader has said otherwise. The stored
+ * preference is a localStorage read, which is not a network request.
+ */
+function initialTheme(): Theme {
+  try {
+    const stored = window.localStorage.getItem(THEME_KEY);
+    if (stored === 'dark' || stored === 'light') return stored;
+  } catch {
+    // Private browsing, or storage disabled. The system preference stands.
+  }
+  return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+const THEME_KEY = 'anatomi-qris:theme';
 
 export interface Store {
   state: AppState;
@@ -185,6 +209,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const qris = useMemo(() => inspectQris(state.input), [state.input]);
   const lensActive = qris.isQris;
 
+  // The theme is a document-level attribute so every token block switches at
+  // once, including inside popovers and portals.
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', state.theme);
+    try {
+      window.localStorage.setItem(THEME_KEY, state.theme);
+    } catch {
+      // Nothing to do; the choice lasts for this session only.
+    }
+  }, [state.theme]);
+
   useEffect(() => {
     // Serialise typed text and samples, never a QRIS payload.
     const url = new URL(window.location.href);
@@ -223,6 +258,7 @@ export function useActions() {
       setRendering: (rendering: 'printed' | 'anatomy') =>
         dispatch({ type: 'setRendering', rendering }),
       setLocale: (locale: Locale) => dispatch({ type: 'setLocale', locale }),
+      setTheme: (theme: Theme) => dispatch({ type: 'setTheme', theme }),
       setHighlight: (highlight: Highlight | null) => dispatch({ type: 'setHighlight', highlight }),
       setFocusedModule: (index: number | null) => dispatch({ type: 'setFocusedModule', index }),
       setForceMask: (mask: number | null) => dispatch({ type: 'setForceMask', mask }),

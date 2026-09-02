@@ -1,84 +1,197 @@
+/*
+ * The stage rail — DESIGN.md §4.2.
+ *
+ * Vertical on desktop: nine stations, each numbered and named, the whole
+ * column draggable. Horizontal below 1180 px. Orientation is decided here and
+ * measured by the component, so there is one implementation, not two.
+ */
+
 .scrubber {
-  padding: var(--space-2) 0 0;
-  position: relative;
+  display: grid;
+  gap: var(--space-2);
 }
 
-.scrubber__steps {
-  display: flex;
-  gap: var(--space-1);
-  align-items: flex-end;
+.scrubber__eyebrow {
+  padding-left: var(--space-3);
 }
 
 .scrubber__track {
   position: relative;
-  height: var(--space-4);
+  display: grid;
+  gap: 2px;
   cursor: pointer;
   touch-action: none;
 }
 
+/* The rail and the fill run down the left edge, behind the dots. */
 .scrubber__rail,
 .scrubber__fill {
   position: absolute;
-  top: 7px;
-  left: 0;
-  height: 1px;
+  left: 11px;
+  width: 1px;
+  pointer-events: none;
 }
 
 .scrubber__rail {
-  right: 0;
+  top: 0;
+  bottom: 0;
   background: var(--rule);
 }
 
 .scrubber__fill {
+  top: 0;
+  height: calc(var(--progress) * 100%);
   background: var(--ink-soft);
 }
 
 .scrubber__station {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  background: none;
-  border: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px 3ch minmax(0, 1fr);
   align-items: center;
   gap: var(--space-1);
+  background: none;
+  border: 0;
+  border-left: 2px solid transparent;
+  padding: 6px var(--space-1) 6px 0;
+  text-align: left;
   cursor: pointer;
   color: var(--ink-soft);
+  transition: color var(--dur-control) var(--ease-standard),
+    background var(--dur-control) var(--ease-standard),
+    border-color var(--dur-control) var(--ease-standard);
+}
+
+.scrubber__station:hover {
+  color: var(--ink-mid);
+  background: var(--surface);
+}
+
+.scrubber__station[data-status='passed'] {
+  color: var(--ink-mid);
+}
+
+/* The active station is the only place --marker appears outside a selection. */
+.scrubber__station[data-status='current'] {
+  color: var(--ink);
+  background: var(--surface);
+  border-left-color: var(--marker);
 }
 
 .scrubber__dot {
   width: 9px;
   height: 9px;
+  justify-self: center;
   background: var(--ground);
-  border: 1px solid var(--rule);
+  border: 1px solid var(--rule-strong);
   display: block;
+  transition: background var(--dur-control) var(--ease-standard),
+    border-color var(--dur-control) var(--ease-standard);
+}
+
+.scrubber__station[data-status='passed'] .scrubber__dot {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
 }
 
 .scrubber__dot[data-active='true'] {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--marker);
+  border-color: var(--marker);
+}
+
+.scrubber__index {
+  font-family: var(--font-display);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+.scrubber__station[data-status='current'] .scrubber__index {
+  color: var(--ink-mid);
 }
 
 .scrubber__label {
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 500;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.scrubber__station[aria-current='step'] .scrubber__label {
-  color: var(--ink);
+/* Prev/next, which live in the console beside the payload field. */
+.scrubber__steps {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
 }
 
-@media (max-width: 720px) {
-  .scrubber__label {
-    display: none;
+/*
+ * Lying down. The track becomes a row: the rail runs horizontally behind the
+ * stations and each station stacks its dot over its number. Nine names on one
+ * row is what made revision 1's track unreadable on anything but a wide
+ * desktop, so here they come off entirely.
+ */
+@media (max-width: 1179px) {
+  .scrubber {
+    gap: var(--space-1);
   }
 
-  .scrubber__station[aria-current='step'] .scrubber__label {
+  .scrubber__eyebrow {
+    padding-left: 0;
+  }
+
+  .scrubber__track {
     display: block;
+    height: var(--space-4);
+    padding-top: var(--space-1);
+  }
+
+  .scrubber__rail,
+  .scrubber__fill {
+    left: 0;
+    top: 12px;
+    bottom: auto;
+    height: 1px;
+    width: auto;
+  }
+
+  .scrubber__rail {
+    right: 0;
+  }
+
+  .scrubber__fill {
+    width: calc(var(--progress) * 100%);
+    height: 1px;
+  }
+
+  .scrubber__station {
     position: absolute;
-    top: var(--space-2);
+    top: var(--space-1);
+    left: var(--at);
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-left: 0;
+    border-top: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .scrubber__station:hover,
+  .scrubber__station[data-status='current'] {
+    background: none;
+  }
+
+  /* Names come off the track entirely rather than being crammed onto it or
+     overflowing at the ends. The panel header already carries the current
+     stage at display size, so nothing is lost. */
+  .scrubber__label {
+    display: none;
   }
 }

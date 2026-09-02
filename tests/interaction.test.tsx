@@ -49,7 +49,7 @@ describe('working through the app', () => {
   it('renders every stage without throwing', () => {
     for (let stage = 1; stage <= 9; stage++) {
       gotoStage(stage);
-      expect(container.querySelector('.shell__panel')?.textContent?.length ?? 0).toBeGreaterThan(10);
+      expect(container.querySelector('.panel')?.textContent?.length ?? 0).toBeGreaterThan(10);
       // The matrix is present and unchanged in size at every stage.
       expect(container.querySelector('.matrix__svg')).not.toBeNull();
     }
@@ -121,7 +121,7 @@ describe('working through the app', () => {
   it('switches locale without losing the payload', () => {
     const input = container.querySelector<HTMLInputElement>('#payload')!;
     expect(input.value).toBe(SAMPLES[0].payload);
-    click(container.querySelector('.shell__header-right .button'));
+    click(container.querySelector('.topbar__controls .button'));
     expect(container.textContent).toContain('Everything runs on this device');
     expect(container.querySelector<HTMLInputElement>('#payload')!.value).toBe(SAMPLES[0].payload);
   });

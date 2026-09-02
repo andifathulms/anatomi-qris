@@ -11,6 +11,11 @@ export const id = {
   'app.offlineNote': 'Semua diproses di perangkat ini. Tidak ada data yang dikirim.',
   'app.skipToMatrix': 'Lewati ke matriks',
   'app.locale': 'English',
+  'app.theme': 'Tampilan',
+  'app.themeDark': 'Gelap',
+  'app.themeLight': 'Terang',
+  'app.specimen': 'Spesimen',
+  'app.stages': 'Tahapan',
 
   'input.label': 'Teks atau payload QRIS',
   'input.placeholder': 'Ketik apa saja, atau tempel payload QRIS',

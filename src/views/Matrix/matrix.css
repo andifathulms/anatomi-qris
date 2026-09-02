@@ -1,72 +1,70 @@
 .matrix {
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-2);
+  min-width: 0;
 }
 
 /*
- * Fixed at 480 px on desktop regardless of version, so a version 3 code has
+ * Fixed at 460 px on desktop regardless of version, so a version 3 code has
  * chunky modules and a version 15 code has fine ones. That is honest: it is
- * the actual difference between them (DESIGN.md §5.1).
+ * the actual difference between them (DESIGN.md §4.3).
+ *
+ * The white ground is the specimen's own, in both themes. It is the one pure
+ * white in the app and it is paper.
  */
 .matrix__svg {
-  width: min(480px, 100%);
+  width: 100%;
   height: auto;
   display: block;
   background: var(--module-light);
+  border: 1px solid var(--rule-strong);
   touch-action: none;
+  cursor: default;
+}
+
+.matrix__svg[data-paintable] {
   cursor: crosshair;
 }
 
+/*
+ * The readout strip is a fixed height and never collapses. A strip that
+ * appeared on hover would make the whole column jump every time the pointer
+ * crossed the matrix (DESIGN.md §4.3).
+ */
 .matrix__readout {
-  min-height: calc(var(--space-4) + var(--space-1));
+  min-height: calc(var(--space-5) + var(--space-1));
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+  padding: var(--space-2);
 }
 
 .readout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: var(--space-1) var(--space-2);
   margin: 0;
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
 }
 
 .readout dt {
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   color: var(--ink-soft);
 }
 
 .readout dd {
   margin: 0;
   color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+  font-variant-numeric: tabular-nums;
 }
 
-.matrix__controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.matrix__summary {
-  display: flex;
-  gap: var(--space-2);
-  font-size: var(--t-small);
-  color: var(--ink-soft);
-  flex-wrap: wrap;
-}
-
-.matrix__summary b {
-  color: var(--ink);
-  font-weight: 500;
-}
-
-@media (max-width: 720px) {
-  .matrix__svg {
-    width: 100%;
-  }
-
+@media (max-width: 719px) {
   .readout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

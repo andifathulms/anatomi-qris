@@ -1,24 +1,50 @@
+/*
+ * A segmented control. Selection is a lifted surface plus a --marker underline
+ * — the same marker that carries every selection in the app, so a selected
+ * segment and a selected module read as the same idea.
+ */
 .toggle {
   display: inline-flex;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--rule-strong);
+  background: var(--ground-sunk);
 }
 
 .toggle__button {
+  position: relative;
   background: transparent;
   border: 0;
   border-right: 1px solid var(--rule);
   color: var(--ink-soft);
-  padding: var(--space-1) var(--space-2);
+  padding: 7px var(--space-2);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard);
 }
 
 .toggle__button:last-child {
   border-right: 0;
 }
 
+.toggle__button:hover {
+  color: var(--ink-mid);
+  background: var(--surface-hover);
+}
+
 .toggle__button[aria-pressed='true'] {
   background: var(--surface-lift);
   color: var(--ink);
+}
+
+.toggle__button[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--marker);
 }

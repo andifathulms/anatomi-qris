@@ -1,136 +1,260 @@
+/*
+ * The frame — DESIGN.md §4. Three zones in DOM order: topbar, workbench,
+ * console. The workbench is three columns: stage rail, specimen, panel.
+ */
+
 .shell {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-3) var(--space-3) var(--space-6);
+  min-height: 100vh;
   display: grid;
-  gap: var(--space-3);
+  grid-template-rows: auto 1fr auto;
 }
 
-.shell__header {
+/* ── Topbar ────────────────────────────────────────────── DESIGN.md §4.1 ── */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  background: var(--ground);
   border-bottom: 1px solid var(--rule);
-  padding-bottom: var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
-.shell__title {
+.topbar__identity {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.topbar__wordmark {
   font-family: var(--font-display);
-  font-size: var(--t-h2);
-  line-height: var(--t-h2-lh);
+  font-size: var(--t-title);
+  line-height: var(--t-title-lh);
   font-weight: 500;
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
 }
 
-.shell__header-right {
+.topbar__tagline {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
+  border-left: 1px solid var(--rule);
+  padding-left: var(--space-2);
+}
+
+.topbar__controls {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
-.shell__offline {
+.topbar__offline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
   white-space: nowrap;
 }
 
-/*
- * The matrix never moves. Everything else changes around it — the single most
- * important layout decision in the app (DESIGN.md §4.1).
- */
-.shell__main {
+/* The one square of --repair outside the damage lab. It is the same claim:
+   nothing left this machine. */
+.topbar__offline-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--repair);
+  display: block;
+  flex: none;
+}
+
+/* ── Workbench ─────────────────────────────────────────── DESIGN.md §4.1 ── */
+
+.workbench {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3);
   display: grid;
-  grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+  grid-template-columns:
+    var(--rail-width)
+    minmax(0, var(--specimen-width))
+    minmax(0, 1fr);
   gap: var(--space-3);
   align-items: start;
 }
 
-.shell__stage {
-  display: grid;
-  gap: var(--space-2);
+.workbench__rail {
   position: sticky;
-  top: var(--space-2);
+  top: calc(var(--space-4) + var(--space-3));
+  align-self: start;
 }
 
-.shell__intro {
+.workbench__column {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* ── Specimen card ─────────────────────────────────────── DESIGN.md §4.3 ── */
+
+.specimen {
+  position: sticky;
+  top: calc(var(--space-4) + var(--space-3));
+  display: grid;
+  gap: var(--space-2);
+  align-self: start;
+  min-width: 0;
+}
+
+.specimen__head {
+  display: grid;
+  gap: var(--space-1);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.specimen__controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ── Panel ─────────────────────────────────────────────── DESIGN.md §4.4 ── */
+
+.panel {
+  min-width: 0;
+}
+
+.panel__head {
+  display: grid;
+  gap: var(--space-1);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.panel__index {
+  font-family: var(--font-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel__index-total {
   color: var(--ink-soft);
 }
 
-.shell__panel {
-  min-height: 480px;
+.panel__title {
+  color: var(--ink);
 }
 
-.shell__footer {
+.panel__intro {
+  color: var(--ink-mid);
+}
+
+/* ── Console ───────────────────────────────────────────── DESIGN.md §4.5 ── */
+
+.console {
   position: sticky;
   bottom: 0;
+  z-index: 15;
   background: var(--ground);
   border-top: 1px solid var(--rule);
-  padding-bottom: var(--space-1);
-  z-index: 5;
+  padding: var(--space-2) var(--space-3);
 }
 
-@media (max-width: 900px) {
-  .shell__main {
-    grid-template-columns: 1fr;
+/* ── Breakpoints ───────────────────────────────────────── DESIGN.md §4.7 ── */
+
+/* The rail lies down above the panel; specimen and panel stay side by side. */
+@media (max-width: 1179px) {
+  .workbench {
+    grid-template-columns: minmax(0, var(--specimen-width)) minmax(0, 1fr);
+    grid-template-areas:
+      'rail rail'
+      'specimen column';
   }
 
-  .shell__stage {
+  .workbench__rail {
+    grid-area: rail;
     position: static;
   }
 
-  .shell__panel {
-    min-height: 0;
+  .specimen {
+    grid-area: specimen;
+  }
+
+  .workbench__column {
+    grid-area: column;
   }
 }
 
-/*
- * Below 720 px the matrix stays the hero at full width and the input moves
- * above the scrubber, since a thumb reaches the bottom of the screen first
- * and the scrubber is the thing being dragged (DESIGN.md §4.5).
- */
-@media (max-width: 720px) {
-  .shell__footer {
-    display: flex;
-    flex-direction: column;
+@media (max-width: 899px) {
+  :root {
+    --card-pad: var(--space-2);
   }
 
-  .shell__footer .input-bar {
-    order: 1;
+  .workbench {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'rail'
+      'specimen'
+      'column';
+    padding: var(--space-2);
+    gap: var(--space-2);
   }
 
-  .shell__footer .scrubber {
-    order: 2;
-    padding-bottom: 0;
+  .specimen {
+    position: static;
+  }
+}
+
+@media (max-width: 719px) {
+  .topbar {
+    padding: var(--space-2);
+    gap: var(--space-1) var(--space-2);
   }
 
-  .shell__header {
-    flex-direction: column;
-    gap: var(--space-1);
+  .topbar__identity {
+    width: 100%;
+  }
+
+  .topbar__tagline {
+    border-left: 0;
+    padding-left: 0;
+    flex-basis: 100%;
+  }
+
+  .topbar__controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .console {
+    padding: var(--space-2);
   }
 }
 
 /* The quality floor is 380 px. Nothing may overflow or clip below it. */
 @media (max-width: 420px) {
-  .shell {
-    padding: var(--space-2) var(--space-1) var(--space-4);
-    gap: var(--space-2);
+  .workbench {
+    padding: var(--space-2) var(--space-1) var(--space-3);
   }
 
-  .shell__title {
-    font-size: var(--t-data);
-  }
-
-  .display {
-    font-size: var(--t-figure);
-  }
-
-  .figure {
+  .topbar__wordmark {
     font-size: var(--t-h2);
-  }
-
-  .panel {
-    padding: var(--space-1);
-  }
-
-  .input-bar__controls {
-    gap: var(--space-1);
   }
 }

@@ -18,10 +18,17 @@ export function stageIntroKey(stage: number): CopyKey {
 }
 
 /**
- * Nine stations along a track. Dragging moves through them continuously,
- * clicking jumps. A continuous control maps the pointer directly with zero
- * easing (DESIGN.md §6.1) — that is what makes it feel like an instrument, and
- * it is why encode() has to stay inside 8 ms.
+ * The spine of the app: nine stations, numbered and named, laid out as a
+ * vertical rail on desktop and a horizontal track below 1180 px.
+ *
+ * It is a slider, not a row of tabs. Dragging moves through stages
+ * continuously and fractional positions are real — halfway between "place"
+ * and "mask" shows the zigzag complete and the mask half applied. A
+ * continuous control maps the pointer directly with zero easing
+ * (DESIGN.md §6.1), which is why encode() has an 8 ms budget.
+ *
+ * Orientation is measured rather than passed, so one component serves both
+ * layouts and CSS alone decides which one is in play.
  */
 export function StageScrubber() {
   const { state } = useStore();
@@ -30,24 +37,28 @@ export function StageScrubber() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const dragging = useRef(false);
 
-  const stageFromPointer = useCallback((clientX: number) => {
+  const stageFromPointer = useCallback((clientX: number, clientY: number) => {
     const track = trackRef.current;
     if (!track) return null;
     const box = track.getBoundingClientRect();
-    const ratio = (clientX - box.left) / box.width;
+    const vertical = box.height > box.width;
+    const ratio = vertical
+      ? (clientY - box.top) / box.height
+      : (clientX - box.left) / box.width;
+    if (!Number.isFinite(ratio)) return null;
     return 1 + Math.min(1, Math.max(0, ratio)) * (STAGE_COUNT - 1);
   }, []);
 
   const handleDown = (event: React.PointerEvent<HTMLDivElement>) => {
     dragging.current = true;
     event.currentTarget.setPointerCapture(event.pointerId);
-    const next = stageFromPointer(event.clientX);
+    const next = stageFromPointer(event.clientX, event.clientY);
     if (next !== null) setStage(next);
   };
 
   const handleMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!dragging.current) return;
-    const next = stageFromPointer(event.clientX);
+    const next = stageFromPointer(event.clientX, event.clientY);
     if (next !== null) setStage(next);
   };
 
@@ -57,10 +68,10 @@ export function StageScrubber() {
   };
 
   const handleKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault();
       setStage(Math.round(state.stage) - 1);
-    } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+    } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault();
       setStage(Math.round(state.stage) + 1);
     } else if (event.key === 'Home') {
@@ -72,10 +83,12 @@ export function StageScrubber() {
     }
   };
 
+  const current = Math.round(state.stage);
   const fraction = (state.stage - 1) / (STAGE_COUNT - 1);
 
   return (
     <div className="scrubber">
+      <p className="eyebrow scrubber__eyebrow">{t('app.stages')}</p>
       <div
         ref={trackRef}
         className="scrubber__track"
@@ -84,31 +97,37 @@ export function StageScrubber() {
         aria-label={t('stage.scrubber')}
         aria-valuemin={1}
         aria-valuemax={STAGE_COUNT}
-        aria-valuenow={Math.round(state.stage)}
+        aria-valuenow={current}
         aria-valuetext={t(stageNameKey(state.stage))}
+        style={{ '--progress': fraction } as React.CSSProperties}
         onPointerDown={handleDown}
         onPointerMove={handleMove}
         onPointerUp={handleUp}
         onKeyDown={handleKey}
       >
-        <div className="scrubber__rail" />
-        <div className="scrubber__fill" style={{ width: `${fraction * 100}%` }} />
+        <div className="scrubber__rail" aria-hidden="true" />
+        <div className="scrubber__fill" aria-hidden="true" />
         {STAGE_NAME_KEYS.map((key, i) => {
           const at = i / (STAGE_COUNT - 1);
-          const active = Math.round(state.stage) === i + 1;
+          const n = i + 1;
+          const status = n === current ? 'current' : n < current ? 'passed' : 'ahead';
           return (
             <button
               key={key}
               type="button"
               className="scrubber__station"
-              style={{ left: `${at * 100}%` }}
-              aria-current={active ? 'step' : undefined}
+              data-status={status}
+              style={{ '--at': `${at * 100}%` } as React.CSSProperties}
+              aria-current={n === current ? 'step' : undefined}
               onClick={(event) => {
                 event.stopPropagation();
-                setStage(i + 1);
+                setStage(n);
               }}
             >
-              <span className="scrubber__dot" data-active={active} />
+              <span className="scrubber__dot" data-active={n === current} aria-hidden="true" />
+              <span className="scrubber__index" aria-hidden="true">
+                {String(n).padStart(2, '0')}
+              </span>
               <span className="scrubber__label">{t(key)}</span>
             </button>
           );

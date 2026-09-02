@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { LocaleContext, translator, useCopy } from './copy';
-import { StoreProvider, useActions, useStore } from './state/store';
+import { STAGE_COUNT, StoreProvider, useActions, useStore, type Theme } from './state/store';
 import { Matrix } from './views/Matrix/Matrix';
 import { Toggle } from './ui/Toggle';
 import { InputBar } from './ui/InputBar';
@@ -36,7 +36,7 @@ function Localised({ children }: { children: React.ReactNode }) {
 
 function Shell() {
   const { state, build, lensActive } = useStore();
-  const { setRendering, setLocale, damage } = useActions();
+  const { setRendering, setLocale, setTheme, damage } = useActions();
   const { t, locale } = useCopy();
 
   // At the interleave stage the matrix carries the same block tints as the
@@ -83,31 +83,67 @@ function Shell() {
     [build, state.stage],
   );
 
+  const stage = Math.round(state.stage);
+
   return (
     <div className="shell">
       <a className="skip-link" href="#matrix">{t('app.skipToMatrix')}</a>
 
-      <header className="shell__header">
-        <div>
-          <h1 className="shell__title">{t('app.title')}</h1>
-          <p className="label">{t('app.tagline')}</p>
+      <header className="topbar">
+        <div className="topbar__identity">
+          <h1 className="topbar__wordmark">{t('app.title')}</h1>
+          <p className="topbar__tagline">{t('app.tagline')}</p>
         </div>
-        <div className="shell__header-right">
+        <div className="topbar__controls">
+          {/* A statement of fact, not a badge. This is where someone pastes a
+              real payment payload. */}
+          <p className="topbar__offline">
+            <span className="topbar__offline-dot" aria-hidden="true" />
+            {t('app.offline')}
+          </p>
+          <Toggle<Theme>
+            label={t('app.theme')}
+            value={state.theme}
+            onChange={setTheme}
+            options={[
+              { value: 'dark', label: t('app.themeDark') },
+              { value: 'light', label: t('app.themeLight') },
+            ]}
+          />
           <button
             type="button"
-            className="button"
+            className="button button--quiet"
             onClick={() => setLocale(locale === 'id' ? 'en' : 'id')}
           >
             {t('app.locale')}
           </button>
-          <p className="shell__offline label">{t('app.offline')} ✓</p>
         </div>
       </header>
 
-      <main className="shell__main">
-        <section className="shell__stage" id="matrix">
-          <h2 className="display" id="stage-heading">{t(stageNameKey(state.stage))}</h2>
-          <p className="prose shell__intro">{t(stageIntroKey(state.stage))}</p>
+      <main className="workbench">
+        {/* The rail is the spine of the app: nine stations, always named,
+            always draggable. DESIGN.md §4.2. */}
+        <nav className="workbench__rail" aria-label={t('app.stages')}>
+          <StageScrubber />
+        </nav>
+
+        {/* The specimen never moves. Nine stages must read as one object being
+            transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
+        <section className="specimen card" id="matrix" aria-label={t('app.specimen')}>
+          <div className="specimen__head">
+            <h2 className="eyebrow">{t('app.specimen')}</h2>
+            {build && (
+              <p className="chips">
+                <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
+                <span className="chip">{t('summary.ec')} <b>{build.ecLevel}</b></span>
+                <span className="chip">{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
+                <span className="chip">{t('summary.mask')} <b>{build.chosenMask}</b></span>
+                <span className="chip">
+                  {t('summary.size')} <b>{build.size}×{build.size}</b>
+                </span>
+              </p>
+            )}
+          </div>
 
           <Matrix
             tint={tint}
@@ -117,18 +153,7 @@ function Shell() {
             {...(inDamageLab ? { onPaint: paint } : {})}
           />
 
-          <div className="matrix__controls">
-            <p className="matrix__summary">
-              {build ? (
-                <>
-                  <span>{t('summary.version')} <b>{build.version}</b></span>
-                  <span>{t('summary.ec')} <b>{build.ecLevel}</b></span>
-                  <span>{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
-                  <span>{t('summary.mask')} <b>{build.chosenMask}</b></span>
-                  <span>{build.size}×{build.size} {t('summary.modules')}</span>
-                </>
-              ) : null}
-            </p>
+          <div className="specimen__controls">
             <Toggle<'printed' | 'anatomy'>
               label={t('matrix.caption')}
               value={state.rendering}
@@ -145,21 +170,33 @@ function Shell() {
           <CodewordTable />
         </section>
 
-        <section className="shell__panel panel" aria-labelledby="stage-heading">
-          <StagePanel />
-        </section>
+        <div className="workbench__column">
+          <section className="panel card" aria-labelledby="stage-heading">
+            <header className="panel__head">
+              <p className="panel__index">
+                {String(stage).padStart(2, '0')}
+                <span className="panel__index-total">/{String(STAGE_COUNT).padStart(2, '0')}</span>
+              </p>
+              <h2 className="display panel__title" id="stage-heading">
+                {t(stageNameKey(state.stage))}
+              </h2>
+              <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
+            </header>
+            <StagePanel />
+          </section>
+
+          {/* Present at every stage when the lens is active: the payload's
+              meaning does not change as the encoding proceeds, only its
+              representation. */}
+          {lensActive && (
+            <section className="card">
+              <PayloadTree />
+            </section>
+          )}
+        </div>
       </main>
 
-      {/* Present at every stage when the lens is active: the payload's meaning
-          does not change as the encoding proceeds, only its representation. */}
-      {lensActive && (
-        <section className="shell__tree panel">
-          <PayloadTree />
-        </section>
-      )}
-
-      <footer className="shell__footer">
-        <StageScrubber />
+      <footer className="console">
         <InputBar />
       </footer>
     </div>

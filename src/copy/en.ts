@@ -8,6 +8,11 @@ export const en: Record<CopyKey, string> = {
   'app.offlineNote': 'Everything runs on this device. Nothing is sent anywhere.',
   'app.skipToMatrix': 'Skip to the matrix',
   'app.locale': 'Bahasa Indonesia',
+  'app.theme': 'Theme',
+  'app.themeDark': 'Dark',
+  'app.themeLight': 'Light',
+  'app.specimen': 'Specimen',
+  'app.stages': 'Stages',
 
   'input.label': 'Text or QRIS payload',
   'input.placeholder': 'Type anything, or paste a QRIS payload',
