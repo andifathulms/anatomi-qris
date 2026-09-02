@@ -5,6 +5,10 @@ import { codewordKey } from '../src/engine/provenance';
 import { blockSpec, EC_LEVELS, type EcLevel } from '../src/engine/tables';
 import { SAMPLES } from '../samples/index';
 
+/** The longer QRIS payload does not fit at level H in version 15. */
+const QRIS_SAMPLE = SAMPLES[0].payload;
+const SHORT_SAMPLE = SAMPLES[2].payload;
+
 function lcg(seed: number) {
   let state = seed >>> 0;
   return () => {
@@ -41,7 +45,7 @@ function streamIndicesOfBlock(build: ReturnType<typeof encode>, block: number): 
 describe('recovery at the stated capacity', () => {
   it('repairs exactly floor(ecc/2) codewords per block, at every EC level', () => {
     for (const ec of EC_LEVELS) {
-      const build = encode(SAMPLES[1].payload, { ecLevel: ec });
+      const build = encode(QRIS_SAMPLE, { ecLevel: ec });
       const spec = blockSpec(build.version, ec);
       const perBlock = Math.floor(spec.eccPerBlock / 2);
       const grid = toGrid(build);
@@ -55,7 +59,7 @@ describe('recovery at the stated capacity', () => {
 
       const result = decode(grid, build.version, ec, build.chosenMask);
       expect(result.failed, `level ${ec}`).toBe(false);
-      expect(result.text).toBe(SAMPLES[1].payload);
+      expect(result.text).toBe(QRIS_SAMPLE);
       expect(result.corrected).toBe(build.blocks.length * perBlock);
       expect(result.capacity).toBe(build.blocks.length * perBlock);
     }
@@ -63,7 +67,7 @@ describe('recovery at the stated capacity', () => {
 
   it('fails, and says so, one codeword past capacity', () => {
     for (const ec of EC_LEVELS) {
-      const build = encode(SAMPLES[1].payload, { ecLevel: ec });
+      const build = encode(QRIS_SAMPLE, { ecLevel: ec });
       const spec = blockSpec(build.version, ec);
       const perBlock = Math.floor(spec.eccPerBlock / 2);
       const grid = toGrid(build);
@@ -74,7 +78,7 @@ describe('recovery at the stated capacity', () => {
 
       const result = decode(grid, build.version, ec, build.chosenMask);
       expect(result.text, `level ${ec} must not claim a recovery`).not.toBe(
-        SAMPLES[1].payload,
+        QRIS_SAMPLE,
       );
       expect(result.failed || result.failedBlocks.length > 0).toBe(true);
       expect(result.capacity).toBe(build.blocks.length * perBlock);
@@ -82,7 +86,7 @@ describe('recovery at the stated capacity', () => {
   });
 
   it('survives a contiguous stain, which is what interleaving buys', () => {
-    const build = encode(SAMPLES[1].payload, { ecLevel: 'Q' });
+    const build = encode(QRIS_SAMPLE, { ecLevel: 'Q' });
     const grid = toGrid(build);
     // A square blot in the middle of the symbol.
     const side = 6;
@@ -93,14 +97,14 @@ describe('recovery at the stated capacity', () => {
     }
     const result = decode(grid, build.version, 'Q', build.chosenMask);
     expect(result.failed).toBe(false);
-    expect(result.text).toBe(SAMPLES[1].payload);
+    expect(result.text).toBe(QRIS_SAMPLE);
     expect(result.corrected).toBeGreaterThan(0);
   });
 
   it('recovers from scattered random noise below capacity', () => {
     const random = lcg(7);
     for (const ec of ['M', 'H'] as EcLevel[]) {
-      const build = encode(SAMPLES[0].payload, { ecLevel: ec });
+      const build = encode(SHORT_SAMPLE, { ecLevel: ec });
       const spec = blockSpec(build.version, ec);
       const budget = Math.floor(spec.eccPerBlock / 2);
       const grid = toGrid(build);
@@ -124,14 +128,14 @@ describe('recovery at the stated capacity', () => {
 
       const result = decode(grid, build.version, ec, build.chosenMask);
       expect(result.failed, `level ${ec}`).toBe(false);
-      expect(result.text).toBe(SAMPLES[0].payload);
+      expect(result.text).toBe(SHORT_SAMPLE);
     }
   });
 });
 
 describe('damage attribution', () => {
   it('names the stream indices it repaired', () => {
-    const build = encode(SAMPLES[0].payload, { ecLevel: 'H' });
+    const build = encode(SHORT_SAMPLE, { ecLevel: 'H' });
     const grid = toGrid(build);
     const targets = [3, 11, 19];
     damageCodewords(build, grid, targets);
@@ -141,7 +145,7 @@ describe('damage attribution', () => {
   });
 
   it('reaches a damaged module through the provenance map alone', () => {
-    const build = encode(SAMPLES[0].payload, { ecLevel: 'M' });
+    const build = encode(SHORT_SAMPLE, { ecLevel: 'M' });
     const coords = build.byCodeword.get(codewordKey('data', 5))!;
     for (const [x, y] of coords) {
       const module = build.modules[y * build.size + x];

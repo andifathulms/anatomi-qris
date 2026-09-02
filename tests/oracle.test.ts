@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import QRCode, { type QRCodeMaskPattern } from 'qrcode';
 import { createRequire } from 'module';
 import { encode, toGrid } from '../src/engine/encode';
-import { chooseMode, chooseVersion } from '../src/engine/segments';
+import { canEncode, chooseMode } from '../src/engine/segments';
 import { EC_LEVELS, MAX_VERSION, dataCodewordCount, charCountBits } from '../src/engine/tables';
 import { SAMPLES } from '../samples/index';
 
@@ -92,8 +92,7 @@ describe('oracle agreement with qrcode', () => {
   it('matches on every bundled sample at every EC level', () => {
     for (const sample of SAMPLES) {
       for (const ec of EC_LEVELS) {
-        const mode = chooseMode(sample.payload);
-        if (chooseVersion(sample.payload, mode, ec) > MAX_VERSION) continue;
+        if (!canEncode(sample.payload, ec)) continue;
         assertAgrees(sample.payload, ec);
       }
     }
@@ -137,6 +136,7 @@ describe('oracle agreement with qrcode', () => {
     const penalties = require('qrcode/lib/core/mask-pattern.js');
     for (const sample of SAMPLES.slice(0, 4)) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(sample.payload, ec)) continue;
         for (let mask = 0; mask < 8; mask++) {
           const ours = encode(sample.payload, { ecLevel: ec, forceMask: mask });
           const ref = QRCode.create(segment(sample.payload, chooseMode(sample.payload)), {
@@ -156,6 +156,7 @@ describe('oracle agreement with qrcode', () => {
   it('picks the lowest-penalty mask, ties going to the lower number', () => {
     for (const sample of SAMPLES) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(sample.payload, ec)) continue;
         const build = encode(sample.payload, { ecLevel: ec });
         const totals = build.maskScores.map((s) => s.total);
         const best = Math.min(...totals);

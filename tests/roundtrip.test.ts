@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import jsQR from 'jsqr';
 import { encode, toGrid } from '../src/engine/encode';
+import { canEncode } from '../src/engine/segments';
 import { decode } from '../src/engine/decode';
 import { EC_LEVELS } from '../src/engine/tables';
 import { SAMPLES } from '../samples/index';
@@ -46,6 +47,7 @@ describe('round trip through jsQR', () => {
   it('reads back every corpus string at every EC level', () => {
     for (const text of CORPUS) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(text, ec)) continue;
         const build = encode(text, { ecLevel: ec });
         const { data, width } = toRgba(toGrid(build));
         const result = jsQR(data, width, width);
@@ -69,6 +71,7 @@ describe('round trip through our own decoder', () => {
   it('reads back every corpus string at every EC level', () => {
     for (const text of CORPUS) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(text, ec)) continue;
         const build = encode(text, { ecLevel: ec });
         const result = decode(toGrid(build), build.version, ec, build.chosenMask);
         expect(result.failed).toBe(false);

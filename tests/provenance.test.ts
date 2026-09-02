@@ -1,9 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { encode, toGrid } from '../src/engine/encode';
+import { canEncode } from '../src/engine/segments';
 import { maskCondition } from '../src/engine/mask';
 import { codewordKey } from '../src/engine/provenance';
 import { EC_LEVELS, matrixSize } from '../src/engine/tables';
 import { SAMPLES } from '../samples/index';
+
+/** The shorter QRIS payload, which fits at all four EC levels. */
+const QRIS_SAMPLE = SAMPLES[0].payload;
 
 /** Deterministic pseudo-random source; the engine itself must stay pure. */
 function lcg(seed: number) {
@@ -17,7 +21,7 @@ function lcg(seed: number) {
 describe('the forward map', () => {
   it('gives every module in the symbol exactly one role', () => {
     for (const ec of EC_LEVELS) {
-      const build = encode(SAMPLES[1].payload, { ecLevel: ec });
+      const build = encode(QRIS_SAMPLE, { ecLevel: ec });
       expect(build.modules).toHaveLength(build.size * build.size);
       const seen = new Set<string>();
       for (const m of build.modules) {
@@ -30,7 +34,7 @@ describe('the forward map', () => {
   });
 
   it('numbers the placement order contiguously over the data region', () => {
-    const build = encode(SAMPLES[0].payload, { ecLevel: 'Q' });
+    const build = encode(QRIS_SAMPLE, { ecLevel: 'Q' });
     const orders = build.modules
       .map((m) => m.placementOrder)
       .filter((o): o is number => o !== null)
@@ -74,7 +78,7 @@ describe('the forward map', () => {
 describe('the reverse map', () => {
   it('gives every data and EC codeword exactly eight modules', () => {
     for (const ec of EC_LEVELS) {
-      const build = encode(SAMPLES[1].payload, { ecLevel: ec });
+      const build = encode(QRIS_SAMPLE, { ecLevel: ec });
       for (let c = 0; c < build.dataCodewords.length; c++) {
         expect(build.byCodeword.get(codewordKey('data', c))).toHaveLength(8);
       }
@@ -87,6 +91,7 @@ describe('the reverse map', () => {
   it('maps every payload byte onto codewords that actually hold it', () => {
     for (const sample of SAMPLES) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(sample.payload, ec)) continue;
         const build = encode(sample.payload, { ecLevel: ec });
         const units = build.segmentation.units.length;
         for (let u = 0; u < units; u++) {
@@ -113,6 +118,7 @@ describe('byte range to modules and back', () => {
     const random = lcg(20260902);
     for (const sample of SAMPLES) {
       for (const ec of EC_LEVELS) {
+        if (!canEncode(sample.payload, ec)) continue;
         const build = encode(sample.payload, { ecLevel: ec });
         const grid = toGrid(build);
         const units = build.segmentation.units.length;
@@ -153,7 +159,7 @@ describe('byte range to modules and back', () => {
   });
 
   it('lights up disjoint modules for disjoint payload fields', () => {
-    const build = encode(SAMPLES[0].payload, { ecLevel: 'M' });
+    const build = encode(QRIS_SAMPLE, { ecLevel: 'M' });
     const head = new Set(build.resolver.rangeToCodewords(0, 6));
     const tail = new Set(
       build.resolver.rangeToCodewords(

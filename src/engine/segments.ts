@@ -105,14 +105,36 @@ export function chooseVersion(
   ecLevel: EcLevel,
   minVersion = MIN_VERSION,
 ): number {
+  const version = versionFor(text, mode, ecLevel, minVersion);
+  if (version === null) {
+    throw new Error(
+      `input of ${text.length} characters does not fit in version ${MAX_VERSION} at level ${ecLevel}`,
+    );
+  }
+  return version;
+}
+
+/**
+ * The lowest version that can carry this input, or null if it does not fit at
+ * all. QRIS payloads run 150-350 characters, so the longer ones genuinely do
+ * not fit at level H within versions 1-15; the UI has to say so rather than
+ * throw.
+ */
+export function versionFor(
+  text: string,
+  mode: Mode,
+  ecLevel: EcLevel,
+  minVersion = MIN_VERSION,
+): number | null {
   const body = payloadBits(text, mode);
   for (let v = Math.max(MIN_VERSION, minVersion); v <= MAX_VERSION; v++) {
-    const needed = 4 + charCountBits(v, mode) + body;
-    if (needed <= dataCodewordCount(v, ecLevel) * 8) return v;
+    if (4 + charCountBits(v, mode) + body <= dataCodewordCount(v, ecLevel) * 8) return v;
   }
-  throw new Error(
-    `input of ${text.length} characters does not fit in version ${MAX_VERSION} at level ${ecLevel}`,
-  );
+  return null;
+}
+
+export function canEncode(text: string, ecLevel: EcLevel, minVersion = MIN_VERSION): boolean {
+  return versionFor(text, chooseMode(text), ecLevel, minVersion) !== null;
 }
 
 class BitWriter {
