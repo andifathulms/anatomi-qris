@@ -1,422 +1,419 @@
 # DESIGN.md — Anatomi QRIS
 
-Visual and motion specification. PRD.md defines substance; this defines form.
+The visual and interaction specification. PRD.md is what and why. CLAUDE.md is how it is
+built. This is how it looks, moves, and feels.
+
+**Revision 2.** Revision 1 established the right instincts — the matrix as a fixed spine,
+a role palette split warm/cool, no shadows, no rounding — and then under-served them. The
+chrome was a single muddy green-grey; every word in the interface was set in the same 13 px
+monospace, so nothing had rank; the nine stages were nine cramped stations on a horizontal
+track; and there was only ever one theme. Revision 2 keeps every principle and rebuilds the
+execution.
 
 ---
 
 ## 0. The design problem
 
-A QR code is the most colour-constrained object a designer can be handed. It is true black
-on true white, and it has to stay that way — tint it and it is no longer honestly the
-thing the app claims to explain.
+A QR code is a printed object. It is black, white, square, and physically flat. Anything
+the interface does that contradicts that — rounding a corner, casting a shadow, tinting the
+paper — is a lie about the material.
 
-But the app's entire purpose is to distinguish ten different roles a module can play:
-finder, separator, timing, alignment, dark module, format bits, version bits, data
-codewords, EC codewords, remainder. That needs a categorical palette.
+But an explanation of a QR code is *not* a printed object. It is an instrument reading one.
+So the app has two registers and they must never blur:
 
-So the two requirements are in direct conflict. The resolution is the app's central visual
-idea:
+- **The specimen.** Pure black on pure white, hard pixel edges, no radius, no shadow, no
+  antialiasing of the module grid. It looks like it was printed, because it was designed to
+  be printed.
+- **The instrument.** Everything else. Dark by default, because an instrument in a lab is
+  dark and the specimen is the only lit thing on the bench.
 
-**Colour is applied as a lens, not as a replacement.** Anatomy tints ride *on top of* the
-black-and-white reading rather than overwriting it. A tinted white module stays clearly
-lighter than a tinted black module of the same hue. At any moment the user can still see
-that they are looking at a QR code, and the toggle between the two states — pure and
-tinted — is one of the app's two orchestrated moments (§6.4).
-
-This also settles the surrounding design: the artefact owns pure black and pure white, so
-the interface may not use either. Chrome lives strictly between.
+**The governing rule, unchanged from revision 1:** the matrix owns pure black and pure
+white. No interface surface, rule, or text may be `#000000` or `#ffffff`. When you see pure
+white on this screen you are looking at paper, and when you see pure black you are looking
+at ink. That is what makes the specimen pop off an otherwise unremarkable page without a
+single glow, gradient, or drop shadow.
 
 ---
 
 ## 1. Design plan
 
-**Concept: the proof sheet.**
+Five moves, in the order they matter.
 
-The register is a printer's proof — the stage before something goes to press, where the
-plate separations are inspected one at a time. That is literally what the pipeline does:
-it takes one printed object apart into the layers that composed it, and lets you look at
-each.
-
-That gives the app its structure (one artefact, many separations), its palette (screen-
-printing ink hues rather than data-visualization defaults), and its typography (technical,
-monospaced, aligned to a grid — because the subject is a grid and every value in the app
-is a column of digits that must line up).
-
-**Alignment:** everything aligns to a module grid. The matrix, the bitstream ribbon, the
-codeword table, and the TLV tree all share one 8 px base unit so that when a byte
-highlights in three places at once, the three highlights are visually the same width.
+1. **Two registers, one white rectangle.** The specimen sits on its own card and never
+   moves. Everything else is instrument chrome that changes around it.
+2. **Rank the type.** Sans for anything a human reads as language. Mono for anything that
+   is data — bits, hex, coordinates, payload strings. Display mono only for the wordmark,
+   stage numerals, and figures. Revision 1 set all three in the same face at the same size,
+   which is why every panel read as an undifferentiated wall.
+3. **Give the nine stages a spine you can read.** A vertical rail on the left with full
+   stage names, always visible, always draggable. Nine labels on a horizontal track meant
+   eight of them were hidden on any screen narrower than a desktop.
+4. **Colour with a budget.** Ten role hues, two functional colours, one marker. Nothing
+   else gets a hue. Chrome is achromatic.
+5. **Both themes, one system.** Dark is the instrument. Light is the lab notebook. Same
+   tokens, same contrast floors, same specimen.
 
 ---
 
 ## 2. Colour
 
-### 2.1 Ground and chrome
+### 2.1 Chrome
 
-Neither black nor white; the matrix owns those.
+Chrome is achromatic with a faint cool cast — barely a hue, just enough that the white
+specimen reads as warmer than its surroundings and therefore closer to the eye. Warm chrome
+would fight the paper; neutral grey next to pure white looks dirty.
+
+Dark (default):
 
 | Token | Value | Use |
-|---|---|---|
-| `--ground` | `#1D2320` | Page. Deep, slightly green-shifted neutral — the tone of a press-room surface, not a UI dark mode. |
-| `--surface` | `#2A312D` | Panels: the bitstream ribbon, the TLV tree, the division steps. |
-| `--surface-lift` | `#38403B` | Selected rows, active stage, hovered nodes. |
-| `--ink` | `#DDE3DE` | Primary text. Not white — white is reserved for light modules. |
-| `--ink-soft` | `#96A099` | Labels, axis text, inactive stages. |
-| `--rule` | `#454E48` | Hairlines and grid. |
+| --- | --- | --- |
+| `--ground` | `#0e1013` | Page. Not black — the specimen owns black. |
+| `--ground-sunk` | `#0a0b0e` | Wells: input fields, scroll regions, tracks. |
+| `--surface` | `#16191e` | Cards and panels. |
+| `--surface-lift` | `#1d2128` | Raised: popovers, active segments, table stripes. |
+| `--surface-hover` | `#252a32` | Pointer feedback only. |
+| `--rule` | `#282d35` | Hairlines. |
+| `--rule-strong` | `#3a414d` | Borders that must be seen: card edges, focus wells. |
+| `--ink` | `#e9edf3` | Primary text. Not white. |
+| `--ink-mid` | `#aab3c0` | Secondary text, data values. |
+| `--ink-soft` | `#8b95a4` | Labels, captions, disabled. AA against `--surface`. |
 
-The matrix's quiet zone renders in pure `#FFFFFF` and its dark modules in pure `#000000`,
-sitting on `--ground`. That contrast is what makes the code read as a physical object laid
-on the page rather than as an element of the interface.
+Light:
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--ground` | `#e9ebef` | Page. |
+| `--ground-sunk` | `#dfe2e8` | Wells. |
+| `--surface` | `#f7f8fa` | Cards and panels. Not white. |
+| `--surface-lift` | `#fcfcfd` | Raised. Still not white. |
+| `--surface-hover` | `#eef0f4` | Pointer feedback. |
+| `--rule` | `#dadde4` | Hairlines. |
+| `--rule-strong` | `#bcc2cd` | Seen borders. |
+| `--ink` | `#14171c` | Primary text. Not black. |
+| `--ink-mid` | `#454c58` | Secondary. |
+| `--ink-soft` | `#616a78` | Labels. |
+
+The theme follows the system by default and can be overridden; the choice persists in
+`localStorage`, which is not a network request.
+
+**Depth without shadows.** Elevation is expressed by ground → surface → surface-lift value
+steps plus a 1 px rule, never by a shadow. One exception, and it is not a shadow: a popover
+carries a 1 px `--rule-strong` border and sits on `--surface-lift`, which is enough
+separation because it is always over a darker card.
 
 ### 2.2 The anatomy palette
 
-Ten roles, ten hues. Chosen as a screen-printing ink set — saturated, slightly impure,
-mixable — rather than a categorical scale from a charting library.
+Ten module roles. The split carries the meaning: **warm is structure** — the parts of the
+code that are the same for every payload at a given version — and **cool is content** —
+the parts that are this payload and no other. A reader learns the split without being told,
+and once learned, the anatomy view is legible at a glance.
 
-| Role | Hue | Value |
-|---|---|---|
-| Finder | vermilion | `#D8452B` |
-| Separator | bone | `#B9AE97` |
-| Timing | ochre | `#D69A24` |
-| Alignment | rust | `#A85A2E` |
-| Dark module | oxblood | `#7A2E32` |
-| Format info | violet | `#7C5BB8` |
-| Version info | indigo | `#4759A8` |
-| Data codewords | teal | `#1E8C86` |
-| EC codewords | moss | `#5E8F3A` |
-| Remainder | slate | `#5D6B72` |
+Structure (warm):
 
-Constraints on this set:
+| Role | Hex | Why |
+| --- | --- | --- |
+| `finder` | `#e2452b` | The loudest role, because it is the first thing a scanner looks for. |
+| `separator` | `#c98f5e` | Tan. Present but subordinate — it is defined by absence. |
+| `timing` | `#e8a317` | Amber, high value, reads as a ruled line. |
+| `alignment` | `#b8551f` | A darker sibling of finder: same job, smaller. |
+| `darkModule` | `#8f2340` | One module, so it gets the one hue nothing else uses. |
 
-- Function patterns (finder, separator, timing, alignment, dark module) occupy the warm
-  half; payload-bearing modules (format, version, data, EC, remainder) occupy the cool
-  half. The warm/cool split is itself information: warm modules are structure, cool
-  modules are content. A user learns this without being told.
-- Data teal and EC moss must be adjacent enough to read as related — they are both
-  codewords — and separable enough to be counted. This is the most important pairing in
-  the palette; tune it first.
-- Every hue must reach 3:1 against `--surface` when used as a legend swatch.
+Content (cool):
+
+| Role | Hex | Why |
+| --- | --- | --- |
+| `format` | `#8b5cf6` | Violet. Metadata about the code, not the payload. |
+| `version` | `#3b6fd4` | Blue. Sibling of format, same category. |
+| `data` | `#12a89c` | Teal. The payload itself — the role the eye should find fastest. |
+| `ecc` | `#6aa832` | Green. Data's partner; adjacent hue, deliberately. |
+| `remainder` | `#64748b` | Slate, nearly achromatic, because it carries nothing. |
+
+Revision 1 used a bone `#b9ae97` for separators and a desaturated slate for remainder. At
+25 % coverage over white both were invisible, so two of the ten roles could not actually be
+found in the anatomy view. Chroma is up across the board and light coverage is up to 32 %.
 
 ### 2.3 How the lens works
 
-The anatomy tint never replaces the module's value.
+The tint **rides on the module's value; it never replaces it.**
 
-- A **light module** takes the role hue at roughly 25% coverage over white.
-- A **dark module** takes the role hue at roughly 65% coverage over black.
+- A light module takes the role hue at `--lens-light-coverage` (32 %) over white.
+- A dark module takes the role hue at `--lens-dark-coverage` (65 %) over black.
 
-Result: within any one role, dark and light modules stay clearly distinguishable, and the
-overall pattern of the code remains readable. Verify by eye at 100%, 50% and 25% zoom —
-if the QR silhouette disappears at any of them, the coverage values are wrong.
+Within any role the light variant stays clearly lighter than the dark one, so the QR
+silhouette survives being coloured in. You can still read the code by eye in anatomy view.
+That is the test: if the silhouette dissolves, the coverage is wrong.
 
-Masked modules — those the mask flipped — carry a 1 px inset stroke in the same hue at
-higher chroma. This is how the mask layer stays separable from the data layer without a
-second colour system.
+### 2.4 Functional colour, and the marker
 
-### 2.4 Two functional colours
+Three colours outside the role palette, and nothing else in the app may use them.
 
-| Token | Value | Use |
-|---|---|---|
-| `--damage` | `#E8543C` | Damaged modules and corrupt codewords, in the damage lab only. |
-| `--repair` | `#4FC1A6` | Modules corrected by Reed-Solomon, for the duration of the repair animation only. |
+| Token | Dark | Light | Meaning |
+| --- | --- | --- | --- |
+| `--damage` | `#ff4438` | `#d92c1f` | A module the user broke, or a mask-penalty offence. |
+| `--repair` | `#2fd6a8` | `#0f9c78` | A module Reed-Solomon just put back. |
+| `--marker` | `#f0439a` | `#c2166f` | Selection and focus. Nothing else. |
 
-Nothing else in the app is coloured. No hover tints, no selection blue, no success green.
-Selection is a 2 px `--ink` outline.
+`--marker` is new in revision 2 and it fixes a real defect. Revision 1 stroked the selected
+and hovered modules in `--ink` — a pale grey. On a dark module that read; on a light module
+it was invisible against white paper. Half of every highlight simply did not render.
+Magenta is the one hue the ten roles leave free, it is legible over both black and white
+modules, and it is the conventional cursor colour in instrument software, so it reads as
+"the tool" rather than "part of the specimen".
+
+There is no success green, no warning yellow, no selection blue. A thing is either the
+specimen, an instrument, damage, a repair, or the marker.
 
 ---
 
 ## 3. Typography
 
-**IBM Plex Mono** carries the app. Not as small data labels — as the primary voice,
-including headings and most running text.
+Three faces, three jobs, no overlap. Revision 1's single failure mode was setting all three
+jobs in the same face at the same size.
 
-That inverts the usual treatment, and it is justified rather than affected: this app is
-bits, hex, and TLV strings, all of which must align in columns, and the subject itself is a
-grid of fixed-width cells. A proportional face would fight the material at every turn.
-Plex Mono has enough humanist warmth to survive being read at length.
-
-**Martian Mono** for display only — the stage names and the two or three large figures.
-Its width axis and squared terminals read as machine-cut, which suits an object made of
-squares. Never below 24 px, never in running text.
-
-**IBM Plex Sans** for the one place mono would genuinely hurt: the longer explanatory
-passages in stage introductions and spec-citation popovers. Two or three short paragraphs
-per stage, no more.
+- **`--font-sans` — IBM Plex Sans.** Everything a human reads as language: prose, glosses,
+  labels, buttons, headings, table headers. This is the default for `body`.
+- **`--font-mono` — IBM Plex Mono.** Everything that is data: bits, hex, codeword indices,
+  coordinates, the raw payload string, TLV values, GF(256) terms. Tabular numerals always.
+- **`--font-display` — Martian Mono.** The wordmark, stage numerals, and figures. Nothing
+  else. It is a strong face and it is used sparingly on purpose.
 
 ### 3.1 Scale
 
-Base 16 px, ratio 1.25.
+| Token | Size | Line | Face | Use |
+| --- | --- | --- | --- | --- |
+| `--t-display` | `clamp(1.75rem, 1.2rem + 2vw, 2.75rem)` | 1.02 | display | Stage name. |
+| `--t-title` | `1.375rem` | 1.15 | display | Wordmark. |
+| `--t-figure` | `1.75rem` | 1 | display | Big numbers in stage panels. |
+| `--t-h2` | `1.0625rem` | 1.3 | sans 600 | Panel and card headings. |
+| `--t-h3` | `0.875rem` | 1.35 | sans 600 | Sub-headings. |
+| `--t-body` | `0.9375rem` | 1.65 | sans | Prose and glosses. |
+| `--t-data` | `0.8125rem` | 1.5 | mono | Data. |
+| `--t-small` | `0.75rem` | 1.45 | sans | Captions, control text. |
+| `--t-micro` | `0.6875rem` | 1.3 | mono | Bit cells, dense grids. |
 
-| Token | Size / line-height | Face | Use |
-|---|---|---|---|
-| `--t-display` | 39 / 1.05, 500 | Martian Mono | Stage name |
-| `--t-figure` | 31 / 1.0, 500 | Martian Mono | Version, capacity, damage counters |
-| `--t-h2` | 20 / 1.25, 500 | Plex Mono | Panel headings |
-| `--t-body` | 15 / 1.6, 400 | Plex Sans | Explanatory copy. Max 66 characters. |
-| `--t-data` | 13 / 1.5, 400 | Plex Mono | Bits, hex, TLV values, codeword tables |
-| `--t-small` | 12 / 1.4, 400 | Plex Mono | Labels, legend, module coordinates |
-| `--t-micro` | 10 / 1.2, 500 | Plex Mono | Module indices in the matrix at high zoom |
+Revision 1's `--t-micro` was 10 px. Eleven is the floor; below that a monospace digit stops
+being a digit.
 
-`font-variant-numeric: tabular-nums` everywhere, though Plex Mono is already monospaced —
-set it anyway so a fallback face cannot break alignment mid-animation.
+**The eyebrow.** Every card and every section within a panel is introduced by an eyebrow:
+11 px sans, `0.09em` tracking, uppercase via `text-transform`, `--ink-soft`. Never uppercase
+in the copy files — the copy register forbids shouting, and this is presentation.
+
+Tracking tokens: `--track-tight: -0.02em` on display sizes, `--track-label: 0.09em` on
+eyebrows, `0` everywhere else.
 
 ### 3.2 Prohibitions
 
-No all-caps labels. No tracked-out eyebrows. No single word in a heading given a different
-colour or weight. Sentence case throughout, including buttons and stage names.
+- No italics. There is no italic in the mono faces and a synthesised one is a smear.
+- No font-weight above 600. Martian Mono at 500 already carries every heavy moment.
+- No letter-spacing on body copy.
+- No text over 66ch measure.
+- No mono for running prose, ever. That was revision 1's mistake and it made a teaching app
+  read like a log file.
 
 ---
 
 ## 4. Layout
 
-### 4.1 The spine
+### 4.1 The frame
 
-The matrix never moves. Everything else changes around it. This is the single most
-important layout decision in the app: it is what makes nine stages read as one object
-being transformed rather than nine illustrations in a row.
+Three zones, in DOM order: topbar, workbench, console.
 
 ```
-┌───────────────────────────────────────────────────────────────┐
-│ Anatomi QRIS                              tidak ada koneksi ✓ │
-├──────────────────────────┬────────────────────────────────────┤
-│                          │                                    │
-│   ┌──────────────────┐   │  stage panel — changes per stage:  │
-│   │                  │   │                                    │
-│   │   THE MATRIX     │   │  · bitstream ribbon                │
-│   │   fixed size,    │   │  · codeword table                  │
-│   │   fixed position │   │  · RS division steps               │
-│   │                  │   │  · interleave grid                 │
-│   └──────────────────┘   │  · mask gallery (8 up)             │
-│   v7-M · byte · mask 3   │  · damage controls                 │
-│   [ as printed | anatomy]│                                    │
-├──────────────────────────┴────────────────────────────────────┤
-│  TLV TREE — present at every stage when the lens is active    │
-│  00 │ 02 │ 01        Payload format indicator                 │
-│  26 │ 38 │ …         Merchant account information             │
-│      └ 00 │ 15 │ …   Globally unique identifier               │
-├───────────────────────────────────────────────────────────────┤
-│ 1─2─3─4─5─6─7─8─9   input ▸ encode ▸ … ▸ damage               │
-│ ●────────────────   [ text or QRIS payload            ]       │
-└───────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ TOPBAR   wordmark · tagline          offline · ID/EN · theme │
+├───────────┬────────────────────┬─────────────────────────────┤
+│ STAGE     │ SPECIMEN           │ PANEL                       │
+│ RAIL      │ (sticky)           │  01/09                      │
+│           │                    │  Stage name (display)       │
+│ 01 Input  │  ┌──────────────┐  │  Intro prose                │
+│ 02 Bits   │  │   matrix     │  │  ─────────────────────      │
+│ 03 …      │  │  (white)     │  │  stage content              │
+│ …         │  └──────────────┘  │                             │
+│ 09 Damage │  readout strip     │  ┌───────────────────────┐  │
+│           │  as-printed/anatomy│  │ payload tree (lens)   │  │
+│           │  legend            │  └───────────────────────┘  │
+├───────────┴────────────────────┴─────────────────────────────┤
+│ CONSOLE  [ payload ................. ]  EC · samples · link  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 The stage scrubber
+Grid: `208px | minmax(0, 460px) | minmax(0, 1fr)`, `--max-width: 96rem`. Revision 1 used
+two columns inside 78 rem and left a third of a wide screen empty while the stage panel
+scrolled.
 
-Pinned to the bottom, full width, with the input field beside it. Nine stations along a
-track; dragging moves through them continuously, clicking jumps.
+**The specimen never moves.** This is still the single most important layout decision. It
+is sticky within the workbench and its card does not resize, reflow, or remount between
+stages. Nine stages must read as one object being transformed, not nine illustrations in a
+row.
 
-Between stations the transition is continuous, not discrete — dragging halfway between
-"place" and "mask" shows the zigzag complete and the mask half-applied. This is what makes
-the scrubber feel like an instrument rather than a set of tabs, and it is why the
-performance budget in CLAUDE.md matters.
+### 4.2 The stage rail
 
-The input field sits in the same bar because input and stage are the two things a user
-changes constantly. Everything else is in the stage panel.
+Nine stations, numbered `01`–`09`, each with its full name. The rail is a slider: dragging
+it moves through stages continuously, clicking a station jumps. Fractional positions are
+real — halfway between *place* and *mask* shows the zigzag complete and the mask half
+applied. That continuity is what makes it an instrument rather than a row of tabs, and it
+is why `encode()` has an 8 ms budget.
 
-### 4.3 The TLV tree
+The active station carries a filled marker, `--ink` text, and a 2 px `--marker` bar on its
+leading edge. Passed stations are `--ink-mid`; unreached ones are `--ink-soft`.
 
-A full-width band below the matrix, present at every stage when the QRIS lens is active,
-absent otherwise — the layout reflows rather than leaving a gap.
+Below 1100 px the rail lies down: it becomes a horizontal track above the panel, station
+labels reduced to numerals with the active one named. Below 720 px it becomes a
+horizontally scrollable chip strip that scrolls the active chip into view.
 
-Three aligned columns: tag, length, value. Nested templates indent by one 8 px unit with a
-hairline connector. Each row carries its meaning in `--ink-soft` at the right.
+### 4.3 The specimen card
 
-Below the tree, the raw payload string in `--t-data`, with the selected node's characters
-marked by a background in `--surface-lift`. Seeing the string and the structure
-simultaneously is what teaches TLV.
+Card header: the four facts that identify this build — version, EC level, mode, mask — as
+chips, mono values on sans labels. Then the matrix. Then a fixed-height readout strip that
+never collapses, because a strip that appears and disappears on hover makes the whole
+column jump. Then the as-printed / anatomy segmented control, and the legend when anatomy
+is on.
 
-### 4.4 Grid and rhythm
+The matrix is a fixed 460 px on desktop regardless of version, so a version 3 code has
+chunky modules and a version 15 code has fine ones. That is honest: it is the actual
+difference between them.
 
-8 px base unit, matching the module grid. Spacing scale: 8 · 16 · 24 · 40 · 64 · 96.
-Max width 78 rem. Panels are square-cornered — 0 radius, not 2 — because everything in
-this app is a square cell and rounding would be a lie about the material. No shadows.
+### 4.4 The panel
 
-### 4.5 Mobile
+Header: stage index in display mono at `--ink-soft` (`01/09`), stage name at
+`--t-display`, intro prose at `--t-body` capped to 60ch, then a full-bleed hairline. The
+content below is the stage component. Every distinct section inside it opens with an
+eyebrow.
 
-Below 720 px the matrix stays the hero at full width. The stage panel moves below it.
-The TLV tree collapses to tag and meaning, with length and value on tap. The scrubber keeps
-the full width; the input moves above it. The mask gallery becomes a 2×4 grid with the
-penalty breakdown on tap rather than always visible.
+The payload tree is a separate card beneath the panel, present at every stage while the
+lens is active — the payload's meaning does not change as the encoding proceeds, only its
+representation.
+
+### 4.5 The console
+
+Sticky to the bottom edge, on `--ground` with a top rule so panel content scrolls under it
+cleanly. One row: the payload field takes the remaining width and is set in mono because
+what goes in it is data; then EC level, samples, and copy-link.
+
+Revision 1 also put the scrubber here, which meant the two things a user changes constantly
+competed for the same 96 px of a sticky bar. The rail took that job.
+
+### 4.6 Grid and rhythm
+
+8 px base, matching the module grid, so a byte highlighted in three places is the same
+width in all three.
+
+`--space-1: 8px`, `-2: 16px`, `-3: 24px`, `-4: 40px`, `-5: 64px`, `-6: 96px`.
+
+Cards use `--space-3` padding on desktop, `--space-2` below 900 px. Card radius is `0`
+everywhere. Everything here is a square cell.
+
+### 4.7 Breakpoints
+
+| Width | Change |
+| --- | --- |
+| ≥ 1180 px | Three columns as drawn. |
+| 900–1179 px | Rail lies down above the panel; specimen and panel side by side. |
+| 720–899 px | Single column. Specimen first, then panel, then tree. |
+| < 720 px | Rail becomes a chip strip. Console stacks: field on its own row, controls below. Matrix full width. |
+| < 380 px | Quality floor. Nothing overflows, nothing clips, nothing is smaller than 11 px. |
 
 ---
 
 ## 5. The instruments
 
+Unchanged in intent from revision 1; restated with the new tokens.
+
 ### 5.1 Matrix
-
-Fixed at 480 px on desktop regardless of version, so a version 3 code has chunky modules
-and a version 15 code has fine ones — which is honest, since that is the actual difference
-between them.
-
-Hovering a module shows a readout: coordinates, role, value, whether the mask flipped it,
-and which codeword and bit it carries. Arrow keys move a focus ring module by module with
-the same readout announced.
-
-The two rendering states — as printed, anatomy — are a two-item toggle directly beneath
-the matrix, never in a settings menu.
+SVG, one `<rect>` per module, `shapeRendering="crispEdges"`, no per-module listeners — one
+listener on the group, hit-tested by dividing pointer coordinates by module size. The rects
+are created once per build and never remounted; the paint loop mutates fills. Focus and
+highlight are a `--marker` inset stroke.
 
 ### 5.2 Bitstream ribbon
-
-A horizontal run of bit cells, 8 px each, matching the module grid so a byte here is
-visually the same width as a byte anywhere else in the app.
-
-Grouping changes with the stage: loose bits at stage 2, 8-bit groups with hairline
-separators at stage 3, block-coloured at stage 5. The cells never remount — they regroup,
-so the user can follow individual bits across the transformation.
-
-Bidirectional binding with the matrix: select bits, modules highlight; select modules,
-bits highlight. Instant, no animation — this is a query, not a transition.
+Five spans told apart by value, not hue: mode, count, payload, terminator, padding. The
+colour budget belongs to the roles. Codeword grouping adds hairline separators and a hex
+readout at stage 3.
 
 ### 5.3 Reed-Solomon division
-
-The generator polynomial fixed at the top. Below it, one row per division step: the
-remainder before, the generator multiple being XORed in, and the remainder after, with
-changed bytes marked.
-
-Steppable and scrubbable. Each byte shows as hex by default, with a toggle to α-notation
-(GF(256) exponents), because the multiplication only makes sense in exponent form and the
-XOR only makes sense in hex. Showing both is how the operation becomes teachable.
+The recorded trace, rendered. Never recomputed. Changed terms are marked by weight and an
+underline, not by colour.
 
 ### 5.4 Interleave
-
-Data blocks as rows of a grid. A read head sweeps down each column in turn, lifting one
-byte from each block and dropping it into the output stream below.
-
-When the sweep completes, the output stream's bytes carry their source block's tint, and
-the matrix — still visible to the left — shows the same tints in place. That is the moment
-the coffee-stain argument lands: adjacent modules are visibly different colours, meaning
-different blocks, meaning localized damage is spread thin.
+Block rows tinted by a generated ramp, lifting column by column into the output row. The
+tints also ride the matrix at that stage, which is where the coffee-stain argument lands:
+adjacent modules are visibly different colours.
 
 ### 5.5 Mask gallery
-
-Eight matrices at 140 px each, in two rows of four. Under each: the four penalty
-components and the total.
-
-Selecting one enlarges it and highlights the offending features on the matrix itself —
-runs of five or more, 2×2 blocks, the 1:1:3:1:1 finder-alike pattern, and a balance bar
-for the dark/light ratio. Each rule's highlight uses the same hue as its score readout, so
-the number and the geometry are linked without a legend.
-
-The winner carries a filled marker; the others do not. No trophy, no glow, no colour
-change — the score is the argument.
+Eight cards, four rules each, the winner marked by a filled square and nothing else. The
+selected card projects its candidate onto the main matrix with its penalty geometry marked
+in `--damage`.
 
 ### 5.6 Damage lab
-
-The matrix becomes paintable. A brush the user drags, plus a density slider for random
-noise.
-
-Damaged modules render `--damage` and stay damaged. A live counter reads: modules hit,
-codewords corrupt, capacity used out of capacity available. The capacity bar is the one
-element in the app that should draw the eye — it is a simple horizontal meter, and it fills
-as the user paints.
-
-When correction runs, corrupt codewords are located, their modules pulse once in
-`--repair`, and snap to their true values. When capacity is exceeded, the correction
-visibly fails and the readout states which codewords could not be located and why.
+A brush on the matrix and a noise slider. The slider draws from a fixed shuffle so dragging
+back removes damage rather than leaving it behind. Damage is `--damage`; repaired modules
+pulse `--repair` then snap to their true value. The capacity meter turns `--damage` when the
+block is past saving.
 
 ---
 
 ## 6. Motion
 
-### 6.1 The rule, carried from the house layer
+### 6.1 The rule
 
-**Continuous control → direct mapping, zero easing.** Stage scrubber and damage slider
-follow the pointer exactly.
+**Continuous control → direct mapping.** The stage rail and the damage slider follow the
+pointer with zero easing.
 
-**Discrete control → timed transition.** EC level change, forced mask, anatomy toggle,
-TLV node selection.
-
-This distinction is what makes the app feel like an instrument. It came out of Suara ke
-Kursi and it belongs in the house layer now.
+**Discrete control → timed transition.** EC level, forced mask, anatomy toggle, theme —
+these animate over a duration because the user needs to see what changed.
 
 ### 6.2 Durations
 
-| Event | Duration | Curve |
-|---|---|---|
-| Zigzag placement (play mode) | 2400 ms total, eased in and out | `cubic-bezier(.4,0,.2,1)` |
-| Anatomy toggle | 480 ms, radial from top-left | `cubic-bezier(.32,.72,0,1)` |
-| Mask application | 360 ms | `cubic-bezier(.32,.72,0,1)` |
-| Interleave sweep | 90 ms per column | linear |
-| Division step | 220 ms | `cubic-bezier(.4,0,.2,1)` |
-| Repair pulse | 300 ms | `cubic-bezier(.4,0,.2,1)` |
-| Highlight bind (bits ↔ modules) | 0 ms | none — this is a query |
-| Popover | 140 ms | `cubic-bezier(.4,0,.2,1)` |
+`--dur-zigzag: 2400ms`, `--dur-anatomy: 480ms`, `--dur-mask: 360ms`,
+`--dur-interleave-col: 90ms`, `--dur-division: 220ms`, `--dur-repair: 300ms`,
+`--dur-popover: 140ms`, `--dur-theme: 200ms`, `--dur-control: 120ms`.
 
-### 6.3 First orchestrated moment: the zigzag
+Easing: `--ease-standard: cubic-bezier(0.4, 0, 0.2, 1)` for chrome,
+`--ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1)` for the matrix.
 
-The single best thing in this app. Data bits fill the matrix in a boustrophedon from the
-bottom-right, two columns wide, snaking up and down, hopping over every function pattern.
+### 6.3 Restraint
 
-Modules land one at a time, each appearing at its role tint before settling to its value.
-The path is genuinely non-obvious and watching it is the moment a user understands that a
-QR code has a reading order.
+One orchestrated moment per stage, maximum. No hover animations on data cells. No entrance
+animations on panels. No spring physics anywhere — this is a measuring instrument.
 
-Play, pause, step, scrub. At version 15 there are thousands of modules, so the animation
-places them in small batches to hold 2400 ms — but the batching must not be visible, and
-the path must never skip.
+### 6.4 Reduced motion
 
-The function patterns are already on the matrix before the zigzag begins, greyed. They
-light to their role tints as the walk passes them, which is how the user sees that the walk
-is avoiding them rather than overwriting them.
-
-### 6.4 Second orchestrated moment: the anatomy toggle
-
-Switching from "as printed" to "anatomy" is not a crossfade. Colour arrives as a wave
-sweeping diagonally from the top-left finder pattern across the matrix, each module taking
-its tint as the wave reaches it.
-
-The reverse — anatomy back to as printed — sweeps the same direction, draining colour.
-
-This is the app's second-best moment because it is the moment the two readings of the same
-object are shown to be the same object. Give it the full 480 ms and do not shorten it.
-
-### 6.5 Restraint
-
-Nothing else animates on its own. No entrance animations on panels, no hover transitions on
-the mask gallery cards, no pulsing call to action. Two orchestrated moments is the budget
-and it is already generous.
-
-### 6.6 Reduced motion
-
-`prefers-reduced-motion: reduce`: the zigzag becomes step-only with an immediate write per
-step; the anatomy toggle becomes instant; the interleave sweep becomes a single state
-change; the repair pulse becomes a 1-frame colour set. Every number and every state stays
-reachable. Test this — do not assume it.
+`prefers-reduced-motion: reduce` sets every duration token to `0ms` and turns the zigzag
+into a step-through. The animation loop reads the same preference.
 
 ---
 
 ## 7. Copy
 
-Indonesian, sentence case, no exclamation marks.
+Indonesian first, English second, flat string files, no framework.
 
-The offline guarantee appears once, beside the input, as a plain statement of fact rather
-than a badge: `Semua diproses di perangkat ini. Tidak ada data yang dikirim.`
+Register: precise and plain. Sentence case, no exclamation marks, no shouting. Terms of art
+stay in English where no settled Indonesian equivalent exists — "codeword", "mask",
+"interleave" — and each gets a one-sentence gloss the first time it appears, set in
+`--t-body` sans at `--ink-soft` directly under the heading that introduced it.
 
-Terms of art stay in English where no settled Indonesian equivalent exists — codeword,
-mask, interleaving — and each gets a one-sentence gloss on first appearance, in
-`--ink-soft` directly beneath the heading that introduces it.
+Spec citations are an inline marker opening a dismissible popover: ISO/IEC 18004 for QR
+structure, the EMVCo Merchant-Presented Mode specification for payload structure.
 
-Failure states describe what happened, in the interface's voice: `CRC tidak cocok.
-Ditemukan 6304ABCD, seharusnya 6304A13F.` Never an apology, never vague.
-
-Empty state, before anything is typed: the input is focused and a sample chooser sits
-beneath it. No illustration, no welcome copy.
+Uppercase is never in the copy. Eyebrows are `text-transform` and nothing else.
 
 ---
 
 ## 8. Quality floor
 
-Assumed, not announced: usable at 380 px; visible keyboard focus everywhere including
-per-module navigation in the matrix; every visual has a keyboard-reachable table
-equivalent; contrast 4.5:1 for text and 3:1 for graphical objects; no layout shift on stage
-change; reduced motion honoured; nothing loads from a network.
+- Contrast: `--ink` ≥ 12:1 on `--surface`, `--ink-mid` ≥ 7:1, `--ink-soft` ≥ 4.6:1. Both
+  themes.
+- Focus: 2 px `--marker` outline at 2 px offset on every interactive element. Never removed.
+- Every control reachable and operable by keyboard, including the rail and the matrix.
+- Nothing below 11 px.
+- No layout shift when the readout, the legend, or the tree appears.
+- 380 px wide with no overflow.
+- Empty network tab after load, in both themes.
 
-## 9. Relationship to the house layer
+---
 
-Takes: the spacing scale, the motion curve family, the citation-popover pattern, the type
-floor.
+## 9. What revision 2 does not change
 
-Contributes back: the continuous-versus-discrete motion rule (§6.1), now proven in two
-apps.
-
-Departs in one place: this app runs on a dark ground where most of the family runs light.
-The reason is in §0 — the artefact owns pure white, so the interface cannot. Document the
-departure rather than letting it drift into a house default.
+The engine, the provenance map, the division trace, the nine stages, the specimen's black
+and white, the absence of shadows and radii, the offline guarantee, and the refusal to let
+the app edit a payload. Those were right. Only the surface was wrong.
