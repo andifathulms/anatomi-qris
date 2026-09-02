@@ -148,6 +148,9 @@
     display: block;
     height: var(--space-4);
     padding-top: var(--space-1);
+    /* Stations are centred on their position, so the first and last hang half
+       their width past the track. Inset it, or 01 and 09 clip on a phone. */
+    margin-inline: var(--space-2);
   }
 
   .scrubber__rail,

@@ -84,7 +84,7 @@ export function InputBar() {
           </select>
         </div>
 
-        <div className="input-bar__group">
+        <div className="input-bar__group input-bar__group--steps">
           <span className="eyebrow">{t('stage.scrubber')}</span>
           <StageSteps />
         </div>

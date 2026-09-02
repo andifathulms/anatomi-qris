@@ -147,7 +147,9 @@
   }
 }
 
-@media (max-width: 460px) {
+/* Two across survives a 390 px phone; one across turns eight cards into an
+   endless scroll and loses the comparison the gallery exists to make. */
+@media (max-width: 359px) {
   .mask-gallery__grid {
     grid-template-columns: minmax(0, 1fr);
   }

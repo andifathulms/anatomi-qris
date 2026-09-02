@@ -180,6 +180,7 @@ export const en: Record<CopyKey, string> = {
   'damage.failed': 'Recovery failed',
   'damage.failedDetail': 'Block {blocks} is past capacity. Reed-Solomon can repair at most {capacity} codewords per block, and cannot locate errors beyond that.',
   'damage.clean': 'No damage yet',
+  'damage.cleanDetail': 'Break some modules, then compare how many codewords are corrupt against the repair capacity above.',
   'damage.syndromes': 'Syndromes',
   'damage.errorPositions': 'Error positions',
   'damage.hint': 'Drag across the matrix to damage it.',

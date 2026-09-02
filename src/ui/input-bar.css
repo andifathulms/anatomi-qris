@@ -5,10 +5,16 @@
  * panel the reader cannot see. The payload field is set in mono because what
  * goes into it is data, not language.
  */
+/*
+ * Flex rather than grid: an `auto` track for the controls will take whatever
+ * it needs and starve the field down to a few characters at intermediate
+ * widths. A flex basis with wrap gives the field a floor and moves the
+ * controls to their own row when they no longer fit beside it.
+ */
 .input-bar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
   gap: var(--space-1) var(--space-3);
   max-width: var(--max-width);
   margin: 0 auto;
@@ -17,6 +23,7 @@
 .input-bar__field {
   display: grid;
   gap: 4px;
+  flex: 1 1 24rem;
   min-width: 0;
 }
 
@@ -46,6 +53,7 @@
   gap: var(--space-2);
   align-items: flex-end;
   flex-wrap: wrap;
+  flex: 0 1 auto;
 }
 
 .input-bar__group {
@@ -78,7 +86,7 @@
    The guarantee belongs here because this is where someone pastes a real
    payment payload. */
 .input-bar__note {
-  grid-column: 1 / -1;
+  flex: 1 0 100%;
   color: var(--ink-soft);
 }
 
@@ -88,29 +96,62 @@
 }
 
 .input-bar__error {
-  grid-column: 1 / -1;
+  flex: 1 0 100%;
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
   font-weight: 500;
 }
 
-@media (max-width: 1023px) {
-  .input-bar {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
+/*
+ * On a phone the console must not eat half the screen. Four stacked control
+ * groups with their own eyebrows took 40 % of an 844 px viewport; here the
+ * controls share one row, their eyebrows go to screen readers only, and the
+ * link-suppression note — which explains a thing rather than doing one — is
+ * dropped.
+ */
 @media (max-width: 719px) {
-  .input-bar__controls {
+  .input-bar {
     gap: var(--space-1) var(--space-2);
   }
 
-  .input-bar__group--link {
+  .input-bar__controls {
     flex: 1 0 100%;
+    gap: var(--space-1);
+    align-items: center;
   }
 
-  .input-bar__group--link .eyebrow {
+  .input-bar__group {
+    grid-template-rows: auto;
+  }
+
+  .input-bar__controls .eyebrow {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .input-bar__select {
+    max-width: 9rem;
+  }
+
+  .input-bar__suppressed {
     display: none;
+  }
+
+  /* The rail is sticky to the top edge on a phone, so stage navigation is
+     already one tap away and does not need a second row down here. */
+  .input-bar__group--steps {
+    display: none;
+  }
+
+  .input-bar__note {
+    font-size: var(--t-micro);
+    line-height: var(--t-micro-lh);
   }
 }

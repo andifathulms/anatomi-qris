@@ -183,6 +183,7 @@ export const id = {
   'damage.failed': 'Gagal dipulihkan',
   'damage.failedDetail': 'Blok {blocks} melampaui kapasitas. Reed-Solomon dapat memperbaiki paling banyak {capacity} codeword per blok, dan tidak dapat menentukan posisi galat di luar itu.',
   'damage.clean': 'Belum ada kerusakan',
+  'damage.cleanDetail': 'Rusak sebagian modul, lalu bandingkan berapa codeword yang rusak dengan kapasitas perbaikan di atas.',
   'damage.syndromes': 'Sindrom',
   'damage.errorPositions': 'Posisi galat',
   'damage.hint': 'Seret di atas matriks untuk merusaknya.',

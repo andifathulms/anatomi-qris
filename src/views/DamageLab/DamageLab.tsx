@@ -166,9 +166,11 @@ export function DamageLab() {
         {clean ? t('damage.clean') : result.failed ? t('damage.failed') : t('damage.recovered')}
       </p>
 
+      {/* The headline already says "no damage yet"; the detail line says what
+          that means, or stays quiet until there is something to report. */}
       <p className={result.failed ? 'damage__failed' : 'gloss'} role="status">
         {clean
-          ? t('damage.clean')
+          ? t('damage.cleanDetail')
           : result.failed
             ? t('damage.failedDetail', {
                 blocks: report.overBudgetBlocks.join(', ') || result.failedBlocks.join(', '),

@@ -202,9 +202,19 @@
   }
 }
 
+/*
+ * Single column, and the two sticky positions swap roles: identity and
+ * settings stop following the reader, and the stage rail takes the top edge
+ * instead. Navigation stays one tap away at the top while the payload field
+ * holds the bottom, which is the arrangement a thumb expects.
+ */
 @media (max-width: 899px) {
   :root {
     --card-pad: var(--space-2);
+  }
+
+  .topbar {
+    position: static;
   }
 
   .workbench {
@@ -213,8 +223,18 @@
       'rail'
       'specimen'
       'column';
-    padding: var(--space-2);
+    padding: 0 var(--space-2) var(--space-2);
     gap: var(--space-2);
+  }
+
+  .workbench__rail {
+    position: sticky;
+    top: 0;
+    z-index: 18;
+    background: var(--ground);
+    border-bottom: 1px solid var(--rule);
+    margin: 0 calc(var(--space-2) * -1);
+    padding: var(--space-1) var(--space-2);
   }
 
   .specimen {
@@ -251,7 +271,12 @@
 /* The quality floor is 380 px. Nothing may overflow or clip below it. */
 @media (max-width: 420px) {
   .workbench {
-    padding: var(--space-2) var(--space-1) var(--space-3);
+    padding: 0 var(--space-1) var(--space-3);
+  }
+
+  .workbench__rail {
+    margin: 0 calc(var(--space-1) * -1);
+    padding: var(--space-1);
   }
 
   .topbar__wordmark {
