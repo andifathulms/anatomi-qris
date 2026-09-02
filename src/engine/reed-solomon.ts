@@ -36,7 +36,7 @@ const generatorCache = new Map<number, Uint8Array>();
 export function generatorPoly(degree: number): Uint8Array {
   const cached = generatorCache.get(degree);
   if (cached) return cached;
-  let g = new Uint8Array([1]);
+  let g: Uint8Array = new Uint8Array([1]);
   for (let i = 0; i < degree; i++) {
     g = polyMul(g, new Uint8Array([1, exp(i)]));
   }

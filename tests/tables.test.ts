@@ -8,7 +8,6 @@ import {
   dataCodewordCount,
   eccCodewordCount,
   formatInfo,
-  matrixSize,
   remainderBits,
   totalCodewords,
   versionInfo,
