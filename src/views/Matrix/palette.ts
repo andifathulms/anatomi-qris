@@ -62,6 +62,8 @@ export interface Palette {
   hue: Record<RoleKey, string>;
   damage: string;
   repair: string;
+  /** Selection and focus. Legible over both a white and a black module. */
+  marker: string;
   moduleLight: string;
   moduleDark: string;
   inkSoft: string;
@@ -101,12 +103,13 @@ export function readPalette(root: HTMLElement = document.documentElement): Palet
     dark,
     stroke,
     hue,
-    damage: read('--damage') || '#e8543c',
-    repair: read('--repair') || '#4fc1a6',
+    damage: read('--damage') || '#ff4438',
+    repair: read('--repair') || '#2fd6a8',
+    marker: read('--marker') || '#f0439a',
     moduleLight: read('--module-light') || '#ffffff',
     moduleDark: read('--module-dark') || '#000000',
-    inkSoft: read('--ink-soft') || '#96a099',
-    ink: read('--ink') || '#dde3de',
+    inkSoft: read('--ink-soft') || '#8b95a4',
+    ink: read('--ink') || '#e9edf3',
   };
 }
 

@@ -1,69 +1,102 @@
 /*
- * Design tokens. DESIGN.md is the authority; this file is its transcription.
+ * Design tokens. DESIGN.md revision 2 is the authority; this file is its
+ * transcription.
  *
  * The one rule that governs everything here: the matrix owns pure black and
- * pure white, so the interface may not use either. Chrome lives strictly
- * between.
+ * pure white, so no interface surface, rule, or text may be #000000 or
+ * #ffffff. When you see pure white you are looking at paper; when you see
+ * pure black you are looking at ink. Chrome lives strictly between.
  */
 
 :root {
-  /* Ground and chrome — DESIGN.md §2.1 */
-  --ground: #1d2320;
-  --surface: #2a312d;
-  --surface-lift: #38403b;
-  --ink: #dde3de;
-  --ink-soft: #96a099;
-  --rule: #454e48;
+  color-scheme: dark;
+
+  /* ── Chrome, dark: the instrument ────────────────────── DESIGN.md §2.1 ──
+     Achromatic with a faint cool cast, so the white specimen reads warmer
+     than its surroundings and therefore closer to the eye. */
+  --ground: #0e1013;
+  --ground-sunk: #0a0b0e;
+  --surface: #16191e;
+  --surface-lift: #1d2128;
+  --surface-hover: #252a32;
+  --rule: #282d35;
+  --rule-strong: #3a414d;
+  --ink: #e9edf3;
+  --ink-mid: #aab3c0;
+  --ink-soft: #8b95a4;
 
   /* The artefact's own two colours. Nothing else in the app may use them. */
   --module-dark: #000000;
   --module-light: #ffffff;
 
-  /* The anatomy palette — DESIGN.md §2.2. Warm half is structure, cool half
-     is content. A reader learns the split without being told. */
-  --role-finder: #d8452b;
-  --role-separator: #b9ae97;
-  --role-timing: #d69a24;
-  --role-alignment: #a85a2e;
-  --role-darkmodule: #7a2e32;
-  --role-format: #7c5bb8;
-  --role-version: #4759a8;
-  --role-data: #1e8c86;
-  --role-ecc: #5e8f3a;
-  --role-remainder: #5d6b72;
+  /* ── The anatomy palette ─────────────────────────────── DESIGN.md §2.2 ──
+     Warm half is structure — the same for every payload at a given version.
+     Cool half is content — this payload and no other. A reader learns the
+     split without being told. */
+  --role-finder: #e2452b;
+  --role-separator: #c98f5e;
+  --role-timing: #e8a317;
+  --role-alignment: #b8551f;
+  --role-darkmodule: #8f2340;
+  --role-format: #8b5cf6;
+  --role-version: #3b6fd4;
+  --role-data: #12a89c;
+  --role-ecc: #6aa832;
+  --role-remainder: #64748b;
 
-  /* The two functional colours — DESIGN.md §2.4. Used nowhere else. */
-  --damage: #e8543c;
-  --repair: #4fc1a6;
+  /* ── Functional colour and the marker ────────────────── DESIGN.md §2.4 ──
+     Three hues outside the role palette. Nothing else may use them, and
+     there is no success green, warning yellow, or selection blue anywhere.
 
-  /* The anatomy lens — DESIGN.md §2.3. Tint rides on the value; it never
-     replaces it, so a tinted light module stays lighter than a tinted dark
-     one of the same hue and the QR silhouette survives. */
-  --lens-light-coverage: 0.25;
+     --marker exists because a pale-ink highlight stroke is invisible against
+     a white module. Magenta is the one hue the ten roles leave free and it
+     is legible over both black and white paper. */
+  --damage: #ff4438;
+  --repair: #2fd6a8;
+  --marker: #f0439a;
+
+  /* ── The anatomy lens ────────────────────────────────── DESIGN.md §2.3 ──
+     Tint rides on the value; it never replaces it. A tinted light module
+     stays lighter than a tinted dark one of the same hue, so the QR
+     silhouette survives being coloured in. If the silhouette dissolves the
+     coverage is wrong. */
+  --lens-light-coverage: 0.32;
   --lens-dark-coverage: 0.65;
 
-  /* Typography — DESIGN.md §3 */
+  /* ── Typography ────────────────────────────────────────── DESIGN.md §3 ──
+     Three faces, three jobs, no overlap. Sans is anything a human reads as
+     language; mono is anything that is data; display is the wordmark, stage
+     numerals and figures, and nothing else. */
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --font-display: 'Martian Mono', 'IBM Plex Mono', ui-monospace, monospace;
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --t-display: 2.441rem;
-  --t-display-lh: 1.05;
-  --t-figure: 1.953rem;
+  --t-display: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  --t-display-lh: 1.02;
+  --t-title: 1.375rem;
+  --t-title-lh: 1.15;
+  --t-figure: 1.75rem;
   --t-figure-lh: 1;
-  --t-h2: 1.25rem;
-  --t-h2-lh: 1.25;
+  --t-h2: 1.0625rem;
+  --t-h2-lh: 1.3;
+  --t-h3: 0.875rem;
+  --t-h3-lh: 1.35;
   --t-body: 0.9375rem;
-  --t-body-lh: 1.6;
+  --t-body-lh: 1.65;
   --t-data: 0.8125rem;
   --t-data-lh: 1.5;
   --t-small: 0.75rem;
-  --t-small-lh: 1.4;
-  --t-micro: 0.625rem;
-  --t-micro-lh: 1.2;
+  --t-small-lh: 1.45;
+  /* Eleven is the floor. Below that a monospace digit stops being a digit. */
+  --t-micro: 0.6875rem;
+  --t-micro-lh: 1.3;
 
-  /* Grid and rhythm — DESIGN.md §4.4. 8 px base, matching the module grid, so
-     a byte highlighted in three places is the same width in all three. */
+  --track-tight: -0.02em;
+  --track-label: 0.09em;
+
+  /* ── Grid and rhythm ─────────────────────────────────── DESIGN.md §4.6 ──
+     8 px base, matching the module grid, so a byte highlighted in three
+     places is the same width in all three. */
   --unit: 8px;
   --space-1: 8px;
   --space-2: 16px;
@@ -71,9 +104,12 @@
   --space-4: 40px;
   --space-5: 64px;
   --space-6: 96px;
-  --max-width: 78rem;
+  --max-width: 96rem;
+  --rail-width: 208px;
+  --specimen-width: 460px;
+  --card-pad: var(--space-3);
 
-  /* Motion — DESIGN.md §6.2 */
+  /* ── Motion ────────────────────────────────────────────── DESIGN.md §6 ── */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1);
   --dur-zigzag: 2400ms;
@@ -83,10 +119,36 @@
   --dur-division: 220ms;
   --dur-repair: 300ms;
   --dur-popover: 140ms;
+  --dur-theme: 200ms;
+  --dur-control: 120ms;
 }
 
 /*
- * Reduced motion — DESIGN.md §6.6. Every transition becomes an immediate
+ * Chrome, light: the lab notebook. Same tokens, same contrast floors, same
+ * specimen. The role palette and the three functional hues are re-tuned only
+ * where a hue that reads on #0e1013 goes thin on #f7f8fa.
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --ground: #e9ebef;
+  --ground-sunk: #dfe2e8;
+  --surface: #f7f8fa;
+  --surface-lift: #fcfcfd;
+  --surface-hover: #eef0f4;
+  --rule: #dadde4;
+  --rule-strong: #bcc2cd;
+  --ink: #14171c;
+  --ink-mid: #454c58;
+  --ink-soft: #616a78;
+
+  --damage: #d92c1f;
+  --repair: #0f9c78;
+  --marker: #c2166f;
+}
+
+/*
+ * Reduced motion — DESIGN.md §6.4. Every transition becomes an immediate
  * write. The zigzag becomes step-only; that is handled in the animation loop,
  * which reads the same preference.
  */
@@ -99,5 +161,7 @@
     --dur-division: 0ms;
     --dur-repair: 0ms;
     --dur-popover: 0ms;
+    --dur-theme: 0ms;
+    --dur-control: 0ms;
   }
 }

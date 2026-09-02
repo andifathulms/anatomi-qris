@@ -109,8 +109,10 @@ export function useMatrixPainter(
       if (state.offences.has(i)) fill = p.damage;
 
       let stroke = 'none';
-      if (state.focused === i) stroke = p.ink;
-      else if (state.highlight.has(i)) stroke = p.ink;
+      // --marker, not --ink: a pale ink stroke is invisible on a white
+      // module, so half of every highlight simply did not render.
+      if (state.focused === i) stroke = p.marker;
+      else if (state.highlight.has(i)) stroke = p.marker;
       else if (
         anatomy > 0 &&
         visible &&
