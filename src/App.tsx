@@ -7,6 +7,7 @@ import { InputBar } from './ui/InputBar';
 import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
 import { Legend } from './ui/Legend';
 import { StagePanel } from './stages/StagePanel';
+import { PayloadTree } from './views/PayloadTree/PayloadTree';
 import { blockTintFor } from './views/Interleave/blockTint';
 import { useOffences } from './views/MaskGallery/MaskGallery';
 import './styles/app.css';
@@ -31,7 +32,7 @@ function Localised({ children }: { children: React.ReactNode }) {
 }
 
 function Shell() {
-  const { state, build } = useStore();
+  const { state, build, lensActive } = useStore();
   const { setRendering, setLocale } = useActions();
   const { t, locale } = useCopy();
 
@@ -110,6 +111,14 @@ function Shell() {
           <StagePanel />
         </section>
       </main>
+
+      {/* Present at every stage when the lens is active: the payload's meaning
+          does not change as the encoding proceeds, only its representation. */}
+      {lensActive && (
+        <section className="shell__tree panel">
+          <PayloadTree />
+        </section>
+      )}
 
       <footer className="shell__footer">
         <StageScrubber />

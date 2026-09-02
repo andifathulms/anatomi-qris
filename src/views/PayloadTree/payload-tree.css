@@ -1,0 +1,105 @@
+.tlv {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.tlv__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tlv__crc-bad {
+  color: var(--damage);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.tlv__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+}
+
+.tlv__table th,
+.tlv__table td {
+  text-align: left;
+  font-weight: 400;
+  padding: 2px var(--space-1) 2px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.tlv__table thead th {
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+}
+
+.tlv__row[data-selected] {
+  background: var(--surface-lift);
+}
+
+.tlv__button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Nested templates indent by one 8 px unit with a hairline connector. */
+.tlv__connector {
+  width: var(--unit);
+  height: 1px;
+  background: var(--rule);
+  display: inline-block;
+}
+
+.tlv__value {
+  word-break: break-all;
+  max-width: 32ch;
+}
+
+.tlv__meaning {
+  color: var(--ink-soft);
+}
+
+.tlv__gloss {
+  color: var(--ink-soft);
+}
+
+.tlv__raw {
+  display: grid;
+  gap: var(--space-1);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+
+/* Seeing the string and the structure at once is what teaches TLV. */
+.tlv__raw-string {
+  font-size: var(--t-data);
+  line-height: var(--t-data-lh);
+  word-break: break-all;
+  color: var(--ink-soft);
+}
+
+.tlv__mark {
+  background: var(--surface-lift);
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .tlv__table td:nth-child(2),
+  .tlv__table th:nth-child(2),
+  .tlv__table td:nth-child(3),
+  .tlv__table th:nth-child(3) {
+    display: none;
+  }
+}
