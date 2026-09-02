@@ -76,24 +76,6 @@ export function StageScrubber() {
 
   return (
     <div className="scrubber">
-      <div className="scrubber__steps">
-        <button
-          type="button"
-          className="button"
-          onClick={() => setStage(Math.round(state.stage) - 1)}
-          disabled={Math.round(state.stage) <= 1}
-        >
-          {t('stage.previous')}
-        </button>
-        <button
-          type="button"
-          className="button"
-          onClick={() => setStage(Math.round(state.stage) + 1)}
-          disabled={Math.round(state.stage) >= STAGE_COUNT}
-        >
-          {t('stage.next')}
-        </button>
-      </div>
       <div
         ref={trackRef}
         className="scrubber__track"
@@ -132,6 +114,39 @@ export function StageScrubber() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/**
+ * The stage steppers live in the input row rather than above the track: the
+ * footer is sticky, and anything stacked above the track floats over the stage
+ * panel behind it.
+ */
+export function StageSteps() {
+  const { state } = useStore();
+  const { setStage } = useActions();
+  const { t } = useCopy();
+  const stage = Math.round(state.stage);
+
+  return (
+    <div className="scrubber__steps">
+      <button
+        type="button"
+        className="button"
+        onClick={() => setStage(stage - 1)}
+        disabled={stage <= 1}
+      >
+        {t('stage.previous')}
+      </button>
+      <button
+        type="button"
+        className="button"
+        onClick={() => setStage(stage + 1)}
+        disabled={stage >= STAGE_COUNT}
+      >
+        {t('stage.next')}
+      </button>
     </div>
   );
 }

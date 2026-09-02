@@ -42,9 +42,8 @@ export function PlaceStage() {
 
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t('stage.6.name')}</h2>
       <p className="gloss">
-        {t('stage.6.intro')} <Cite citation={CITATIONS.placement} />
+        <Cite citation={CITATIONS.placement} />
       </p>
 
       <dl className="figures">

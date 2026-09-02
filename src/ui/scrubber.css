@@ -1,12 +1,12 @@
 .scrubber {
-  padding: var(--space-3) 0 var(--space-1);
+  padding: var(--space-2) 0 0;
+  position: relative;
 }
 
 .scrubber__steps {
   display: flex;
   gap: var(--space-1);
-  justify-content: flex-end;
-  margin-bottom: var(--space-1);
+  align-items: flex-end;
 }
 
 .scrubber__track {

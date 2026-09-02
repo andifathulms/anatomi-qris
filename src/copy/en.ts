@@ -14,7 +14,8 @@ export const en: Record<CopyKey, string> = {
   'input.samples': 'Samples',
   'input.copyLink': 'Copy link',
   'input.copied': 'Link copied',
-  'input.linkSuppressed': 'Links are off while the QRIS lens is active, so a merchant identifier is not carried along.',
+  'input.linkSuppressed': 'Links are off while the QRIS lens is active.',
+  'input.linkSuppressedWhy': 'So a merchant identifier is not carried into a link someone might share.',
   'input.tooLong': 'Too long for this correction level at version 15. Lower the level or shorten the text.',
   'input.empty': 'Type something to begin.',
 

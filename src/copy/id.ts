@@ -17,7 +17,8 @@ export const id = {
   'input.samples': 'Contoh',
   'input.copyLink': 'Salin tautan',
   'input.copied': 'Tautan disalin',
-  'input.linkSuppressed': 'Tautan dimatikan selama lensa QRIS aktif, agar pengenal merchant tidak ikut tersalin.',
+  'input.linkSuppressed': 'Tautan dimatikan selama lensa QRIS aktif.',
+  'input.linkSuppressedWhy': 'Agar pengenal merchant tidak ikut tersalin ke tautan yang mungkin dibagikan.',
   'input.tooLong': 'Terlalu panjang untuk tingkat koreksi ini pada versi 15. Turunkan tingkat koreksi atau pendekkan teks.',
   'input.empty': 'Ketik sesuatu untuk mulai.',
 

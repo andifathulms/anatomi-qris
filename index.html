@@ -8,6 +8,15 @@
       name="description"
       content="Bagaimana sebuah kode QR dibangun, dan apa isi payload QRIS. Semua diproses di perangkat ini."
     />
+    <!--
+      Inlined so the browser never requests /favicon.ico. A 404 in the network
+      tab is still a network request, and PRD §9.1 promises an empty one.
+      Three finder patterns, which is the least a QR code can be.
+    -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect width='21' height='21' fill='%23fff'/%3E%3Cpath fill='%23000' d='M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0z'/%3E%3Cpath fill='%23fff' d='M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1z'/%3E%3Cpath fill='%23000' d='M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM9 0h1v3H9zM9 5h1v3H9zM0 9h3v1H0zM5 9h3v1H5zM9 9h2v2H9zM12 12h2v2h-2zM16 10h2v2h-2zM10 16h2v2h-2zM14 18h3v1h-3zM18 14h1v3h-1z'/%3E%3C/svg%3E"
+    />
     <title>Anatomi QRIS</title>
   </head>
   <body>

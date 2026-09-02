@@ -56,6 +56,11 @@ export function Matrix({
 
   const paint: PaintState = {
     ...stageProgress,
+    // The interleave argument needs the codewords visible where they land:
+    // adjacent modules in different colours is the whole point, and it cannot
+    // be made against an empty data region. So a tinted matrix shows the walk
+    // already complete, one stage before the walk is the subject.
+    ...(tint ? { placeProgress: 1 } : {}),
     anatomyProgress,
     highlight,
     damage,

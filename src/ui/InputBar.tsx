@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCopy } from '../copy';
 import { useActions, useStore } from '../state/store';
 import { EC_LEVELS, type EcLevel } from '../engine/tables';
 import { SAMPLES } from '../../samples/index';
 import { Toggle } from './Toggle';
+import { StageSteps } from './StageScrubber';
 import type { CopyKey } from '../copy';
 import './input-bar.css';
 
@@ -19,6 +20,17 @@ export function InputBar() {
   const { setInput, setEcLevel } = useActions();
   const { t } = useCopy();
   const [copied, setCopied] = useState(false);
+  const field = useRef<HTMLInputElement | null>(null);
+
+  // Focused on load, but showing the start of the payload rather than its
+  // tail: the first thing in a QRIS string is the part that identifies it.
+  useEffect(() => {
+    const el = field.current;
+    if (!el) return;
+    el.focus();
+    el.setSelectionRange(0, 0);
+    el.scrollLeft = 0;
+  }, []);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(window.location.href);
@@ -32,11 +44,11 @@ export function InputBar() {
         <label className="label" htmlFor="payload">{t('input.label')}</label>
         <input
           id="payload"
+          ref={field}
           className="input-bar__input"
           type="text"
           autoComplete="off"
           spellCheck={false}
-          autoFocus
           placeholder={t('input.placeholder')}
           value={state.input}
           onChange={(event) => setInput(event.target.value)}
@@ -45,6 +57,8 @@ export function InputBar() {
       </div>
 
       <div className="input-bar__controls">
+        <StageSteps />
+
         <div className="input-bar__group">
           <span className="label" id="ec-label">{t('ec.label')}</span>
           <Toggle<EcLevel>
@@ -79,7 +93,9 @@ export function InputBar() {
             {copied ? t('input.copied') : t('input.copyLink')}
           </button>
         ) : (
-          <p className="input-bar__suppressed label">{t('input.linkSuppressed')}</p>
+          <p className="input-bar__suppressed label" title={t('input.linkSuppressedWhy')}>
+            {t('input.linkSuppressed')}
+          </p>
         )}
       </div>
 

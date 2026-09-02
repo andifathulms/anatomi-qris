@@ -106,7 +106,7 @@ function Shell() {
 
       <main className="shell__main">
         <section className="shell__stage" id="matrix">
-          <h2 className="display">{t(stageNameKey(state.stage))}</h2>
+          <h2 className="display" id="stage-heading">{t(stageNameKey(state.stage))}</h2>
           <p className="prose shell__intro">{t(stageIntroKey(state.stage))}</p>
 
           <Matrix
@@ -145,7 +145,7 @@ function Shell() {
           <CodewordTable />
         </section>
 
-        <section className="shell__panel panel">
+        <section className="shell__panel panel" aria-labelledby="stage-heading">
           <StagePanel />
         </section>
       </main>

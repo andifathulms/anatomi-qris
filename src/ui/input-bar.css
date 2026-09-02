@@ -1,13 +1,20 @@
+/*
+ * One row. The footer is sticky, so every pixel it takes is a pixel of the
+ * stage panel the reader cannot see.
+ */
 .input-bar {
-  display: grid;
+  display: flex;
   gap: var(--space-2);
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  align-items: start;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding-top: var(--space-1);
 }
 
 .input-bar__field {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
+  flex: 1 1 22rem;
+  min-width: 0;
 }
 
 .input-bar__input {
@@ -35,6 +42,10 @@
 }
 
 .input-bar__group {
+  gap: 2px;
+}
+
+.input-bar__group {
   display: grid;
   gap: var(--space-1);
 }
@@ -57,11 +68,12 @@
 }
 
 .input-bar__suppressed {
-  max-width: 30ch;
+  max-width: 42ch;
+  align-self: center;
 }
 
 .input-bar__error {
-  grid-column: 1 / -1;
+  flex: 1 0 100%;
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
@@ -69,6 +81,7 @@
 
 @media (max-width: 720px) {
   .input-bar {
+    display: grid;
     grid-template-columns: 1fr;
   }
 }

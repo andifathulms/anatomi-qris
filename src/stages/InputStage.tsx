@@ -17,7 +17,6 @@ export function InputStage() {
 
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t('stage.1.name')}</h2>
       <p className="gloss">{t('ec.gloss')}</p>
 
       <dl className="figures">

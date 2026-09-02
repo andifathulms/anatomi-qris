@@ -9,11 +9,8 @@ export function EncodeStage({ grouping }: { grouping: Grouping }) {
   const { t } = useCopy();
   if (!build) return null;
 
-  const stage = grouping === 'bits' ? '2' : '3';
-
   return (
     <div className="stage">
-      <h2 className="panel__heading">{t(`stage.${stage}.name` as 'stage.2.name')}</h2>
       <p className="gloss">
         {t('bitstream.gloss')}{' '}
         <Cite citation={grouping === 'bits' ? CITATIONS.mode : CITATIONS.padding} />
