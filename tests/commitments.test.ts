@@ -18,6 +18,7 @@ function walk(dir: string): string[] {
 
 const SRC = walk('src');
 const ENGINE = SRC.filter((p) => p.startsWith('src/engine'));
+const MAKER_MARK = join('src', 'ui', 'MakerSignature.tsx');
 
 /**
  * The four non-negotiables in CLAUDE.md, as tests. They are easy to breach by
@@ -47,7 +48,10 @@ describe('non-negotiables', () => {
       for (const forbidden of ['fetch(', 'XMLHttpRequest', 'navigator.sendBeacon', 'new WebSocket']) {
         expect(source.includes(forbidden), `${path} contains ${forbidden}`).toBe(false);
       }
-      // Fonts are bundled from node_modules; nothing may point at a CDN.
+      // Fonts are bundled from node_modules; nothing may point at a CDN. The
+      // maker's mark is the one exception: its URLs are anchor targets a
+      // reader may choose to follow, never something the page loads.
+      if (path === MAKER_MARK) continue;
       expect(/https?:\/\/(?!anatomi\.example)/.test(source), `${path} has an external URL`).toBe(
         false,
       );

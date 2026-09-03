@@ -187,6 +187,8 @@ export const en: Record<CopyKey, string> = {
   'damage.errorPositions': 'Error positions',
   'damage.hint': 'Drag across the matrix to damage it.',
 
+  'maker.by': 'Designed & built by',
+
   'cite.open': 'Source',
   'cite.close': 'Close',
   'cite.iso': 'ISO/IEC 18004',

@@ -56,6 +56,12 @@ const ALLOWED_URLS = [
   /https?:\/\/www\.w3\.org\//g,
   /https?:\/\/reactjs\.org\/docs\/error-decoder/g,
   /https?:\/\/anatomi\.example\.id\//g,
+  // The maker's mark in the footer. These are anchor targets a reader may
+  // choose to follow; nothing here is loaded by the page.
+  /https?:\/\/andifathulms\.github\.io\/en\//g,
+  /https?:\/\/github\.com\/andifathulms/g,
+  /https?:\/\/www\.linkedin\.com\/in\/andifathulmukminin\//g,
+  /https?:\/\/www\.instagram\.com\/andifathulms\//g,
 ];
 
 let failures = 0;

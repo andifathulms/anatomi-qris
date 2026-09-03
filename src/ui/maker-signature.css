@@ -1,0 +1,80 @@
+/*
+ * The maker's mark. Muted by default; the name is the only thing that lifts
+ * to full ink, and only the hover state spends any colour.
+ */
+
+.maker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.maker__line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.maker__name {
+  color: var(--ink-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--rule-strong);
+  transition: color var(--dur-control) var(--ease-standard),
+    text-decoration-color var(--dur-control) var(--ease-standard);
+}
+
+.maker__name:hover {
+  color: var(--ink);
+  text-decoration-color: var(--marker);
+}
+
+.maker__sep {
+  color: var(--rule-strong);
+}
+
+/* The year is a figure, so it is set in mono and lined up on the digits. */
+.maker__year {
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: tabular-nums;
+}
+
+.maker__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.maker__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--ink-soft);
+  transition: color var(--dur-control) var(--ease-standard),
+    background var(--dur-control) var(--ease-standard);
+}
+
+.maker__icon:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+@media (max-width: 719px) {
+  .maker {
+    justify-content: flex-start;
+  }
+}

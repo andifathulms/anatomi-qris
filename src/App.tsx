@@ -4,6 +4,7 @@ import { STAGE_COUNT, StoreProvider, useActions, useStore, type Theme } from './
 import { Matrix } from './views/Matrix/Matrix';
 import { Toggle } from './ui/Toggle';
 import { InputBar } from './ui/InputBar';
+import { MakerSignature } from './ui/MakerSignature';
 import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
 import { Legend } from './ui/Legend';
 import { CodewordTable } from './ui/CodewordTable';
@@ -120,85 +121,93 @@ function Shell() {
         </div>
       </header>
 
-      <main className="workbench">
-        {/* The rail is the spine of the app: nine stations, always named,
-            always draggable. DESIGN.md §4.2. */}
-        <nav className="workbench__rail" aria-label={t('app.stages')}>
-          <StageScrubber />
-        </nav>
+      <div className="shell__work">
+        <main className="workbench">
+          {/* The rail is the spine of the app: nine stations, always named,
+              always draggable. DESIGN.md §4.2. */}
+          <nav className="workbench__rail" aria-label={t('app.stages')}>
+            <StageScrubber />
+          </nav>
 
-        {/* The specimen never moves. Nine stages must read as one object being
-            transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
-        <section className="specimen card" id="matrix" aria-label={t('app.specimen')}>
-          <div className="specimen__head">
-            <div className="specimen__head-row">
-              <h2 className="eyebrow">{t('app.specimen')}</h2>
-              {/* The view control sits with the facts it applies to, and above
-                  the fold on a laptop, rather than below the readout. */}
-              <Toggle<'printed' | 'anatomy'>
-                label={t('matrix.caption')}
-                value={state.rendering}
-                onChange={setRendering}
-                options={[
-                  { value: 'printed', label: t('matrix.asPrinted') },
-                  { value: 'anatomy', label: t('matrix.anatomy') },
-                ]}
-              />
+          {/* The specimen never moves. Nine stages must read as one object being
+              transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
+          <section className="specimen card" id="matrix" aria-label={t('app.specimen')}>
+            <div className="specimen__head">
+              <div className="specimen__head-row">
+                <h2 className="eyebrow">{t('app.specimen')}</h2>
+                {/* The view control sits with the facts it applies to, and above
+                    the fold on a laptop, rather than below the readout. */}
+                <Toggle<'printed' | 'anatomy'>
+                  label={t('matrix.caption')}
+                  value={state.rendering}
+                  onChange={setRendering}
+                  options={[
+                    { value: 'printed', label: t('matrix.asPrinted') },
+                    { value: 'anatomy', label: t('matrix.anatomy') },
+                  ]}
+                />
+              </div>
+              {build && (
+                <p className="chips">
+                  <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
+                  <span className="chip">{t('summary.ec')} <b>{build.ecLevel}</b></span>
+                  <span className="chip">{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
+                  <span className="chip">{t('summary.mask')} <b>{build.chosenMask}</b></span>
+                  <span className="chip">
+                    {t('summary.size')} <b>{build.size}×{build.size}</b>
+                  </span>
+                </p>
+              )}
             </div>
-            {build && (
-              <p className="chips">
-                <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
-                <span className="chip">{t('summary.ec')} <b>{build.ecLevel}</b></span>
-                <span className="chip">{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
-                <span className="chip">{t('summary.mask')} <b>{build.chosenMask}</b></span>
-                <span className="chip">
-                  {t('summary.size')} <b>{build.size}×{build.size}</b>
-                </span>
-              </p>
-            )}
-          </div>
 
-          <Matrix
-            tint={tint}
-            offences={offences}
-            overrideGrid={overrideGrid}
-            repaired={repaired}
-            {...(inDamageLab ? { onPaint: paint } : {})}
-          />
+            <Matrix
+              tint={tint}
+              offences={offences}
+              overrideGrid={overrideGrid}
+              repaired={repaired}
+              {...(inDamageLab ? { onPaint: paint } : {})}
+            />
 
-          {state.rendering === 'anatomy' && <Legend />}
+            {state.rendering === 'anatomy' && <Legend />}
 
-          <CodewordTable />
-        </section>
-
-        <div className="workbench__column">
-          <section className="panel card" aria-labelledby="stage-heading">
-            <header className="panel__head">
-              <p className="panel__index">
-                {String(stage).padStart(2, '0')}
-                <span className="panel__index-total">/{String(STAGE_COUNT).padStart(2, '0')}</span>
-              </p>
-              <h2 className="display panel__title" id="stage-heading">
-                {t(stageNameKey(state.stage))}
-              </h2>
-              <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
-            </header>
-            <StagePanel />
+            <CodewordTable />
           </section>
 
-          {/* Present at every stage when the lens is active: the payload's
-              meaning does not change as the encoding proceeds, only its
-              representation. */}
-          {lensActive && (
-            <section className="card">
-              <PayloadTree />
+          <div className="workbench__column">
+            <section className="panel card" aria-labelledby="stage-heading">
+              <header className="panel__head">
+                <p className="panel__index">
+                  {String(stage).padStart(2, '0')}
+                  <span className="panel__index-total">/{String(STAGE_COUNT).padStart(2, '0')}</span>
+                </p>
+                <h2 className="display panel__title" id="stage-heading">
+                  {t(stageNameKey(state.stage))}
+                </h2>
+                <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
+              </header>
+              <StagePanel />
             </section>
-          )}
-        </div>
-      </main>
 
-      <footer className="console">
-        <InputBar />
+            {/* Present at every stage when the lens is active: the payload's
+                meaning does not change as the encoding proceeds, only its
+                representation. */}
+            {lensActive && (
+              <section className="card">
+                <PayloadTree />
+              </section>
+            )}
+          </div>
+        </main>
+
+        <div className="console">
+          <InputBar />
+        </div>
+      </div>
+
+      {/* The maker's mark: personal credit, kept off the console and away from
+          the offline guarantee it must not be mistaken for. */}
+      <footer className="colophon">
+        <MakerSignature />
       </footer>
     </div>
   );

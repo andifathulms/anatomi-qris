@@ -190,6 +190,8 @@ export const id = {
   'damage.errorPositions': 'Posisi galat',
   'damage.hint': 'Seret di atas matriks untuk merusaknya.',
 
+  'maker.by': 'Dirancang & dibangun oleh',
+
   'cite.open': 'Sumber',
   'cite.close': 'Tutup',
   'cite.iso': 'ISO/IEC 18004',

@@ -9,6 +9,14 @@
   grid-template-rows: auto 1fr auto;
 }
 
+/* The console is sticky to the bottom of the work area, not of the document:
+   scrolling to the very end lets it lift and reveals the colophon under it. */
+.shell__work {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+}
+
 /* ── Topbar ────────────────────────────────────────────── DESIGN.md §4.1 ── */
 
 .topbar {
@@ -177,6 +185,15 @@
   padding: var(--space-2) var(--space-3);
 }
 
+/* ── Colophon ─────────────────────────────────────────────────────────────
+   The document's last line. One seam, shared with nothing above it. */
+
+.colophon {
+  background: var(--ground);
+  border-top: 1px solid var(--rule);
+  padding: var(--space-2) var(--space-3);
+}
+
 /* ── Breakpoints ───────────────────────────────────────── DESIGN.md §4.7 ── */
 
 /* The rail lies down above the panel; specimen and panel stay side by side. */
@@ -264,6 +281,10 @@
   }
 
   .console {
+    padding: var(--space-2);
+  }
+
+  .colophon {
     padding: var(--space-2);
   }
 }
