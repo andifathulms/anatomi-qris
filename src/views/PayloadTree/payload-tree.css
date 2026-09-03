@@ -48,7 +48,14 @@
   border-bottom-color: var(--rule-strong);
 }
 
+/* The row is the target. The whole row lights on hover, so the whole row has
+   to be clickable: a 16 x 20 px tag button under a 626 x 31 px hover state is
+   a lie about where to click, and it is under WCAG 2.5.8's 24 x 24 px floor
+   besides. The click handler is on the row and the button stays the control,
+   so pointer users get the whole row and keyboard users keep a real button
+   inside real table semantics. */
 .tlv__row {
+  cursor: pointer;
   transition: background var(--dur-control) var(--ease-standard);
 }
 
@@ -120,9 +127,12 @@
   padding: var(--space-2);
 }
 
+/* --ground, not --module-light: white on the dark marker is 3.51:1, under the
+   4.6:1 floor DESIGN.md 8 sets. The ground reads 5.42:1 in dark and 4.84:1 in
+   light, because the marker and the ground invert together. */
 .tlv__mark {
   background: var(--marker);
-  color: var(--module-light);
+  color: var(--ground);
 }
 
 @media (max-width: 719px) {

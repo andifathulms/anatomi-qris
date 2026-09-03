@@ -81,9 +81,15 @@ export function PayloadTree() {
                 key={node.path + node.start}
                 className="tlv__row"
                 data-selected={isSelected || undefined}
+                onClick={() => select(node)}
               >
                 <th scope="row" style={{ paddingLeft: `calc(${node.depth} * var(--unit))` }}>
-                  <button type="button" className="tlv__button" onClick={() => select(node)}>
+                  <button
+                    type="button"
+                    className="tlv__button"
+                    aria-pressed={isSelected}
+                    onClick={() => select(node)}
+                  >
                     {node.depth > 0 && <span className="tlv__connector" aria-hidden="true" />}
                     {node.tag}
                   </button>
