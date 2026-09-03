@@ -9,6 +9,10 @@ import { gzipSync } from 'node:zlib';
  * CSS, the HTML, and the woff2 faces. The .woff duplicates that @fontsource
  * ships alongside them are not fetched by any browser that supports woff2, so
  * they are excluded, and the check says so rather than quietly ignoring them.
+ *
+ * dist/brand is excluded on the same grounds: the touch icon is fetched only
+ * when someone adds the app to a home screen, and the social card only by a
+ * crawler that never runs the page. Neither is on the first-load path.
  */
 const LIMIT = 250 * 1024;
 const DIST = 'dist';
@@ -20,7 +24,9 @@ function walk(dir) {
   });
 }
 
-const counted = walk(DIST).filter((path) => !path.endsWith('.woff'));
+const counted = walk(DIST).filter(
+  (path) => !path.endsWith('.woff') && !path.startsWith(join(DIST, 'brand')),
+);
 let total = 0;
 const rows = [];
 

@@ -33,6 +33,15 @@
   padding: var(--space-2) var(--space-3);
 }
 
+/* The mark leads the wordmark by one module of clear space, per the brand
+   package's clear-space rule. It is optically centred against the two lines
+   of the identity rather than sitting on their baseline. */
+.brand-mark {
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--ink);
+}
+
 .topbar__identity {
   display: flex;
   align-items: baseline;

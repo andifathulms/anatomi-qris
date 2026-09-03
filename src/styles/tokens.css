@@ -25,6 +25,11 @@
   --ink-mid: #aab3c0;
   --ink-soft: #8b95a4;
 
+  /* The mark's own accent — cursor magenta, from the brand package. It is not
+     part of the chrome palette and nothing but the logo may use it; it keeps
+     its value in both themes, because that is what a brand colour is. */
+  --brand-magenta: #f0328c;
+
   /* The artefact's own two colours. Nothing else in the app may use them. */
   --module-dark: #000000;
   --module-light: #ffffff;

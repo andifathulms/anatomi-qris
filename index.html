@@ -33,14 +33,41 @@
       content="Bagaimana sebuah kode QR dibangun, dan apa isi payload QRIS. Semua diproses di perangkat ini."
     />
     <!--
-      Inlined so the browser never requests /favicon.ico. A 404 in the network
-      tab is still a network request, and PRD §9.1 promises an empty one.
-      Three finder patterns, which is the least a QR code can be.
+      The mark, inlined so the browser never requests /favicon.ico. A 404 in
+      the network tab is still a network request, and PRD §9.1 promises an
+      empty one. This is the brand package's 32 px tier: finder only, magenta
+      core, because below 32 px the alignment pattern turns to mud.
     -->
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect width='21' height='21' fill='%23fff'/%3E%3Cpath fill='%23000' d='M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0z'/%3E%3Cpath fill='%23fff' d='M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1z'/%3E%3Cpath fill='%23000' d='M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM9 0h1v3H9zM9 5h1v3H9zM0 9h3v1H0zM5 9h3v1H5zM9 9h2v2H9zM12 12h2v2h-2zM16 10h2v2h-2zM10 16h2v2h-2zM14 18h3v1h-3zM18 14h1v3h-1z'/%3E%3C/svg%3E"
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%23F4F4F6'/%3E%3Crect x='12' y='12' width='62' height='62' fill='none' stroke='%230A0A0C' stroke-width='13'/%3E%3Crect x='35' y='35' width='16' height='16' fill='%23F0328C'/%3E%3C/svg%3E" />
+    <!--
+      Safari fetches this only when someone adds the app to a home screen, so
+      it costs no request on load. Full-bleed paper tile, no transparency, as
+      iOS wants.
+    -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Anatomi QRIS" />
+
+    <!--
+      The social card. Crawlers fetch it; the page never does. The URL is
+      absolute because that is the only form a crawler can resolve.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Anatomi QRIS" />
+    <meta property="og:title" content="Anatomi QRIS — Dibaca modul demi modul" />
+    <meta
+      property="og:description"
+      content="Bagaimana sebuah kode QR dibangun, dan apa isi payload QRIS. Semua diproses di perangkat ini."
     />
+    <meta property="og:url" content="https://andifathulms.github.io/anatomi-qris/" />
+    <meta
+      property="og:image"
+      content="https://andifathulms.github.io/anatomi-qris/brand/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Anatomi QRIS — dibaca modul demi modul" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <title>Anatomi QRIS</title>
   </head>
   <body>

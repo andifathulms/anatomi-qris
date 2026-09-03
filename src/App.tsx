@@ -3,6 +3,7 @@ import { LocaleContext, translator, useCopy } from './copy';
 import { STAGE_COUNT, StoreProvider, useActions, useStore, type Theme } from './state/store';
 import { Matrix } from './views/Matrix/Matrix';
 import { Toggle } from './ui/Toggle';
+import { BrandMark } from './ui/BrandMark';
 import { InputBar } from './ui/InputBar';
 import { MakerSignature } from './ui/MakerSignature';
 import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
@@ -92,6 +93,7 @@ function Shell() {
 
       <header className="topbar">
         <div className="topbar__identity">
+          <BrandMark />
           <h1 className="topbar__wordmark">{t('app.title')}</h1>
           <p className="topbar__tagline">{t('app.tagline')}</p>
         </div>
