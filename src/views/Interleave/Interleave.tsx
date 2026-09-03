@@ -61,10 +61,19 @@ export function Interleave() {
         </button>
       </div>
 
-      <div className="interleave__grid" role="table" aria-label={t('interleave.heading')}>
+      {/* A group, not a table. The cells sit inside .interleave__cells rather
+          than directly under the row, so role="cell" was never a child of its
+          role="row" and no reader would have announced a table anyway. The
+          real text equivalent for this data is the codeword table. */}
+      <div className="interleave__grid" role="group" aria-label={t('interleave.heading')}>
         {build.blocks.map((block) => (
-          <div className="interleave__row" role="row" key={block.index}>
-            <span className="interleave__row-label label" role="rowheader">
+          <div
+            className="interleave__row"
+            role="group"
+            aria-label={`${t('interleave.block')} ${block.index}`}
+            key={block.index}
+          >
+            <span className="interleave__row-label label">
               {t('interleave.block')} {block.index}
             </span>
             <div className="interleave__cells">
@@ -75,7 +84,6 @@ export function Interleave() {
                   className="interleave__cell"
                   data-lifted={i < swept || undefined}
                   style={{ background: tints.data[block.index] }}
-                  role="cell"
                 >
                   {toHex(byte)}
                 </span>
@@ -89,7 +97,6 @@ export function Interleave() {
                     i + Math.max(...build.blocks.map((b) => b.data.length)) < swept || undefined
                   }
                   style={{ background: tints.ecc[block.index] }}
-                  role="cell"
                 >
                   {toHex(byte)}
                 </span>
