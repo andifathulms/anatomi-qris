@@ -33,7 +33,11 @@
  * crossed the matrix (DESIGN.md §4.3).
  */
 .matrix__readout {
-  min-height: calc(var(--space-5) + var(--space-1));
+  /* The measured height of the six-cell grid at its tallest role, plus the
+     padding. The old floor was one row, so the first hover grew the strip by
+     38 px and pushed the codeword table down with it — the exact shift the
+     comment above says cannot happen. Reserve the maximum, not the minimum. */
+  min-height: 124px;
   background: var(--ground-sunk);
   border: 1px solid var(--rule);
   padding: var(--space-2);
@@ -67,5 +71,10 @@
 @media (max-width: 719px) {
   .readout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Two columns means three rows for the same six cells. */
+  .matrix__readout {
+    min-height: 160px;
   }
 }

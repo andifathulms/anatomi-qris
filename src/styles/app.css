@@ -278,10 +278,12 @@
     width: 100%;
   }
 
+  /* The descriptor is a second line of the wordmark on desktop and a third
+     row of sticky chrome on a phone. It survives in the page title, the
+     social card and the README; it does not need to cost the specimen 30 px
+     of every screen. */
   .topbar__tagline {
-    border-left: 0;
-    padding-left: 0;
-    flex-basis: 100%;
+    display: none;
   }
 
   .topbar__controls {
@@ -295,6 +297,12 @@
 
   .colophon {
     padding: var(--space-2);
+  }
+
+  /* Four chips, as DESIGN.md 4.3 specifies. The fifth wrapped to a second
+     row and pushed the specimen further under the sticky console. */
+  .chips .chip:nth-child(5) {
+    display: none;
   }
 }
 

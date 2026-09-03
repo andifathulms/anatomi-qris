@@ -104,7 +104,11 @@ export function InputBar() {
       </div>
 
       <p className="input-bar__note label">
-        {t(`ec.${state.ecLevel}` as 'ec.L')} · {t('app.offlineNote')}
+        {t(`ec.${state.ecLevel}` as 'ec.L')}
+        {/* The topbar chip now states the guarantee in its own words, so on a
+            phone — where the console is a third of the viewport — this
+            repeats it rather than adding to it. */}
+        <span className="input-bar__guarantee"> · {t('app.offlineNote')}</span>
       </p>
 
       {buildError && (

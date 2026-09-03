@@ -115,6 +115,25 @@
     gap: var(--space-1) var(--space-2);
   }
 
+  /* The console was 175 px of an 844 px phone, and the topbar another 134, so
+     the specimen — the one thing that has to be the hero here — was cut off
+     mid-code on first paint. The field is unmistakable without its eyebrow,
+     and the guarantee is already in the topbar. */
+  .input-bar__field .eyebrow {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .input-bar__guarantee {
+    display: none;
+  }
+
   .input-bar__controls {
     flex: 1 0 100%;
     gap: var(--space-1);
