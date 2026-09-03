@@ -36,14 +36,14 @@ those bytes light up in the matrix. That mapping is the product.
 
 | # | Stage | What you watch happen |
 |---|-------|----------------------|
-| 1 | Payload | The string, and — if it is QRIS — its TLV tree |
-| 2 | Analyse | Mode selection, version, capacity |
-| 3 | Encode | Characters become a bitstream, with every span named |
-| 4 | Divide | Reed-Solomon long division, one step at a time |
+| 1 | Input | Mode, version and correction level fall out of the text |
+| 2 | Encode | Characters become a bitstream, every span named |
+| 3 | Codewords | The bits are cut into groups of eight |
+| 4 | Error correction | Reed-Solomon long division, one step at a time |
 | 5 | Interleave | Blocks comb together into the final codeword order |
-| 6 | Place | The zigzag walk fills the matrix, module by module |
+| 6 | Place | The zigzag walk fills the matrix, two columns at a time |
 | 7 | Mask | Eight candidates, four penalty rules, one winner |
-| 8 | Finish | Format and version information, the finished symbol |
+| 8 | Final | Format and version information, written last and unmasked |
 | 9 | Damage | Break it, and watch Reed-Solomon put it back |
 
 The stage rail is a slider, not a row of tabs: dragging it moves through the
