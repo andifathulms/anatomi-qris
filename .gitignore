@@ -5,3 +5,11 @@ dist-ssr
 *.local
 coverage
 .vite
+
+# The brand export package. The few files the app and the README actually use
+# are copied into public/brand and committed there; the rest is source material
+# that does not belong in the repo.
+exports
+
+# Incremental typecheck state.
+tsconfig.tsbuildinfo
