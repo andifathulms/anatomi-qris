@@ -73,6 +73,9 @@ export function DamageLab() {
   const { setNoise, clearDamage, repair } = useActions();
   const { t } = useCopy();
   const report = useDamageReport();
+  // The damage standing right now, brush and slider together. Repair needs it
+  // to settle the slider's share rather than leave it to regenerate.
+  const standing = useDamageSet();
 
   if (!build || !report) return null;
 
@@ -101,7 +104,7 @@ export function DamageLab() {
         <button
           type="button"
           className="button"
-          onClick={() => repair([...report.repairedModules])}
+          onClick={() => repair([...report.repairedModules], [...standing])}
           disabled={clean || result.failed}
         >
           {t('damage.repair')}

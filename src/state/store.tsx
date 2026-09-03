@@ -69,7 +69,7 @@ type Action =
   | { type: 'toggleMaskFeatures' }
   | { type: 'damage'; indices: number[] }
   | { type: 'setNoise'; noise: number }
-  | { type: 'repair'; indices: number[] }
+  | { type: 'repair'; indices: number[]; standing: number[] }
   | { type: 'clearDamage' };
 
 function reducer(state: AppState, action: Action): AppState {
@@ -118,9 +118,21 @@ function reducer(state: AppState, action: Action): AppState {
     }
     case 'setNoise':
       return { ...state, noise: Math.min(1, Math.max(0, action.noise)) };
+    /*
+     * Repair has to settle the noise as well as the brush. Noise damage is
+     * derived from `noise` on every read rather than stored, so filtering
+     * `damage` alone left every noise-selected module standing and the button
+     * looked dead on the likeliest route to stage 9's payoff. So: take the
+     * damage standing at the moment of repair, drop what the decoder fixed,
+     * and keep the rest as painted damage with the slider back at zero.
+     */
     case 'repair': {
       const repaired = new Set(action.indices);
-      return { ...state, damage: state.damage.filter((i) => !repaired.has(i)) };
+      return {
+        ...state,
+        damage: action.standing.filter((i) => !repaired.has(i)),
+        noise: 0,
+      };
     }
     case 'clearDamage':
       return { ...state, damage: [], noise: 0 };
@@ -266,7 +278,8 @@ export function useActions() {
       toggleMaskFeatures: () => dispatch({ type: 'toggleMaskFeatures' }),
       damage: (indices: number[]) => dispatch({ type: 'damage', indices }),
       setNoise: (noise: number) => dispatch({ type: 'setNoise', noise }),
-      repair: (indices: number[]) => dispatch({ type: 'repair', indices }),
+      repair: (indices: number[], standing: number[]) =>
+        dispatch({ type: 'repair', indices, standing }),
       clearDamage: () => dispatch({ type: 'clearDamage' }),
     }),
     [dispatch],
