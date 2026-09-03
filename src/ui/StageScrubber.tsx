@@ -88,7 +88,12 @@ export function StageScrubber() {
 
   return (
     <div className="scrubber">
-      <p className="eyebrow scrubber__eyebrow">{t('app.stages')}</p>
+      <div className="scrubber__head">
+        <p className="eyebrow">{t('app.stages')}</p>
+        {/* Nothing on screen said this column was a control, let alone a
+            draggable one. One line, in the rail's own quiet register. */}
+        <p className="scrubber__hint">{t('app.stagesHint')}</p>
+      </div>
       <div
         ref={trackRef}
         className="scrubber__track"
@@ -117,6 +122,11 @@ export function StageScrubber() {
               type="button"
               className="scrubber__station"
               data-status={status}
+              /* The track is the control and carries the only tab stop. A
+                 slider prunes its own descendants from the accessibility
+                 tree, so nine focusable buttons inside one meant nine tab
+                 stops that announce nothing. Pointer users still click. */
+              tabIndex={-1}
               style={{ '--at': `${at * 100}%` } as React.CSSProperties}
               aria-current={n === current ? 'step' : undefined}
               onClick={(event) => {

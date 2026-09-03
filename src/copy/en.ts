@@ -4,7 +4,7 @@ import type { CopyKey } from './id';
 export const en: Record<CopyKey, string> = {
   'app.title': 'Anatomi QRIS',
   'app.tagline': 'How a QR code is built, and what a QRIS payload says',
-  'app.offline': 'No connection',
+  'app.offline': 'Runs on this device',
   'app.offlineNote': 'Everything runs on this device. Nothing is sent anywhere.',
   'app.skipToMatrix': 'Skip to the matrix',
   'app.locale': 'Bahasa Indonesia',
@@ -13,6 +13,7 @@ export const en: Record<CopyKey, string> = {
   'app.themeLight': 'Light',
   'app.specimen': 'Specimen',
   'app.stages': 'Stages',
+  'app.stagesHint': 'Drag, or pick a stage.',
 
   'input.label': 'Text or QRIS payload',
   'input.placeholder': 'Type anything, or paste a QRIS payload',
@@ -36,7 +37,6 @@ export const en: Record<CopyKey, string> = {
   'matrix.asPrinted': 'As printed',
   'matrix.anatomy': 'Anatomy',
   'matrix.caption': 'Matrix',
-  'matrix.readout': 'Module',
   'matrix.none': 'Hover, or use the arrow keys, to read one module.',
   'matrix.coord': 'Coordinates',
   'matrix.role': 'Role',
@@ -185,9 +185,11 @@ export const en: Record<CopyKey, string> = {
   'damage.cleanDetail': 'Break some modules, then compare how many codewords are corrupt against the repair capacity above.',
   'damage.syndromes': 'Syndromes',
   'damage.errorPositions': 'Error positions',
-  'damage.hint': 'Drag across the matrix to damage it.',
+  'damage.hint': 'Drag across the matrix to break one module. Hold Shift for a 3×3 brush, or press Enter on the focused module.',
 
   'maker.by': 'Designed & built by',
+
+  'maker.portfolio': 'Portfolio',
 
   'cite.open': 'Source',
   'cite.close': 'Close',

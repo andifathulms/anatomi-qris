@@ -15,7 +15,11 @@ const MAKER = {
 };
 
 interface MakerLink {
+  /** The accessible name. Platform names are proper nouns and stay as they
+   *  are in both locales; only "portfolio" is a word rather than a name, so
+   *  only it is translated. */
   label: string;
+  translate?: boolean;
   href: string;
   icon: JSX.Element;
 }
@@ -23,6 +27,7 @@ interface MakerLink {
 const LINKS: MakerLink[] = [
   {
     label: 'Portfolio',
+    translate: true,
     href: MAKER.portfolio,
     icon: (
       <>
@@ -89,7 +94,7 @@ export function MakerSignature() {
             <a
               className="maker__icon"
               href={link.href}
-              aria-label={link.label}
+              aria-label={link.translate ? t('maker.portfolio') : link.label}
               target="_blank"
               rel="noopener noreferrer"
             >

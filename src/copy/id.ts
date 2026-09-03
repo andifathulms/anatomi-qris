@@ -7,7 +7,7 @@
 export const id = {
   'app.title': 'Anatomi QRIS',
   'app.tagline': 'Bagaimana sebuah kode QR dibangun, dan apa isi payload QRIS',
-  'app.offline': 'Tidak ada koneksi',
+  'app.offline': 'Diproses di perangkat ini',
   'app.offlineNote': 'Semua diproses di perangkat ini. Tidak ada data yang dikirim.',
   'app.skipToMatrix': 'Lewati ke matriks',
   'app.locale': 'English',
@@ -16,6 +16,7 @@ export const id = {
   'app.themeLight': 'Terang',
   'app.specimen': 'Spesimen',
   'app.stages': 'Tahapan',
+  'app.stagesHint': 'Geser atau pilih satu tahap.',
 
   'input.label': 'Teks atau payload QRIS',
   'input.placeholder': 'Ketik apa saja, atau tempel payload QRIS',
@@ -39,7 +40,6 @@ export const id = {
   'matrix.asPrinted': 'Seperti dicetak',
   'matrix.anatomy': 'Anatomi',
   'matrix.caption': 'Matriks',
-  'matrix.readout': 'Modul',
   'matrix.none': 'Arahkan atau gunakan tombol panah untuk membaca satu modul.',
   'matrix.coord': 'Koordinat',
   'matrix.role': 'Peran',
@@ -188,9 +188,11 @@ export const id = {
   'damage.cleanDetail': 'Rusak sebagian modul, lalu bandingkan berapa codeword yang rusak dengan kapasitas perbaikan di atas.',
   'damage.syndromes': 'Sindrom',
   'damage.errorPositions': 'Posisi galat',
-  'damage.hint': 'Seret di atas matriks untuk merusaknya.',
+  'damage.hint': 'Seret di atas matriks untuk merusak satu modul. Tahan Shift untuk kuas 3×3, atau tekan Enter pada modul yang sedang difokuskan.',
 
   'maker.by': 'Dirancang & dibangun oleh',
+
+  'maker.portfolio': 'Portofolio',
 
   'cite.open': 'Sumber',
   'cite.close': 'Tutup',

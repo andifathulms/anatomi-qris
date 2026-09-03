@@ -12,7 +12,7 @@ const QUIET = 4;
 
 export interface MatrixProps {
   /** Called for each module the brush passes over, while the pointer is down. */
-  onPaint?: (index: number) => void;
+  onPaint?: (index: number, wide: boolean) => void;
   offences?: Set<number>;
   repaired?: Set<number>;
   overrideGrid?: Uint8Array | null;
@@ -91,7 +91,7 @@ export function Matrix({
     (event: React.PointerEvent<SVGSVGElement>) => {
       const index = hitTest(event);
       setHovered(index);
-      if (pointerDown.current && index !== null && onPaint) onPaint(index);
+      if (pointerDown.current && index !== null && onPaint) onPaint(index, event.shiftKey);
     },
     [hitTest, onPaint],
   );
@@ -103,7 +103,7 @@ export function Matrix({
       pointerDown.current = true;
       event.currentTarget.setPointerCapture(event.pointerId);
       setFocusedModule(index);
-      if (onPaint) onPaint(index);
+      if (onPaint) onPaint(index, event.shiftKey);
     },
     [hitTest, onPaint, setFocusedModule],
   );
@@ -130,6 +130,17 @@ export function Matrix({
         case 'End': x = build.size - 1; break;
         case 'PageUp': y = 0; break;
         case 'PageDown': y = build.size - 1; break;
+        // The damage lab was pointer-only, while its own hint told the reader
+        // to drag across the matrix. On a keyboard this is the better
+        // instrument anyway: one module, exactly, which the 3 x 3 brush
+        // cannot do.
+        case 'Enter':
+        case ' ':
+          if (onPaint) {
+            event.preventDefault();
+            onPaint(current, event.shiftKey);
+          }
+          return;
         default: return;
       }
       event.preventDefault();
@@ -137,8 +148,15 @@ export function Matrix({
       y = Math.min(build.size - 1, Math.max(0, y));
       setFocusedModule(y * build.size + x);
     },
-    [build, state.focusedModule, setFocusedModule],
+    [build, state.focusedModule, setFocusedModule, onPaint],
   );
+
+  // Focus has to land on a module, not on an abstraction. Without this the
+  // readout says "none" until an arrow key arrives, which for a screen-reader
+  // user may be never.
+  const handleFocus = useCallback(() => {
+    if (state.focusedModule === null) setFocusedModule(0);
+  }, [state.focusedModule, setFocusedModule]);
 
   // Rects are created once per build and never remounted, so the matrix reads
   // as one persistent object across every stage.
@@ -171,9 +189,15 @@ export function Matrix({
         ref={svgRef}
         className="matrix__svg"
         viewBox={`0 0 ${extent} ${extent}`}
-        role="img"
+        /* role="application", not role="img": an img prunes its descendants
+           and is not a widget, so a screen reader in browse mode swallowed
+           the arrow keys and this navigation never ran. DESIGN.md 8 promises
+           it works, so it has to be a widget. */
+        role="application"
         tabIndex={0}
         aria-label={`${t('matrix.caption')} ${size}×${size}`}
+        aria-describedby="matrix-readout"
+        onFocus={handleFocus}
         onPointerMove={handleMove}
         onPointerLeave={() => setHovered(null)}
         data-paintable={onPaint ? '' : undefined}
@@ -185,7 +209,7 @@ export function Matrix({
         <rect x={0} y={0} width={extent} height={extent} fill="#ffffff" />
         <g>{cells}</g>
       </svg>
-      <figcaption className="matrix__readout" aria-live="polite" aria-label={t('matrix.readout')}>
+      <figcaption className="matrix__readout" id="matrix-readout" role="status">
         {readout && build ? <Readout module={readout} build={build} /> : (
           <span className="label">{t('matrix.none')}</span>
         )}
@@ -228,12 +252,16 @@ function Readout({ module, build }: { module: ModuleInfo; build: Build }) {
         <dt>{t('matrix.carries')}</dt>
         <dd>{carries}</dd>
       </div>
-      {module.placementOrder !== null && (
-        <div>
-          <dt>{t('matrix.placementOrder')}</dt>
-          <dd>{module.placementOrder} / {build.size * build.size}</dd>
-        </div>
-      )}
+      {/* Always rendered, even for function patterns, so every role fills the
+          same six cells and the strip cannot grow under the pointer. */}
+      <div>
+        <dt>{t('matrix.placementOrder')}</dt>
+        <dd>
+          {module.placementOrder !== null
+            ? `${module.placementOrder} / ${build.size * build.size}`
+            : '—'}
+        </dd>
+      </div>
     </dl>
   );
 }

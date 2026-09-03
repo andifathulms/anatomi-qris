@@ -48,10 +48,17 @@ function Shell() {
   const report = useDamageReport();
   const inDamageLab = Math.round(state.stage) === 9;
 
-  // The brush: one module wide by default, widened by holding shift.
+  // The brush: one module wide by default, widened to 3 x 3 by holding shift.
+  // One module is the pedagogically important size — it is how you show that
+  // a single broken module corrupts exactly one codeword — and it was the
+  // documented behaviour long before it was the implemented one.
   const paint = useCallback(
-    (index: number) => {
+    (index: number, wide: boolean) => {
       if (!inDamageLab || !build) return;
+      if (!wide) {
+        damage([index]);
+        return;
+      }
       const x = index % build.size;
       const y = Math.floor(index / build.size);
       const hit: number[] = [];
