@@ -12,8 +12,8 @@
 
 [![CI](https://github.com/andifathulms/anatomi-qris/actions/workflows/ci.yml/badge.svg)](https://github.com/andifathulms/anatomi-qris/actions/workflows/ci.yml)
 [![Deploy](https://github.com/andifathulms/anatomi-qris/actions/workflows/deploy.yml/badge.svg)](https://github.com/andifathulms/anatomi-qris/actions/workflows/deploy.yml)
-![No runtime dependencies beyond React](https://img.shields.io/badge/runtime%20requests-zero-0A0A0C?labelColor=F0328C)
-![QR engine written from scratch](https://img.shields.io/badge/QR%20engine-from%20scratch-0A0A0C?labelColor=F0328C)
+![No runtime dependencies beyond React](https://img.shields.io/badge/runtime%20requests-zero-0A0A0C?labelColor=C2166F)
+![QR engine written from scratch](https://img.shields.io/badge/QR%20engine-from%20scratch-0A0A0C?labelColor=C2166F)
 
 </div>
 

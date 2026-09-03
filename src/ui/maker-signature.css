@@ -37,10 +37,6 @@
   text-decoration-color: var(--marker);
 }
 
-.maker__sep {
-  color: var(--rule-strong);
-}
-
 /* The year is a figure, so it is set in mono and lined up on the digits. */
 .maker__year {
   font-family: var(--font-mono);
@@ -68,13 +64,24 @@
     background var(--dur-control) var(--ease-standard);
 }
 
+/* --surface-lift, not --surface-hover: the house pairs the hover fill with a
+   1 px border, and this target has none, so on the light ground the hover fill
+   has to do the work alone. --surface-hover sits 1.05:1 from the light ground
+   and simply is not there. --surface-lift is 1.16:1 in both themes, which is
+   the same separation the cards already use. */
 .maker__icon:hover {
   color: var(--ink);
-  background: var(--surface-hover);
+  background: var(--surface-lift);
 }
 
 @media (max-width: 719px) {
   .maker {
     justify-content: flex-start;
+  }
+
+  /* A thumb is not a pointer. 30 px clears WCAG 2.5.8 but nothing more. */
+  .maker__icon {
+    width: 36px;
+    height: 36px;
   }
 }
