@@ -169,4 +169,50 @@ describe('byte range to modules and back', () => {
     );
     for (const c of head) expect(tail.has(c)).toBe(false);
   });
+
+  /*
+   * The inverse has to agree with the forward direction exactly, or the
+   * matrix readout will name a field that does not own the module under the
+   * cursor. Round-trip it both ways over the whole payload.
+   */
+  it('inverts unit-to-codeword without losing or inventing a unit', () => {
+    for (const ecLevel of ['L', 'M', 'Q', 'H'] as const) {
+      for (const input of [QRIS_SAMPLE, 'HELLO WORLD 123', '12345678901234567890']) {
+        const build = encode(input, { ecLevel });
+        const units = build.segmentation.units.length;
+
+        // Forward then back: every codeword a unit maps to must map back to it.
+        for (let unit = 0; unit < units; unit++) {
+          for (const c of build.resolver.unitToCodewords(unit)) {
+            expect(
+              build.resolver.codewordToUnits(c),
+              `codeword ${c} lost unit ${unit} (${input.slice(0, 12)}, ${ecLevel})`,
+            ).toContain(unit);
+          }
+        }
+
+        // Back then forward: a codeword may not claim a unit that does not
+        // resolve to it. This is the direction that would put a wrong field
+        // name in the readout.
+        for (let c = 0; c < build.dataCodewords.length; c++) {
+          for (const unit of build.resolver.codewordToUnits(c)) {
+            expect(
+              build.resolver.unitToCodewords(unit),
+              `codeword ${c} invented unit ${unit} (${input.slice(0, 12)}, ${ecLevel})`,
+            ).toContain(c);
+          }
+        }
+      }
+    }
+  });
+
+  it('claims no payload units for header, terminator or padding codewords', () => {
+    const build = encode('hi', { ecLevel: 'L' });
+    const claimed = new Set<number>();
+    for (let c = 0; c < build.dataCodewords.length; c++) {
+      for (const u of build.resolver.codewordToUnits(c)) claimed.add(u);
+    }
+    // Two bytes of payload, and a version-1 symbol full of padding after it.
+    expect([...claimed].sort((a, b) => a - b)).toEqual([0, 1]);
+  });
 });
