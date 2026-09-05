@@ -3,7 +3,7 @@
 @import '@fontsource/ibm-plex-sans/latin-600.css';
 @import '@fontsource/ibm-plex-mono/latin-400.css';
 @import '@fontsource/ibm-plex-mono/latin-500.css';
-@import '@fontsource/martian-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-600.css';
 @import './tokens.css';
 
 *,
@@ -101,7 +101,7 @@ textarea {
   font-family: var(--font-display);
   font-size: var(--t-display);
   line-height: var(--t-display-lh);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--track-tight);
 }
 
@@ -109,7 +109,7 @@ textarea {
   font-family: var(--font-display);
   font-size: var(--t-figure);
   line-height: var(--t-figure-lh);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--track-tight);
   font-variant-numeric: tabular-nums;
 }

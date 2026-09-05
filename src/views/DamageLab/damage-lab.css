@@ -59,7 +59,7 @@
   font-family: var(--font-display);
   font-size: var(--t-figure);
   line-height: var(--t-figure-lh);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--track-tight);
   font-variant-numeric: tabular-nums;
   color: var(--ink);

@@ -69,32 +69,36 @@
   --lens-dark-coverage: 0.65;
 
   /* ── Typography ────────────────────────────────────────── DESIGN.md §3 ──
-     Three faces, three jobs, no overlap. Sans is anything a human reads as
-     language; mono is anything that is data; display is the wordmark, stage
-     numerals and figures, and nothing else. */
+     Two faces, two jobs. Sans is anything a human reads as language; mono is
+     anything that is data, plus the wordmark and the figures, which are
+     data wearing a larger size. --font-display stays as a name so the display
+     role keeps its own token, but it resolves to the mono stack: a third face
+     was buying texture, not distinction, and cost a font download for it. */
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --font-display: 'Martian Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-display: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  --t-display: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
-  --t-display-lh: 1.02;
+  --t-display: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  --t-display-lh: 1.05;
   --t-title: 1.375rem;
-  --t-title-lh: 1.15;
+  --t-title-lh: 1.2;
   --t-figure: 1.75rem;
   --t-figure-lh: 1;
-  --t-h2: 1.0625rem;
-  --t-h2-lh: 1.3;
-  --t-h3: 0.875rem;
-  --t-h3-lh: 1.35;
-  --t-body: 0.9375rem;
-  --t-body-lh: 1.65;
-  --t-data: 0.8125rem;
-  --t-data-lh: 1.5;
-  --t-small: 0.75rem;
+  --t-h2: 1.125rem;
+  --t-h2-lh: 1.35;
+  --t-h3: 1rem;
+  --t-h3-lh: 1.4;
+  /* 16 px is the floor for anything that is a sentence. */
+  --t-body: 1rem;
+  --t-body-lh: 1.6;
+  --t-data: 0.875rem;
+  --t-data-lh: 1.55;
+  --t-small: 0.8125rem;
   --t-small-lh: 1.45;
-  /* Eleven is the floor. Below that a monospace digit stops being a digit. */
-  --t-micro: 0.6875rem;
-  --t-micro-lh: 1.3;
+  /* Twelve is the floor. Below that a monospace digit stops being a digit,
+     and an eyebrow stops being readable at arm's length. */
+  --t-micro: 0.75rem;
+  --t-micro-lh: 1.35;
 
   --track-tight: -0.02em;
   --track-label: 0.09em;
