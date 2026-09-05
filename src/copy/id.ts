@@ -168,6 +168,7 @@ export const id = {
   'tlv.crcOk': 'CRC cocok',
   'tlv.crcBad': 'CRC tidak cocok',
   'tlv.crcDetail': 'Ditemukan {found}, seharusnya {expected}.',
+  'tlv.crcCoversHint': 'Pilih untuk menandai rentang yang dihitung checksum: dari awal payload sampai akhir 6304, dengan polinomial 0x1021.',
   'tlv.parseFailed': 'Pembacaan berhenti di karakter {at}: {reason}',
   'tlv.position': 'Posisi',
   'tlv.codewords': 'Codeword',

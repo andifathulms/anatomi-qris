@@ -13,6 +13,8 @@ import './payload-tree.css';
  * provenance map and lights exactly the modules carrying those bytes. That
  * mapping is the product (PRD §1); everything else here is in service of it.
  */
+const CRC_LABEL = 'crc:covered';
+
 export function PayloadTree() {
   const { build, qris, state } = useStore();
   const { setHighlight } = useActions();
@@ -32,6 +34,28 @@ export function PayloadTree() {
     );
   };
 
+  /*
+   * The checksum was the one computed value in the app you had to take on
+   * faith: everything else is reachable in raw form, and this said "CRC
+   * cocok" and stopped. Selecting it marks exactly the characters it covers
+   * in the raw string below and lights their modules in the matrix — which
+   * shows the part people get wrong by hand, that the range runs to the end
+   * of "6304" and excludes only the four digits after it.
+   */
+  const crcRange: [number, number] | null =
+    qris && qris.crcOk !== null && qris.expectedCrc ? [0, state.input.lastIndexOf('6304') + 4] : null;
+  const crcSelected = state.highlight?.source === 'tlv' && state.highlight.label === CRC_LABEL;
+
+  const selectCrc = () => {
+    if (!build || !crcRange || crcRange[1] <= 3) return;
+    if (crcSelected) {
+      setHighlight(null);
+      return;
+    }
+    const codewords = build.resolver.rangeToCodewords(crcRange[0], crcRange[1]);
+    setHighlight(highlightFromCodewords(build, codewords, 'tlv', CRC_LABEL, crcRange));
+  };
+
   const rows = useMemo(() => (qris ? flattenRows(qris.nodes) : []), [qris]);
   if (!qris || !qris.isQris) return null;
 
@@ -42,7 +66,15 @@ export function PayloadTree() {
       <div className="tlv__head">
         <h3 className="subheading">{t('tlv.heading')}</h3>
         <p className={qris.crcOk ? 'label' : 'tlv__crc-bad'}>
-          {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}{' '}
+          <button
+            type="button"
+            className="tlv__crc-button"
+            aria-pressed={crcSelected}
+            onClick={selectCrc}
+            title={t('tlv.crcCoversHint')}
+          >
+            {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}
+          </button>{' '}
           <Cite citation={CITATIONS.crc} />
           {!qris.crcOk && qris.expectedCrc && (
             <>

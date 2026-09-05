@@ -143,3 +143,19 @@
     display: none;
   }
 }
+
+/* The checksum verdict is selectable, so it looks selectable. */
+.tlv__crc-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  border-bottom: 1px dotted currentColor;
+}
+
+.tlv__crc-button[aria-pressed='true'] {
+  color: var(--marker);
+  border-bottom-style: solid;
+}

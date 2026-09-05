@@ -165,6 +165,7 @@ export const en: Record<CopyKey, string> = {
   'tlv.crcOk': 'CRC matches',
   'tlv.crcBad': 'CRC does not match',
   'tlv.crcDetail': 'Found {found}, expected {expected}.',
+  'tlv.crcCoversHint': 'Select to mark the range the checksum covers: the start of the payload to the end of 6304, with polynomial 0x1021.',
   'tlv.parseFailed': 'Parsing stopped at character {at}: {reason}',
   'tlv.position': 'Position',
   'tlv.codewords': 'Codewords',
