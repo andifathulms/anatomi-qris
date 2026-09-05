@@ -62,3 +62,34 @@ export function qrisAccountTemplate(nodes: TlvNode[]): TlvNode | null {
   }
   return null;
 }
+
+/**
+ * The deepest node whose span covers a character index, or null when the index
+ * falls between fields. Depth matters: index 40 of a QRIS sits inside both the
+ * merchant account template and one sub-tag of it, and the sub-tag is the
+ * answer a reader wants.
+ */
+export function nodeAt(nodes: TlvNode[], index: number): TlvNode | null {
+  for (const node of nodes) {
+    if (index < node.start || index >= node.end) continue;
+    if (node.children) {
+      const deeper = nodeAt(node.children, index);
+      if (deeper) return deeper;
+    }
+    return node;
+  }
+  return null;
+}
+
+/**
+ * The distinct fields a set of payload character indices touches, in payload
+ * order. Used to say which fields a damaged codeword was carrying.
+ */
+export function nodesCovering(nodes: TlvNode[], indices: Iterable<number>): TlvNode[] {
+  const byPath = new Map<string, TlvNode>();
+  for (const index of indices) {
+    const node = nodeAt(nodes, index);
+    if (node) byPath.set(node.path, node);
+  }
+  return [...byPath.values()].sort((a, b) => a.start - b.start);
+}

@@ -48,6 +48,7 @@ export const en: Record<CopyKey, string> = {
   'matrix.yes': 'yes',
   'matrix.no': 'no',
   'matrix.carries': 'Carries',
+  'matrix.field': 'Payload field',
   'matrix.bit': 'bit',
   'matrix.placementOrder': 'Placement order',
   'matrix.table': 'Module table',

@@ -51,6 +51,7 @@ export const id = {
   'matrix.yes': 'ya',
   'matrix.no': 'tidak',
   'matrix.carries': 'Membawa',
+  'matrix.field': 'Bagian payload',
   'matrix.bit': 'bit',
   'matrix.placementOrder': 'Urutan penempatan',
   'matrix.table': 'Tabel modul',

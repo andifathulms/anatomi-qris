@@ -78,3 +78,9 @@
     min-height: 160px;
   }
 }
+
+/* The field spans the readout grid: a meaning is prose, not a short value,
+   and wrapping it into a 120 px column would cost three lines. */
+.readout__field {
+  grid-column: 1 / -1;
+}

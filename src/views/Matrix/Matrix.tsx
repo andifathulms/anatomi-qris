@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type { Build } from '../../engine/encode';
 import type { ModuleInfo } from '../../engine/provenance';
 import { useCopy } from '../../copy';
+import { nodesCovering } from '../../qris/detect';
 import { STAGE_COUNT, useActions, useDamageSet, useHighlightSet, useStore } from '../../state/store';
 import { duration, useTimedValue } from '../../ui/useTimedValue';
 import { useMatrixPainter, type PaintState } from './useMatrixPainter';
@@ -226,7 +227,20 @@ const EMPTY: Set<number> = new Set();
 
 function Readout({ module, build }: { module: ModuleInfo; build: Build }) {
   const { t } = useCopy();
+  const { qris, lensActive } = useStore();
   const role = module.role;
+
+  /*
+   * The return path. A data module resolves to its codeword, the codeword to
+   * the payload units it carries, and those to the field that owns them —
+   * which is the binding the payload tree already runs in the other
+   * direction. Character and byte indices coincide here because an EMVCo
+   * payload is ASCII, and the lens only opens on one.
+   */
+  const fields =
+    lensActive && qris && role.kind === 'data'
+      ? nodesCovering(qris.nodes, build.resolver.codewordToUnits(role.codeword))
+      : [];
   const carries =
     role.kind === 'data' || role.kind === 'ecc'
       ? `${t(roleLabelKey(role))} ${role.codeword}, ${t('matrix.bit')} ${role.bit}`
@@ -256,6 +270,18 @@ function Readout({ module, build }: { module: ModuleInfo; build: Build }) {
         <dt>{t('matrix.carries')}</dt>
         <dd>{carries}</dd>
       </div>
+      {/* Only when the lens is open, but then for every module, so the strip
+          keeps one shape as the pointer crosses from data into padding. */}
+      {lensActive && (
+        <div className="readout__field">
+          <dt>{t('matrix.field')}</dt>
+          <dd>
+            {fields.length > 0
+              ? fields.map((node) => node.meaning ?? `${t('tlv.tag')} ${node.tag}`).join(' · ')
+              : '—'}
+          </dd>
+        </div>
+      )}
       {/* Always rendered, even for function patterns, so every role fills the
           same six cells and the strip cannot grow under the pointer. */}
       <div>
