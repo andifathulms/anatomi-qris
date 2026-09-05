@@ -13,7 +13,8 @@ export const en: Record<CopyKey, string> = {
   'app.themeLight': 'Light',
   'app.specimen': 'Specimen',
   'app.stages': 'Stages',
-  'app.stagesHint': 'Drag, or pick a stage.',
+  'app.stagesHint': 'Drag to take the code apart.',
+  'app.lede': 'The code beside this is built from the text in the box below. Drag the nine stages to see how.',
 
   'input.label': 'Text or QRIS payload',
   'input.placeholder': 'Type anything, or paste a QRIS payload',

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type { Build } from '../../engine/encode';
 import type { ModuleInfo } from '../../engine/provenance';
 import { useCopy } from '../../copy';
-import { useActions, useDamageSet, useHighlightSet, useStore } from '../../state/store';
+import { STAGE_COUNT, useActions, useDamageSet, useHighlightSet, useStore } from '../../state/store';
 import { duration, useTimedValue } from '../../ui/useTimedValue';
 import { useMatrixPainter, type PaintState } from './useMatrixPainter';
 import { roleLabelKey } from './roleLabel';
@@ -48,7 +48,11 @@ export function Matrix({
   const size = build?.size ?? 21;
   const extent = size + QUIET * 2;
 
-  const stageProgress = useStageProgress(state.stage);
+  // Until the reader moves the rail, the specimen shows the finished symbol.
+  // Stage one is genuinely a bare skeleton — that is what the stage means —
+  // but a stranger landing on an empty frame reads it as a broken render, and
+  // the app's whole claim is that this thing can be taken apart.
+  const stageProgress = useStageProgress(state.stageTouched ? state.stage : STAGE_COUNT);
   const anatomyProgress = useTimedValue(
     state.rendering === 'anatomy' ? 1 : 0,
     duration('--dur-anatomy', 480),

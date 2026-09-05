@@ -185,13 +185,20 @@ function Shell() {
           <div className="workbench__column">
             <section className="panel card" aria-labelledby="stage-heading">
               <header className="panel__head">
-                <p className="panel__index">
-                  {String(stage).padStart(2, '0')}
-                  <span className="panel__index-total">/{String(STAGE_COUNT).padStart(2, '0')}</span>
-                </p>
-                <h2 className="display panel__title" id="stage-heading">
-                  {t(stageNameKey(state.stage))}
+                <h2 className="panel__step" id="stage-heading">
+                  <span className="panel__index">
+                    {String(stage).padStart(2, '0')}
+                    <span className="panel__index-total">
+                      /{String(STAGE_COUNT).padStart(2, '0')}
+                    </span>
+                  </span>
+                  <span className="panel__step-name">{t(stageNameKey(state.stage))}</span>
                 </h2>
+                {/* The largest slot on the page states what the app is, on the
+                    one stage a first-time visitor arrives at. */}
+                {!state.stageTouched && stage === 1 && (
+                  <p className="display panel__lede">{t('app.lede')}</p>
+                )}
                 <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
               </header>
               <StagePanel />

@@ -16,7 +16,8 @@ export const id = {
   'app.themeLight': 'Terang',
   'app.specimen': 'Spesimen',
   'app.stages': 'Tahapan',
-  'app.stagesHint': 'Geser atau pilih satu tahap.',
+  'app.stagesHint': 'Geser untuk membongkar kodenya.',
+  'app.lede': 'Kode di sebelah dibangun dari teks di kotak bawah. Geser sembilan tahap untuk melihat caranya.',
 
   'input.label': 'Teks atau payload QRIS',
   'input.placeholder': 'Ketik apa saja, atau tempel payload QRIS',

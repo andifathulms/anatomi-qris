@@ -40,6 +40,13 @@ export interface AppState {
   forceMask: number | null;
   /** Continuous, 1 to 9. Fractional while the scrubber is between stations. */
   stage: number;
+  /**
+   * False until the reader first moves the rail. While it is false the
+   * specimen shows the finished symbol rather than stage one's bare
+   * skeleton — a first-time visitor should see a QR code, not an empty
+   * frame that reads as a failed render.
+   */
+  stageTouched: boolean;
   rendering: 'printed' | 'anatomy';
   locale: Locale;
   /** Dark is the instrument, light is the lab notebook. DESIGN.md §2.1. */
@@ -94,7 +101,11 @@ function reducer(state: AppState, action: Action): AppState {
         forceMask: null,
       };
     case 'setStage':
-      return { ...state, stage: Math.min(STAGE_COUNT, Math.max(1, action.stage)) };
+      return {
+        ...state,
+        stage: Math.min(STAGE_COUNT, Math.max(1, action.stage)),
+        stageTouched: true,
+      };
     case 'setRendering':
       return { ...state, rendering: action.rendering };
     case 'setLocale':
@@ -155,6 +166,7 @@ function initialState(): AppState {
     ecLevel: ecParam && EC_LEVELS.includes(ecParam) ? ecParam : 'M',
     forceMask: null,
     stage: 1,
+    stageTouched: false,
     rendering: 'printed',
     locale: 'id',
     theme: initialTheme(),

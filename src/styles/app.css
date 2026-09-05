@@ -162,21 +162,50 @@
   border-bottom: 1px solid var(--rule);
 }
 
-.panel__index {
+/*
+ * The step marker: position in the sequence and the name of the step, at one
+ * size. It is a waypoint, not a title, and it no longer competes with the
+ * wordmark for the reader's idea of what this page is called.
+ */
+.panel__step {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
   font-family: var(--font-display);
-  font-size: var(--t-small);
-  font-weight: 500;
-  letter-spacing: var(--track-label);
+  font-size: var(--t-title);
+  line-height: var(--t-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
+}
+
+.panel__index {
+  color: var(--ink-soft);
+  letter-spacing: var(--track-label);
 }
 
 .panel__index-total {
   color: var(--ink-soft);
 }
 
-.panel__title {
+.panel__step-name {
   color: var(--ink);
+}
+
+/*
+ * The one sentence a stranger has five seconds to read. It is language, so it
+ * is set in sans — the display face is mono and mono is for data. Four lines
+ * of monospace at 40 px is a wall; three lines of sans is a sentence.
+ */
+.panel__head .panel__lede {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  max-width: 30ch;
+  margin-top: var(--space-1);
 }
 
 .panel__intro {
