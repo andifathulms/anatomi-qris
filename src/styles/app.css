@@ -303,21 +303,54 @@
     gap: var(--space-1) var(--space-2);
   }
 
-  .topbar__identity {
-    width: 100%;
+  /*
+   * On a phone the tagline is the only thing on the first screen that says
+   * what this page is, so it stays. It used to be hidden here to save 30 px,
+   * which spent the stranger's only explanation to buy room for a theme
+   * switch.
+   *
+   * One column, three rows: identity, then the tagline at full width so the
+   * wordmark never wraps, then settings. Theme and locale are low-frequency
+   * settings and they sit below the sentence that explains the page, not
+   * beside it competing for 390 px of width.
+   */
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-1);
   }
 
-  /* The descriptor is a second line of the wordmark on desktop and a third
-     row of sticky chrome on a phone. It survives in the page title, the
-     social card and the README; it does not need to cost the specimen 30 px
-     of every screen. */
+  .topbar__identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .topbar__wordmark {
+    border-bottom: 0;
+  }
+
   .topbar__tagline {
-    display: none;
+    border-left: 0;
+    padding-left: 0;
+    font-size: var(--t-small);
+    max-width: 42ch;
   }
 
   .topbar__controls {
-    width: 100%;
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-1) var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  /* The offline promise belongs with the payload box more than with the
+     settings, but it is cheap here and it anchors the row. */
+  .topbar__offline {
+    order: -1;
+    flex: 1 0 100%;
   }
 
   .console {
