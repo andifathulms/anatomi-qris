@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useCopy } from '../copy';
 import { useStore } from '../state/store';
 import { formatInfo, hasVersionInfo, versionInfo } from '../engine/tables';
@@ -26,6 +27,8 @@ export function FinalStage() {
         <Figure label={t('summary.ec')} value={build.ecLevel} />
       </dl>
 
+      <ModuleBudget />
+
       <table className="data-table">
         <tbody>
           <tr>
@@ -48,6 +51,92 @@ export function FinalStage() {
           </tr>
         </tbody>
       </table>
+    </div>
+  );
+}
+
+/**
+ * Where the picture actually goes. Almost everyone assumes a QR code is mostly
+ * the thing it encodes; it is mostly machinery, and the payload proper — the
+ * bytes a reader typed or a merchant registered — is a small minority of a
+ * large grid. The bar reuses the anatomy palette, so it needs no legend of its
+ * own: these are the same colours those roles wear in the matrix.
+ */
+function ModuleBudget() {
+  const { build } = useStore();
+  const { t } = useCopy();
+
+  const parts = useMemo(() => {
+    if (!build) return null;
+    let fn = 0;
+    let info = 0;
+    let data = 0;
+    let ecc = 0;
+    let rest = 0;
+    let payload = 0;
+    for (const m of build.modules) {
+      switch (m.role.kind) {
+        case 'format':
+        case 'version':
+          info++;
+          break;
+        case 'data':
+          data++;
+          // A data codeword that resolves to no payload unit is header,
+          // terminator or padding — structure wearing the data colour.
+          if (build.resolver.codewordToUnits(m.role.codeword).length > 0) payload++;
+          break;
+        case 'ecc':
+          ecc++;
+          break;
+        case 'remainder':
+          rest++;
+          break;
+        default:
+          fn++;
+      }
+    }
+    const total = build.modules.length;
+    return { fn, info, data, ecc, rest, payload, total };
+  }, [build]);
+
+  if (!parts) return null;
+
+  const rows: Array<[string, number, string]> = [
+    [t('summary.functionPatterns'), parts.fn, 'var(--role-finder)'],
+    [t('summary.infoBits'), parts.info, 'var(--role-format)'],
+    [t('role.data'), parts.data, 'var(--role-data)'],
+    [t('role.ecc'), parts.ecc, 'var(--role-ecc)'],
+    [t('role.remainder'), parts.rest, 'var(--role-remainder)'],
+  ];
+  const pct = (n: number) => ((n / parts.total) * 100).toFixed(1);
+
+  return (
+    <div className="budget">
+      <p className="eyebrow">{t('summary.budget')}</p>
+      <div className="budget__bar" role="presentation">
+        {rows.map(([label, count, colour]) => (
+          <span
+            key={label}
+            className="budget__segment"
+            style={{ background: colour, width: `${(count / parts.total) * 100}%` }}
+          />
+        ))}
+      </div>
+      <dl className="budget__rows">
+        {rows.map(([label, count, colour]) => (
+          <div key={label} className="budget__row">
+            <dt>
+              <span className="budget__swatch" style={{ background: colour }} aria-hidden="true" />
+              {label}
+            </dt>
+            <dd>{count} · {pct(count)}%</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="label">
+        {t('summary.budgetPayload', { count: parts.payload, percent: pct(parts.payload) })}
+      </p>
     </div>
   );
 }

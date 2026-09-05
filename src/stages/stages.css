@@ -93,3 +93,64 @@
   border: 1px solid var(--rule);
   padding: var(--space-2);
 }
+
+/*
+ * The module budget. Reuses the anatomy palette rather than introducing a
+ * sixth set of colours, so the bar reads against the matrix beside it without
+ * a legend of its own.
+ */
+.budget {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.budget__bar {
+  display: flex;
+  height: var(--space-2);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+
+.budget__segment {
+  display: block;
+  height: 100%;
+}
+
+.budget__rows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2px var(--space-2);
+  margin: 0;
+}
+
+.budget__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  border-bottom: 1px solid var(--rule);
+  padding: 2px 0;
+}
+
+.budget__row dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-mid);
+}
+
+.budget__row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget__swatch {
+  width: var(--unit);
+  height: var(--unit);
+  display: block;
+  flex: none;
+}
