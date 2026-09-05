@@ -84,3 +84,24 @@
   max-width: 44ch;
   color: var(--ink-mid);
 }
+
+.damage__fields {
+  display: grid;
+  gap: var(--space-1);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: var(--space-2);
+}
+
+.damage__field-list {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--ink);
+}
+
+/* Only the fields correction genuinely failed to rescue wear the damage
+   colour. A field that was hit and recovered is a demonstration, not a loss. */
+.damage__field-list [data-lost] {
+  color: var(--damage);
+  font-weight: 500;
+}

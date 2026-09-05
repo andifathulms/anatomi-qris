@@ -3,6 +3,7 @@ import { decode } from '../../engine/decode';
 import { toGrid } from '../../engine/encode';
 import { blockSpec } from '../../engine/tables';
 import { useCopy } from '../../copy';
+import { nodesCovering } from '../../qris/detect';
 import { useActions, useDamageSet, useStore } from '../../state/store';
 import './damage-lab.css';
 
@@ -25,10 +26,14 @@ export function useDamageReport() {
     // placement. Nothing recomputes geometry.
     const corruptByBlock = new Map<number, Set<number>>();
     const corrupt = new Set<number>();
+    // Data codewords carry payload; correction codewords carry none. Keeping
+    // the block against each one is what separates "hit" from "lost" below.
+    const hitDataCodewords = new Map<number, number>();
     for (const index of damage) {
       const role = build.modules[index]?.role;
       if (!role || (role.kind !== 'data' && role.kind !== 'ecc')) continue;
       corrupt.add(role.streamIndex);
+      if (role.kind === 'data') hitDataCodewords.set(role.codeword, role.block);
       let set = corruptByBlock.get(role.block);
       if (!set) {
         set = new Set();
@@ -53,8 +58,26 @@ export function useDamageReport() {
       }
     }
 
+    /*
+     * Which payload units the damage touched, and which of them sit in a block
+     * correction could not rescue. The difference between the two is the whole
+     * point: a field that was hit and recovered is a demonstration, a field in
+     * a failed block is actually gone, and the copy must never blur them.
+     */
+    const failedBlocks = new Set(result.failedBlocks);
+    const hitUnits = new Set<number>();
+    const lostUnits = new Set<number>();
+    for (const [codeword, block] of hitDataCodewords) {
+      for (const unit of build.resolver.codewordToUnits(codeword)) {
+        hitUnits.add(unit);
+        if (failedBlocks.has(block)) lostUnits.add(unit);
+      }
+    }
+
     return {
       modulesHit: damage.size,
+      hitUnits,
+      lostUnits,
       corruptCodewords: corrupt.size,
       capacity,
       perBlock,
@@ -69,7 +92,7 @@ export function useDamageReport() {
 }
 
 export function DamageLab() {
-  const { state, build } = useStore();
+  const { state, build, qris, lensActive } = useStore();
   const { setNoise, clearDamage, repair } = useActions();
   const { t } = useCopy();
   const report = useDamageReport();
@@ -133,6 +156,37 @@ export function DamageLab() {
           />
         </div>
       </div>
+
+      {/*
+        The two layers meeting at the moment of failure. Correction protects
+        this merchant's name, not "data" in the abstract, and when it runs out
+        something nameable is gone.
+      */}
+      {lensActive && qris && report.hitUnits.size > 0 && (
+        <div className="damage__fields">
+          <p className="eyebrow">{t('damage.fieldsHit')}</p>
+          {/* One list, with the losses marked inside it. Two lists said the
+              same names twice at heavy damage and buried the arithmetic. */}
+          <p className="damage__field-list">
+            {nodesCovering(qris.nodes, report.hitUnits).map((node, i, all) => {
+              const lost = [...report.lostUnits].some(
+                (u) => u >= node.start && u < node.end,
+              );
+              return (
+                <span key={node.path + node.start}>
+                  <span data-lost={lost || undefined}>
+                    {node.meaning ?? `${t('tlv.tag')} ${node.tag}`}
+                  </span>
+                  {i < all.length - 1 ? ' · ' : ''}
+                </span>
+              );
+            })}
+          </p>
+          <p className="label">
+            {report.lostUnits.size > 0 ? t('damage.fieldsLostKey') : t('damage.fieldsHeld')}
+          </p>
+        </div>
+      )}
 
       <table className="data-table">
         <tbody>

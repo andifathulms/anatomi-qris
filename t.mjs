@@ -1,24 +1,31 @@
 import { chromium } from 'playwright';
 const b = await chromium.launch();
-const p = await b.newPage({ viewport: { width: 1440, height: 1000 } });
+const p = await b.newPage({ viewport: { width: 1440, height: 1100 } });
 await p.goto('http://localhost:4173/anatomi-qris/', { waitUntil: 'networkidle' });
 await p.waitForTimeout(700);
-await p.locator('.scrubber__station').nth(7).click();   // stage 8, finished code
-await p.waitForTimeout(700);
-const svg = await p.locator('.matrix__svg').boundingBox();
-// Sweep a horizontal line across the data region and collect what the readout says.
-const seen = new Map();
-for (let i = 0; i < 60; i++) {
-  const x = svg.x + svg.width * (0.15 + 0.7 * (i / 59));
-  const y = svg.y + svg.height * 0.62;
-  await p.mouse.move(x, y);
-  await p.waitForTimeout(25);
-  const row = await p.evaluate(() => {
-    const el = document.querySelector('.readout__field dd');
-    return el ? el.textContent.trim() : '(no field row)';
+await p.locator('.scrubber__station').nth(8).click();
+await p.waitForTimeout(600);
+const set = async (v) => {
+  await p.locator('.damage__slider input').evaluate((el, val) => {
+    const s = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    s.call(el, val); el.dispatchEvent(new Event('input', { bubbles: true }));
+  }, v);
+  await p.waitForTimeout(500);
+  return p.evaluate(() => {
+    const all = [...document.querySelectorAll('.damage__field-list span[data-lost], .damage__field-list span:not([data-lost])')];
+    const lost = [...document.querySelectorAll('.damage__field-list [data-lost]')].map(e=>e.textContent);
+    return {
+      headline: document.querySelector('.damage__headline')?.textContent?.trim(),
+      key: document.querySelector('.damage__fields .label')?.textContent?.trim(),
+      lostCount: lost.length,
+      lines: document.querySelector('.damage__field-list')?.getBoundingClientRect().height,
+    };
   });
-  seen.set(row, (seen.get(row) || 0) + 1);
+};
+for (const v of ['0.01','0.03','0.08']) {
+  const r = await set(v);
+  console.log(`noise ${v}: ${r.headline} | lost fields: ${r.lostCount} | list height ${Math.round(r.lines)}px`);
+  console.log(`   key: ${r.key}`);
 }
-console.log('distinct payload fields named while sweeping one row of the matrix:');
-for (const [k, v] of [...seen].sort((a,b)=>b[1]-a[1])) console.log(`  ${String(v).padStart(3)}x  ${k}`);
+await p.screenshot({ path: process.argv[2] + '/a2-one-list.png' });
 await b.close();
