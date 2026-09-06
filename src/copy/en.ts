@@ -157,6 +157,7 @@ export const en: Record<CopyKey, string> = {
   'mask.rule3Short': 'Finder-alike',
   'mask.rule4Short': 'Imbalance',
   'mask.total': 'Total',
+  'mask.cardLabel': 'Mask {n}, total penalty {total}',
   'mask.winner': 'Chosen',
   'mask.forced': 'Forced',
   'mask.forceHint': 'Pick a mask to force it, or go back to the automatic choice.',

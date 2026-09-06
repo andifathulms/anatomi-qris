@@ -160,6 +160,7 @@ export const id = {
   'mask.rule3Short': 'Mirip finder',
   'mask.rule4Short': 'Timpang',
   'mask.total': 'Total',
+  'mask.cardLabel': 'Mask {n}, penalti total {total}',
   'mask.winner': 'Terpilih',
   'mask.forced': 'Dipaksa',
   'mask.forceHint': 'Pilih satu mask untuk memaksanya, atau kembalikan ke pilihan otomatis.',

@@ -80,6 +80,14 @@ export function MaskGallery() {
               <button
                 type="button"
                 className="mask-card"
+                /* The name was the whole card's text run together:
+                   "0Total2178Deret938Blok1080Mirip finder160Tim...". The
+                   detail stays in the card for browse mode; the name is now
+                   the two things that identify it. */
+                aria-label={
+                  t('mask.cardLabel', { n: score.mask, total: score.total }) +
+                  (isWinner ? `, ${t('mask.winner')}` : '')
+                }
                 aria-pressed={selected === score.mask}
                 onClick={() => setSelectedMask(selected === score.mask ? null : score.mask)}
               >
@@ -106,7 +114,6 @@ export function MaskGallery() {
                     <span className="mono mask-card__ratio">{(score.darkRatio * 100).toFixed(1)}%</span>
                   </span>
                 </span>
-                {isWinner && <span className="visually-hidden">{t('mask.winner')}</span>}
               </button>
             </li>
           );
