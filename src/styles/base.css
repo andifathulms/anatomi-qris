@@ -304,3 +304,24 @@ textarea {
 .skip-link:focus {
   top: var(--space-1);
 }
+
+/*
+ * A fixed-height scroll region. Four of the app's instruments live in one, and
+ * each of them cut its content mid-glyph at the bottom edge — a sliced row of
+ * hex reads as broken rendering, not as "there is more below".
+ *
+ * The gradients are painted in two coordinate spaces: the cover pair scrolls
+ * with the content (background-attachment: local) and the shadow pair is fixed
+ * to the box. Where content has been scrolled away the cover moves off and the
+ * shadow shows through, so the cue appears only at an edge there is more
+ * beyond, and disappears at the top and bottom of the run. No script.
+ */
+.scroll-well {
+  background:
+    linear-gradient(var(--ground-sunk) 40%, transparent) top / 100% 20px no-repeat local,
+    linear-gradient(transparent, var(--ground-sunk) 60%) bottom / 100% 20px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, var(--well-shadow), transparent) top / 100% 8px
+      no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, var(--well-shadow), transparent) bottom / 100% 8px
+      no-repeat scroll;
+}

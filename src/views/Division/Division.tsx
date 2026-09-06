@@ -85,7 +85,7 @@ export function Division() {
         <Poly bytes={generator} notation={notation} />
       </div>
 
-      <ol className="division__steps">
+      <ol className="division__steps scroll-well">
         {trace.slice(0, shown).map((step) => (
           <li key={step.iteration} className="division__step">
             <div className="division__step-head">

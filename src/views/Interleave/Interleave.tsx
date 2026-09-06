@@ -65,7 +65,7 @@ export function Interleave() {
           than directly under the row, so role="cell" was never a child of its
           role="row" and no reader would have announced a table anyway. The
           real text equivalent for this data is the codeword table. */}
-      <div className="interleave__grid" role="group" aria-label={t('interleave.heading')}>
+      <div className="interleave__grid scroll-well" role="group" aria-label={t('interleave.heading')}>
         {build.blocks.map((block) => (
           <div
             className="interleave__row"
@@ -108,7 +108,7 @@ export function Interleave() {
 
       <div className="interleave__output">
         <span className="eyebrow">{t('interleave.output')}</span>
-        <div className="interleave__cells interleave__cells--output">
+        <div className="interleave__cells interleave__cells--output scroll-well">
           {Array.from(build.interleaved.subarray(0, dealt), (byte, i) => {
             const source = build.blockPlan.sources[i];
             const ramp = source.kind === 'data' ? tints.data : tints.ecc;

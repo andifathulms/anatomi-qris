@@ -52,7 +52,7 @@ export function Bitstream({ grouping }: { grouping: Grouping }) {
         ))}
       </ol>
 
-      <div className="bitstream__ribbon" data-grouping={grouping}>
+      <div className="bitstream__ribbon scroll-well" data-grouping={grouping}>
         {chunk(bits, 8).map((group, codeword) => (
           <button
             key={codeword}
