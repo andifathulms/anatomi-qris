@@ -294,5 +294,6 @@ Do not start the UI before step 4 passes.
 
 ## 12. Deployment
 
-GitHub Pages via Actions. `base` set to the repo path. CI: typecheck → lint → test →
-oracle → build. Deploy only on green.
+GitHub Pages via Actions. `base` set to the repo path. CI: typecheck → test (the oracle
+runs here) → build → bundle budget. Deploy only on green. There is no lint step and no
+ESLint config in the repo; the pipeline above is what the workflows actually run.

@@ -153,5 +153,5 @@ not fully closed out. Scope stays as written above while that finishes.
 - Contrast floors hold in both themes: primary text ≥ 12:1 on its surface, secondary
   ≥ 7:1, soft ≥ 4.6:1. Focus is a 2 px marker outline at 2 px offset on every interactive
   element and is never removed.
-- Nothing below 11 px. No layout shift when a readout, legend, or tree appears.
+- Nothing below 12 px. No layout shift when a readout, legend, or tree appears.
 - Both a dark and a light theme, at the same contrast floors.
