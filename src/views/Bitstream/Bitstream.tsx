@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type { Build } from '../../engine/encode';
 import type { BitSpan } from '../../engine/segments';
 import { useCopy, type CopyKey } from '../../copy';
@@ -31,6 +31,23 @@ export function Bitstream({ grouping }: { grouping: Grouping }) {
   const { t } = useCopy();
 
   const bits = useMemo(() => (build ? unpack(build) : []), [build]);
+
+  /*
+   * Roving tabindex. 216 codewords meant 216 tab stops, so reaching anything
+   * past the ribbon took 216 presses — the same problem the stage rail solved
+   * by making nine stations one control. Here the buttons stay native buttons
+   * and only one is in the tab order at a time; the arrows move between them.
+   */
+  const [cursor, setCursor] = useState(0);
+  const ribbon = useRef<HTMLDivElement | null>(null);
+
+  const moveTo = useCallback((next: number, total: number) => {
+    const clamped = Math.min(total - 1, Math.max(0, next));
+    setCursor(clamped);
+    const buttons = ribbon.current?.querySelectorAll<HTMLButtonElement>('.bitstream__codeword');
+    buttons?.[clamped]?.focus();
+  }, []);
+
   if (!build) return null;
 
   const selectCodeword = (codeword: number) => {
@@ -52,23 +69,63 @@ export function Bitstream({ grouping }: { grouping: Grouping }) {
         ))}
       </ol>
 
-      <div className="bitstream__ribbon scroll-well" data-grouping={grouping}>
+      <p className="label">{t('bitstream.ribbonHint')}</p>
+
+      <div
+        ref={ribbon}
+        className="bitstream__ribbon scroll-well"
+        data-grouping={grouping}
+        onKeyDown={(event) => {
+          const total = build.dataCodewords.length;
+          const step =
+            event.key === 'ArrowRight' ? 1
+            : event.key === 'ArrowLeft' ? -1
+            : event.key === 'PageDown' ? 16
+            : event.key === 'PageUp' ? -16
+            : 0;
+          if (step !== 0) {
+            event.preventDefault();
+            moveTo(cursor + step, total);
+          } else if (event.key === 'Home') {
+            event.preventDefault();
+            moveTo(0, total);
+          } else if (event.key === 'End') {
+            event.preventDefault();
+            moveTo(total - 1, total);
+          }
+        }}
+      >
         {chunk(bits, 8).map((group, codeword) => (
           <button
             key={codeword}
             type="button"
             className="bitstream__codeword"
+            tabIndex={codeword === cursor ? 0 : -1}
             aria-pressed={selected.has(codeword)}
+            /* The digits inside are decorative to a reader — eight of them
+               announced with no idea which codeword they belong to. */
+            aria-label={t('bitstream.codewordLabel', {
+              n: codeword,
+              hex: toHex(build.dataCodewords[codeword]),
+            })}
             title={`${codeword}: ${toHex(build.dataCodewords[codeword])}`}
+            onFocus={() => setCursor(codeword)}
             onClick={() => selectCodeword(codeword)}
           >
             {group.map((bit) => (
-              <span key={bit.index} className="bitstream__bit" data-kind={bit.kind}>
+              <span
+                key={bit.index}
+                className="bitstream__bit"
+                data-kind={bit.kind}
+                aria-hidden="true"
+              >
                 {bit.value ? '1' : '0'}
               </span>
             ))}
             {grouping === 'codewords' && (
-              <span className="bitstream__hex">{toHex(build.dataCodewords[codeword])}</span>
+              <span className="bitstream__hex" aria-hidden="true">
+                {toHex(build.dataCodewords[codeword])}
+              </span>
             )}
           </button>
         ))}

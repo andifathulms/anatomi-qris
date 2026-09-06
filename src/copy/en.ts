@@ -119,6 +119,8 @@ export const en: Record<CopyKey, string> = {
   'bitstream.padBits': 'Padding to the byte boundary',
   'bitstream.padBytes': 'Pad bytes',
   'bitstream.bits': 'bits',
+  'bitstream.ribbonHint': 'Use the arrow keys to move between codewords.',
+  'bitstream.codewordLabel': 'Codeword {n}, {hex}',
 
   'division.gloss': 'Polynomial long division over GF(256). Each step eliminates one leading term with a multiple of the generator.',
   'division.generator': 'Generator polynomial',

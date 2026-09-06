@@ -122,6 +122,8 @@ export const id = {
   'bitstream.padBits': 'Padding ke batas byte',
   'bitstream.padBytes': 'Byte padding',
   'bitstream.bits': 'bit',
+  'bitstream.ribbonHint': 'Gunakan tombol panah untuk berpindah antar codeword.',
+  'bitstream.codewordLabel': 'Codeword {n}, {hex}',
 
   'division.gloss': 'Pembagian panjang polinomial di GF(256). Setiap langkah menghapus satu suku terdepan dengan sebuah kelipatan generator.',
   'division.generator': 'Polinomial generator',
