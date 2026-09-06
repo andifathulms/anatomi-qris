@@ -169,7 +169,8 @@
   display: grid;
   gap: var(--space-1);
   border-top: 1px solid var(--rule);
-  padding-top: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-2) 0;
 }
 
 .mask-breakdown__list {

@@ -72,6 +72,10 @@ export function MaskGallery() {
         ))}
       </ol>
 
+      {/* Above the grid, not below it: eight cards is a long way to scroll
+          past to find the working for the one you just clicked. */}
+      <MaskBreakdown />
+
       <ul className="mask-gallery__grid">
         {build.maskScores.map((score) => {
           const isWinner = score.mask === build.chosenMask;
@@ -119,8 +123,6 @@ export function MaskGallery() {
           );
         })}
       </ul>
-
-      <MaskBreakdown />
     </div>
   );
 }
