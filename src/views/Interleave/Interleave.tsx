@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useCopy } from '../../copy';
-import { useStore } from '../../state/store';
+import { useActions, useStore } from '../../state/store';
 import { duration, prefersReducedMotion } from '../../ui/useTimedValue';
 import { toHex } from '../Bitstream/Bitstream';
 import { blockTints } from './blockTint';
@@ -15,12 +15,38 @@ import './interleave.css';
  * tints in place, which is where the point actually lands.
  */
 export function Interleave() {
-  const { build } = useStore();
+  const { build, state } = useStore();
+  const { setHighlight } = useActions();
   const { t } = useCopy();
   const [column, setColumn] = useState<number | null>(null);
   const frame = useRef(0);
 
   const tints = useMemo(() => (build ? blockTints(build.blocks.length) : null), [build]);
+
+  const selectedBlock =
+    state.highlight?.source === 'block' ? Number(state.highlight.label) : null;
+
+  const selectBlock = (index: number) => {
+    if (!build) return;
+    if (selectedBlock === index) {
+      setHighlight(null);
+      return;
+    }
+    const modules: number[] = [];
+    for (const m of build.modules) {
+      const role = m.role;
+      if ((role.kind === 'data' || role.kind === 'ecc') && role.block === index) {
+        modules.push(m.y * build.size + m.x);
+      }
+    }
+    setHighlight({
+      source: 'block',
+      modules,
+      codewords: [],
+      charRange: null,
+      label: String(index),
+    });
+  };
   const maxColumn = useMemo(() => {
     if (!build) return 0;
     return Math.max(...build.blocks.map((b) => b.data.length)) + build.blockPlan.eccPerBlock;
@@ -73,9 +99,20 @@ export function Interleave() {
             aria-label={`${t('interleave.block')} ${block.index}`}
             key={block.index}
           >
-            <span className="interleave__row-label label">
+            {/*
+              "Which squares are block 2?" had no answer: the stage argued that
+              adjacent modules come from different blocks and gave no way to
+              check it. The store has declared source: 'block' since it was
+              written and nothing ever constructed one.
+            */}
+            <button
+              type="button"
+              className="interleave__row-label"
+              aria-pressed={selectedBlock === block.index}
+              onClick={() => selectBlock(block.index)}
+            >
               {t('interleave.block')} {block.index}
-            </span>
+            </button>
             <div className="interleave__cells">
               <span className="visually-hidden">{t('interleave.data')}</span>
               {Array.from(block.data, (byte, i) => (

@@ -66,3 +66,29 @@
   border-top: 1px solid var(--rule);
   padding-top: var(--space-2);
 }
+
+/* The block label is a control now: pressing it lights that block's modules
+   in the matrix, which is how the coffee-stain argument becomes checkable
+   rather than asserted. */
+.interleave__row-label {
+  background: none;
+  border: 0;
+  padding: 2px var(--space-1) 2px 0;
+  min-height: var(--space-3);
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-mid);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.interleave__row-label:hover {
+  color: var(--ink);
+}
+
+.interleave__row-label[aria-pressed='true'] {
+  color: var(--marker);
+  font-weight: 500;
+}
