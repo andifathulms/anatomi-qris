@@ -129,10 +129,16 @@
   height: 100%;
 }
 
+/*
+ * 150 px gave three columns at desktop width, which wrapped both the longest
+ * label and its own value, so every row grew to two lines to accommodate the
+ * worst and five items left two orphan cells. A wider track settles at two
+ * columns where every label fits on one line.
+ */
 .budget__rows {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 2px var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2px var(--space-3);
   margin: 0;
 }
 
