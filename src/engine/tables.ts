@@ -144,11 +144,11 @@ export function charCountBits(version: number, mode: Mode): number {
  * kind of transcription CLAUDE.md §8.2 rules out.
  */
 
-const FORMAT_GENERATOR = 0b101_0011_0111; // x^10 + x^8 + x^5 + x^4 + x^2 + x + 1
-const FORMAT_XOR = 0b101_0100_0001_0010;
+export const FORMAT_GENERATOR = 0b101_0011_0111; // x^10 + x^8 + x^5 + x^4 + x^2 + x + 1
+export const FORMAT_XOR = 0b101_0100_0001_0010;
 const VERSION_GENERATOR = 0b1_1111_0010_0101; // x^12 + x^11 + … + x^2 + 1
 
-function bchRemainder(value: number, generator: number, degree: number): number {
+export function bchRemainder(value: number, generator: number, degree: number): number {
   let rest = value;
   const genBits = bitLength(generator);
   for (let i = bitLength(rest); i > degree; i--) {

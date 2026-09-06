@@ -1,7 +1,15 @@
 import { useMemo } from 'react';
 import { useCopy } from '../copy';
 import { useStore } from '../state/store';
-import { formatInfo, hasVersionInfo, versionInfo } from '../engine/tables';
+import {
+  EC_INDICATOR,
+  FORMAT_GENERATOR,
+  FORMAT_XOR,
+  bchRemainder,
+  formatInfo,
+  hasVersionInfo,
+  versionInfo,
+} from '../engine/tables';
 import { Figure } from './InputStage';
 import { CITATIONS, Cite } from '../ui/Cite';
 
@@ -15,6 +23,17 @@ export function FinalStage() {
   if (!build) return null;
 
   const format = formatInfo(build.ecLevel, build.chosenMask);
+
+  /*
+   * The working behind that fifteen-bit string. It was printed as a fact while
+   * the division next door showed every step of its own arithmetic. Recomputed
+   * here from the engine's own constants rather than a second copy of them, so
+   * the display cannot drift from what was written into the matrix.
+   */
+  const fmtData = (EC_INDICATOR[build.ecLevel] << 3) | build.chosenMask;
+  const fmtRemainder = bchRemainder(fmtData << 10, FORMAT_GENERATOR, 10);
+  const fmtRaw = (fmtData << 10) | fmtRemainder;
+  const bits = (n: number, width: number) => n.toString(2).padStart(width, '0');
   const version = hasVersionInfo(build.version) ? versionInfo(build.version) : null;
 
   return (
@@ -32,8 +51,39 @@ export function FinalStage() {
       <table className="data-table">
         <tbody>
           <tr>
+            <th scope="row">{t('final.formatData')}</th>
+            <td className="mono-bits">
+              {bits(fmtData, 5)}
+              <span className="data-table__gloss">
+                {t('final.formatDataGloss', {
+                  ec: build.ecLevel,
+                  ecBits: bits(EC_INDICATOR[build.ecLevel], 2),
+                  mask: build.chosenMask,
+                  maskBits: bits(build.chosenMask, 3),
+                })}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">{t('final.formatBch')}</th>
+            <td className="mono-bits">
+              {bits(fmtRemainder, 10)}
+              <span className="data-table__gloss">
+                {t('final.formatBchGloss', { generator: bits(FORMAT_GENERATOR, 11) })}
+              </span>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">{t('role.format')}</th>
-            <td className="mono-bits">{format.toString(2).padStart(15, '0')}</td>
+            <td className="mono-bits">
+              {bits(format, 15)}
+              <span className="data-table__gloss">
+                {t('final.formatXorGloss', {
+                  raw: bits(fmtRaw, 15),
+                  mask: bits(FORMAT_XOR, 15),
+                })}
+              </span>
+            </td>
           </tr>
           <tr>
             <th scope="row">{t('role.version')}</th>
