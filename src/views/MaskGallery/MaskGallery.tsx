@@ -119,6 +119,96 @@ export function MaskGallery() {
           );
         })}
       </ul>
+
+      <MaskBreakdown />
+    </div>
+  );
+}
+
+/**
+ * How a card's numbers were arrived at. The division view next door shows
+ * every XOR of a 216-step long division; the gallery showed four totals and
+ * asked to be believed. The engine already records the points each individual
+ * offence costs — collectPenaltyFeatures returns them — and only the sums were
+ * ever displayed.
+ */
+function MaskBreakdown() {
+  const { build, state } = useStore();
+  const { t } = useCopy();
+
+  const shown = state.selectedMask ?? build?.chosenMask ?? null;
+
+  const sums = useMemo(() => {
+    if (!build || shown === null) return null;
+    const grid = build.maskGrids[shown];
+    const features = collectPenaltyFeatures(grid, build.size);
+    const of = (rule: PenaltyRule) => features.filter((f) => f.rule === rule);
+    const score = build.maskScores[shown];
+    const percent = (score.darkCount * 100) / (build.size * build.size);
+    return {
+      score,
+      runs: of(1).length,
+      blocks: of(2).length,
+      finders: of(3).length,
+      percent,
+      deviation: Math.abs(percent - 50),
+      steps: Math.floor(Math.abs(percent - 50) / 5),
+    };
+  }, [build, shown]);
+
+  if (!build || !sums || shown === null) return null;
+  const { score } = sums;
+
+  return (
+    <div className="mask-breakdown">
+      <h4 className="eyebrow">{t('mask.breakdown', { n: shown })}</h4>
+      <dl className="mask-breakdown__list">
+        <Line
+          label={t('mask.rule1Short')}
+          working={t('mask.rule1Working', { runs: sums.runs })}
+          value={score.rule1}
+        />
+        <Line
+          label={t('mask.rule2Short')}
+          working={t('mask.rule2Working', { blocks: sums.blocks })}
+          value={score.rule2}
+        />
+        <Line
+          label={t('mask.rule3Short')}
+          working={t('mask.rule3Working', { finders: sums.finders })}
+          value={score.rule3}
+        />
+        <Line
+          label={t('mask.rule4Short')}
+          working={t('mask.rule4Working', {
+            percent: sums.percent.toFixed(1),
+            deviation: sums.deviation.toFixed(1),
+            steps: sums.steps,
+          })}
+          value={score.rule4}
+        />
+        <Line label={t('mask.total')} working="" value={score.total} isTotal />
+      </dl>
+    </div>
+  );
+}
+
+function Line({
+  label,
+  working,
+  value,
+  isTotal,
+}: {
+  label: string;
+  working: string;
+  value: number;
+  isTotal?: boolean;
+}) {
+  return (
+    <div className="mask-breakdown__line" data-total={isTotal || undefined}>
+      <dt>{label}</dt>
+      <dd className="mask-breakdown__working">{working}</dd>
+      <dd className="mask-breakdown__value">{value}</dd>
     </div>
   );
 }

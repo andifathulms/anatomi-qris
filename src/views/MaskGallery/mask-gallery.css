@@ -160,3 +160,62 @@
   line-height: var(--t-micro-lh);
   color: var(--ink-soft);
 }
+
+/*
+ * The working, not just the answer. Sits under the gallery because a card is
+ * a quarter of a column wide and this is a sentence per rule.
+ */
+.mask-breakdown {
+  display: grid;
+  gap: var(--space-1);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+
+.mask-breakdown__list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+
+.mask-breakdown__line {
+  display: grid;
+  grid-template-columns: 14ch minmax(0, 1fr) 6ch;
+  gap: var(--space-2);
+  align-items: baseline;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.mask-breakdown__line dt {
+  color: var(--ink-mid);
+  font-size: var(--t-small);
+}
+
+.mask-breakdown__working {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
+}
+
+.mask-breakdown__value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ink);
+}
+
+.mask-breakdown__line[data-total] {
+  border-bottom: 0;
+  border-top: 1px solid var(--rule-strong);
+  margin-top: 2px;
+}
+
+.mask-breakdown__line[data-total] dt,
+.mask-breakdown__line[data-total] .mask-breakdown__value {
+  color: var(--ink);
+  font-weight: 500;
+}
