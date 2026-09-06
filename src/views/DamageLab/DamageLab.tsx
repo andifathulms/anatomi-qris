@@ -110,18 +110,22 @@ export function DamageLab() {
     <div className="damage">
       <p className="label">{t('damage.hint')}</p>
 
-      <label className="damage__slider">
-        <span className="eyebrow">{t('damage.noise')}</span>
+      <div className="damage__slider">
+        <label className="eyebrow" htmlFor="noise">{t('damage.noise')}</label>
         <input
+          id="noise"
           type="range"
           min={0}
           max={0.5}
           step={0.002}
           value={state.noise}
+          /* The raw value runs 0 to 0.5 and means nothing said aloud. The
+             percentage is what the number beside it shows. */
+          aria-valuetext={`${(state.noise * 100).toFixed(1)}%`}
           onChange={(event) => setNoise(Number(event.target.value))}
         />
-        <span className="mono">{(state.noise * 100).toFixed(1)}%</span>
-      </label>
+        <span className="mono" aria-hidden="true">{(state.noise * 100).toFixed(1)}%</span>
+      </div>
 
       <div className="stage__controls">
         <button
@@ -143,10 +147,16 @@ export function DamageLab() {
       */}
       <div className="damage__meter">
         <div className="damage__meter-head">
-          <span className="eyebrow">{t('damage.capacityUsed')}</span>
-          <span className="figure">
+          <span className="eyebrow" id="capacity-label">{t('damage.capacityUsed')}</span>
+          {/*
+            The one number the payoff stage exists to deliver, and it used to
+            change in silence. <output> is the native element for a calculated
+            result and already maps to role="status", so it announces politely
+            without an aria-live that would only repeat what the tag says.
+          */}
+          <output className="figure" htmlFor="noise" aria-labelledby="capacity-label">
             {report.corruptCodewords} / {report.capacity}
-          </span>
+          </output>
         </div>
         <div className="damage__meter-track">
           <div
