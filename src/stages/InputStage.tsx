@@ -1,6 +1,6 @@
 import { useCopy } from '../copy';
 import { useStore } from '../state/store';
-import { blockSpec, dataCodewordCount } from '../engine/tables';
+import { ALPHANUMERIC_CHARSET, alphanumericValue, blockSpec, dataCodewordCount } from '../engine/tables';
 
 /**
  * Stage 1. The mode, version and correction level are not settings — they are
@@ -24,6 +24,30 @@ export function InputStage() {
     .filter((span) => span.kind === 'mode' || span.kind === 'count' || span.kind === 'payload')
     .reduce((sum, span) => sum + span.length, 0);
 
+  /*
+   * Why this mode and not a narrower one. The rule was stated — "the narrowest
+   * mode that fits wins" — and then the answer was given, with the test that
+   * decided it invisible. One lowercase letter is enough to disqualify a whole
+   * payload from alphanumeric, and that is worth seeing.
+   */
+  const modeReason = (() => {
+    const chars = [...build.input];
+    if (build.mode === 'numeric') return t('summary.modeNumeric');
+    const firstNonDigit = chars.findIndex((c) => c < '0' || c > '9');
+    if (build.mode === 'alphanumeric') {
+      return t('summary.modeAlnum', {
+        char: chars[firstNonDigit] ?? '',
+        at: firstNonDigit,
+      });
+    }
+    const firstOutside = chars.findIndex((c) => alphanumericValue(c) < 0);
+    return t('summary.modeByte', {
+      char: chars[firstOutside] ?? '',
+      at: firstOutside,
+      charset: ALPHANUMERIC_CHARSET,
+    });
+  })();
+
   // What the next version down would have held, which is why it was not used.
   const previousCapacity =
     build.version > 1
@@ -46,6 +70,10 @@ export function InputStage() {
           {/* The version is the one number on this panel that arrives as a
               verdict. This is the rule behind it: bits needed against what the
               version below holds and what this one holds. */}
+          <tr>
+            <th scope="row">{t('summary.modeWhy')}</th>
+            <td className="is-prose">{modeReason}</td>
+          </tr>
           <tr>
             <th scope="row">{t('summary.fit')}</th>
             <td className="is-prose">
