@@ -164,6 +164,15 @@
 }
 
 /*
+ * 62x20 is four pixels short of the 24x24 minimum. The inline exception does
+ * not cover it: it sits alone in its own span rather than inside a sentence,
+ * unlike the citation marker beside it. Height from --space-3, which is 24.
+ */
+.tlv__crc-button {
+  min-height: var(--space-3);
+}
+
+/*
  * The verdict and its citation are two separate controls that rendered as
  * "CRC cocok Sumber" — a dotted underline immediately followed by a solid one,
  * with nothing between them, reading as a single broken link. A separator and
