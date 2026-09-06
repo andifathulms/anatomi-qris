@@ -48,7 +48,7 @@ export function InputStage() {
               version below holds and what this one holds. */}
           <tr>
             <th scope="row">{t('summary.fit')}</th>
-            <td>
+            <td className="is-prose">
               {t('summary.fitDetail', {
                 needed: neededBits,
                 previous:
