@@ -105,3 +105,27 @@
   color: var(--damage);
   font-weight: 500;
 }
+
+/*
+ * On a phone seventeen dot-separated names wrap into a thirteen-line
+ * paragraph with red and ink alternating mid-sentence, which is the one place
+ * the hit-versus-lost distinction has to be readable and is not. One field per
+ * line puts the distinction down a column instead of across wrapped prose.
+ */
+@media (max-width: 719px) {
+  .damage__field-list {
+    display: grid;
+    gap: 2px;
+  }
+
+  .damage__field-list > span {
+    display: block;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+  }
+
+  /* The separator earns its keep only when the names run together. */
+  .damage__field-list > span > .damage__sep {
+    display: none;
+  }
+}

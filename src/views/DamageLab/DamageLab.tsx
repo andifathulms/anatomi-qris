@@ -177,7 +177,7 @@ export function DamageLab() {
                   <span data-lost={lost || undefined}>
                     {node.meaning ?? `${t('tlv.tag')} ${node.tag}`}
                   </span>
-                  {i < all.length - 1 ? ' · ' : ''}
+                  {i < all.length - 1 ? <span className="damage__sep"> · </span> : ''}
                 </span>
               );
             })}
