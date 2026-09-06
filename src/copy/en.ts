@@ -19,6 +19,7 @@ export const en: Record<CopyKey, string> = {
   'input.label': 'Text or QRIS payload',
   'input.placeholder': 'Type anything, or paste a QRIS payload',
   'input.samples': 'Samples',
+  'input.chars': '{n} characters',
   'input.copyLink': 'Copy link',
   'input.copied': 'Link copied',
   'input.linkSuppressed': 'Links are off while the QRIS lens is active.',

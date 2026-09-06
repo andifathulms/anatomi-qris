@@ -32,6 +32,8 @@ export function InputBar() {
     el.scrollLeft = 0;
   }, []);
 
+  const activeSample = SAMPLES.find((s) => s.payload === state.input) ?? null;
+
   const copyLink = async () => {
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -71,17 +73,28 @@ export function InputBar() {
           <select
             id="sample"
             className="input-bar__select"
-            value={SAMPLES.find((s) => s.payload === state.input)?.id ?? ''}
+            value={activeSample?.id ?? ''}
             onChange={(event) => {
               const sample = SAMPLES.find((s) => s.id === event.target.value);
               if (sample) setInput(sample.payload);
             }}
           >
             <option value="">—</option>
+            {/* The length is in the label because it is the one fact that
+                tells a newcomer which of these is a gentle place to start. */}
             {SAMPLES.map((sample) => (
-              <option key={sample.id} value={sample.id}>{sample.label}</option>
+              <option key={sample.id} value={sample.id}>
+                {sample.label} — {t('input.chars', { n: sample.payload.length })}
+              </option>
             ))}
           </select>
+          {/*
+            Every sample has carried a sentence saying what it demonstrates
+            since the file was written, and none of them was ever rendered.
+            "Mode numerik: tiga digit muat dalam sepuluh bit" is the whole
+            lesson of stage two in one line, attached to the thing it explains.
+          */}
+          {activeSample && <p className="input-bar__note">{activeSample.note}</p>}
         </div>
 
         <div className="input-bar__group input-bar__group--steps">

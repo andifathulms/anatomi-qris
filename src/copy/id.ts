@@ -22,6 +22,7 @@ export const id = {
   'input.label': 'Teks atau payload QRIS',
   'input.placeholder': 'Ketik apa saja, atau tempel payload QRIS',
   'input.samples': 'Contoh',
+  'input.chars': '{n} karakter',
   'input.copyLink': 'Salin tautan',
   'input.copied': 'Tautan disalin',
   'input.linkSuppressed': 'Tautan dimatikan selama lensa QRIS aktif.',
