@@ -66,6 +66,7 @@ export function PayloadTree() {
       <div className="tlv__head">
         <h3 className="subheading">{t('tlv.heading')}</h3>
         <p className={qris.crcOk ? 'label' : 'tlv__crc-bad'}>
+          <span className="tlv__crc">
           <button
             type="button"
             className="tlv__crc-button"
@@ -74,7 +75,8 @@ export function PayloadTree() {
             title={t('tlv.crcCoversHint')}
           >
             {qris.crcOk ? t('tlv.crcOk') : t('tlv.crcBad')}
-          </button>{' '}
+          </button>
+          </span>{' '}
           <Cite citation={CITATIONS.crc} />
           {!qris.crcOk && qris.expectedCrc && (
             <>

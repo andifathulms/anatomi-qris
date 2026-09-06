@@ -144,7 +144,25 @@
   }
 }
 
-/* The checksum verdict is selectable, so it looks selectable. */
+/*
+ * The verdict and its citation are two separate controls that rendered as
+ * "CRC cocok Sumber" — a dotted underline immediately followed by a solid one,
+ * with nothing between them, reading as a single broken link. A separator and
+ * a little space make two controls look like two.
+ */
+.tlv__crc {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.tlv__crc::after {
+  content: '';
+  width: 1px;
+  align-self: stretch;
+  background: var(--rule-strong);
+}
+
 .tlv__crc-button {
   background: none;
   border: 0;
