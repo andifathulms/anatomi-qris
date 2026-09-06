@@ -34,6 +34,27 @@
   --module-dark: #000000;
   --module-light: #ffffff;
 
+  /* ── The bitstream ramp ──────────────────────────────── DESIGN.md §5.2 ──
+     Five spans told apart by value, not hue, because the colour budget
+     belongs to the ten module roles. Additive: nothing else reads these, and
+     removing them restores the previous behaviour exactly.
+
+     Five monotonic steps cannot all clear 2:1 — the usable range is under
+     21:1 once pure black and white are excluded, which caps an even step at
+     about 1.9:1. So the ramp is even, and the boundary that matters most,
+     where the header stops and the payload starts, gets a second cue: the
+     text flips from dark-on-light to light-on-dark at span-3. */
+  --span-1: #e9edf3;
+  --span-1-ink: #16191e;
+  --span-2: #97a1b0;
+  --span-2-ink: #16191e;
+  --span-3: #5b6674;
+  --span-3-ink: #e9edf3;
+  --span-4: #3b434f;
+  --span-4-ink: #dfe4ea;
+  --span-5: #1e2229;
+  --span-5-ink: #aab3c0;
+
   /* ── The anatomy palette ─────────────────────────────── DESIGN.md §2.2 ──
      Warm half is structure — the same for every payload at a given version.
      Cool half is content — this payload and no other. A reader learns the
@@ -150,6 +171,18 @@
   --ink: #14171c;
   --ink-mid: #454c58;
   --ink-soft: #58616e;
+
+  /* The bitstream ramp, light. Same even steps, same flip at span-3. */
+  --span-1: #14171c;
+  --span-1-ink: #fcfcfd;
+  --span-2: #545c6a;
+  --span-2-ink: #fcfcfd;
+  --span-3: #98a2b0;
+  --span-3-ink: #14171c;
+  --span-4: #cfd5dd;
+  --span-4-ink: #14171c;
+  --span-5: #edeff2;
+  --span-5-ink: #454c58;
 
   --damage: #d92c1f;
   --repair: #0b7d60;

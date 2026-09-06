@@ -27,20 +27,25 @@
 }
 
 /*
- * The five spans of the bitstream are told apart by value, not by hue: this
- * app's colour budget belongs to the ten module roles and the three functional
- * colours. Nothing here introduces a sixth palette.
+ * The five spans are told apart by value, not by hue: this app's colour budget
+ * belongs to the ten module roles and the two functional colours. Nothing here
+ * introduces a sixth palette.
+ *
+ * The ramp lives in tokens.css. Before it, count and payload sat on --ink-mid
+ * and --ink-soft, which measured 1.43:1 apart in dark and 1.38:1 in light —
+ * indistinguishable, and they are exactly the boundary a reader looks for.
  */
 .bitstream__legend-swatch[data-kind='mode'],
-.bitstream__bit[data-kind='mode'] { background: var(--ink); color: var(--surface); }
+.bitstream__bit[data-kind='mode'] { background: var(--span-1); color: var(--span-1-ink); }
 .bitstream__legend-swatch[data-kind='count'],
-.bitstream__bit[data-kind='count'] { background: var(--ink-mid); color: var(--surface); }
+.bitstream__bit[data-kind='count'] { background: var(--span-2); color: var(--span-2-ink); }
 .bitstream__legend-swatch[data-kind='payload'],
-.bitstream__bit[data-kind='payload'] { background: var(--ink-soft); color: var(--surface); }
+.bitstream__bit[data-kind='payload'] { background: var(--span-3); color: var(--span-3-ink); }
 .bitstream__legend-swatch[data-kind='terminator'],
-.bitstream__bit[data-kind='terminator'] { background: var(--rule-strong); color: var(--ink); }
+.bitstream__bit[data-kind='terminator'] { background: var(--span-4); color: var(--span-4-ink); }
 .bitstream__legend-swatch[data-kind='padBits'],
-.bitstream__bit[data-kind='padBits'] { background: var(--rule); color: var(--ink-mid); }
+.bitstream__bit[data-kind='padBits'] { background: var(--span-5); color: var(--span-5-ink); }
+
 .bitstream__legend-swatch[data-kind='padBytes'],
 .bitstream__bit[data-kind='padBytes'] {
   background: transparent;
