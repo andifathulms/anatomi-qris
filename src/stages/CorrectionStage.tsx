@@ -10,6 +10,9 @@ export function CorrectionStage() {
       <p className="gloss">
         {t('division.gloss')} <Cite citation={CITATIONS.errorCorrection} />
       </p>
+      {/* The most alien idea in the app arrived as a given. It says what the
+          division is over, never what that is or why it is used. */}
+      <p className="gloss">{t('division.fieldGloss')}</p>
       <Division />
     </div>
   );

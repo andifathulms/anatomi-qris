@@ -48,7 +48,7 @@ describe('copy', () => {
           const letters = word.replace(/[^A-Za-z]/g, '');
           if (letters.length < 3) continue;
           // Acronyms and terms of art are allowed; running words are not.
-          const allowed = ['QRIS', 'CRC', 'ISO', 'IEC', 'EMVCo', 'MCC', 'TLV', 'GF'];
+          const allowed = ['QRIS', 'CRC', 'ISO', 'IEC', 'EMVCo', 'MCC', 'TLV', 'GF', 'XOR'];
           if (allowed.some((a) => word.includes(a))) continue;
           expect(letters === letters.toUpperCase(), `${key} shouts "${word}"`).toBe(false);
         }

@@ -82,6 +82,7 @@ export function Division() {
 
       <div className="division__generator">
         <span className="eyebrow">{t('division.generator')}</span>
+        <p className="gloss">{t('division.generatorGloss')}</p>
         <Poly bytes={generator} notation={notation} />
       </div>
 

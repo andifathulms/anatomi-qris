@@ -173,3 +173,15 @@
   display: block;
   flex: none;
 }
+
+/* A gloss riding under a value in a data table: the reason for the number,
+   next to the number, rather than in a legend somewhere else. */
+.data-table__gloss {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-soft);
+  max-width: 62ch;
+}

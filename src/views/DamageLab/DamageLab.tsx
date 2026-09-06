@@ -127,6 +127,9 @@ export function DamageLab() {
         <span className="mono" aria-hidden="true">{(state.noise * 100).toFixed(1)}%</span>
       </div>
 
+      {/* Say where the app simplifies, at the control that does it. */}
+      <p className="label">{t('damage.noiseHonesty')}</p>
+
       <div className="stage__controls">
         <button
           type="button"
@@ -215,6 +218,7 @@ export function DamageLab() {
           <tr>
             <th scope="row">{t('damage.syndromes')}</th>
             <td className="damage__positions">
+              <span className="data-table__gloss">{t('damage.syndromeGloss')}</span>
               {result.syndromesByBlock
                 .map((s, block) => `${block}: ${[...s].every((v) => v === 0) ? '0' : '≠0'}`)
                 .join(' · ')}
@@ -223,6 +227,7 @@ export function DamageLab() {
           <tr>
             <th scope="row">{t('damage.errorPositions')}</th>
             <td className="damage__positions">
+              <span className="data-table__gloss">{t('damage.positionsGloss')}</span>
               {result.errorPositions.length > 0 ? result.errorPositions.join(', ') : '—'}
             </td>
           </tr>

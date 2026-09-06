@@ -73,7 +73,10 @@ export function InputStage() {
           </tr>
           <tr>
             <th scope="row">{t('summary.blocks')}</th>
-            <td>{blocks}</td>
+            <td>
+              {blocks}
+              <span className="data-table__gloss">{t('summary.blocksGloss')}</span>
+            </td>
           </tr>
           <tr>
             <th scope="row">{t('summary.capacity')}</th>
