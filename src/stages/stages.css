@@ -75,7 +75,14 @@
  * language, and a wrapped monospace sentence is the hardest thing on the panel
  * to read. Opt-in, so the default stays right for the cells that hold numbers.
  */
+/*
+ * The mode explanation prints the alphanumeric character set, which is a
+ * 36-character unbreakable run. A table sizes to min-content, so that one
+ * token set the panel's width and pushed the whole page into horizontal
+ * scrolling on a phone. It is allowed to break mid-run.
+ */
 .data-table td.is-prose {
+  overflow-wrap: anywhere;
   font-family: var(--font-sans);
   font-size: var(--t-body);
   line-height: var(--t-body-lh);
