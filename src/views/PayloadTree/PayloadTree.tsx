@@ -111,11 +111,17 @@ export function PayloadTree() {
             const gloss = glossFor(node.path, node.value);
             const isSelected = selectedPath === node.path;
             return (
+              /*
+               * The row carried its own onClick, so a table row was an
+               * interactive element with no role, no tab stop and no key
+               * handler — the full-width target existed for pointers only.
+               * The button now stretches its hit area across the row instead,
+               * so there is one native control doing the job.
+               */
               <tr
                 key={node.path + node.start}
                 className="tlv__row"
                 data-selected={isSelected || undefined}
-                onClick={() => select(node)}
               >
                 <th scope="row" style={{ paddingLeft: `calc(${node.depth} * var(--unit))` }}>
                   <button

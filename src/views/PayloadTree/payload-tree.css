@@ -54,12 +54,18 @@
    besides. The click handler is on the row and the button stays the control,
    so pointer users get the whole row and keyboard users keep a real button
    inside real table semantics. */
+/*
+ * The row no longer carries a click handler, so it must not keep implying it
+ * is a target. It still lights up — but driven by the button inside it, so
+ * the highlight follows the thing that is actually clickable, for hover and
+ * for keyboard focus alike.
+ */
 .tlv__row {
-  cursor: pointer;
   transition: background var(--dur-control) var(--ease-standard);
 }
 
-.tlv__row:hover {
+.tlv__row:has(.tlv__button:hover),
+.tlv__row:has(.tlv__button:focus-visible) {
   background: var(--surface-hover);
 }
 
@@ -70,9 +76,21 @@
   box-shadow: inset 2px 0 0 var(--marker);
 }
 
+/*
+ * 17x22 failed the 24x24 minimum, and these are standalone controls in table
+ * cells, not links inside a sentence, so the inline exception does not apply.
+ * Both dimensions come from --space-3, which is 24.
+ *
+ * An earlier attempt stretched the hit area across the whole row with an
+ * absolutely positioned ::after. It silently did nothing: a <tr> is not a
+ * reliable containing block, so the overlay had nothing to size against and a
+ * click on the right of a row selected nothing.
+ */
 .tlv__button {
   background: none;
   border: 0;
+  min-height: var(--space-3);
+  min-width: var(--space-3);
   padding: 0;
   color: var(--ink);
   cursor: pointer;
@@ -82,6 +100,7 @@
   font-family: inherit;
   font-size: inherit;
 }
+
 
 /* Nested templates indent by one 8 px unit with a hairline connector. */
 .tlv__connector {
