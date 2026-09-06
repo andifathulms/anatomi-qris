@@ -23,6 +23,8 @@ export function CodewordTable() {
       <p className="label">{t('matrix.tableHint')}</p>
       <div className="codeword-table__scroll">
         <table className="data-table">
+          {/* <summary> names the disclosure, not the table inside it. */}
+          <caption className="visually-hidden">{t('matrix.table')}</caption>
           <thead>
             <tr>
               <th scope="col">{t('tlv.codewords')}</th>

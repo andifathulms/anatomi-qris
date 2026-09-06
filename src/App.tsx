@@ -140,10 +140,12 @@ function Shell() {
 
           {/* The specimen never moves. Nine stages must read as one object being
               transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
-          <section className="specimen card" id="matrix" aria-label={t('app.specimen')}>
+          {/* Named by its own heading rather than by a duplicate aria-label,
+              which made a reader hear "Spesimen" twice on entering. */}
+          <section className="specimen card" id="matrix" aria-labelledby="specimen-heading">
             <div className="specimen__head">
               <div className="specimen__head-row">
-                <h2 className="eyebrow">{t('app.specimen')}</h2>
+                <h2 className="eyebrow" id="specimen-heading">{t('app.specimen')}</h2>
                 {/* The view control sits with the facts it applies to, and above
                     the fold on a laptop, rather than below the readout. */}
                 <Toggle<'printed' | 'anatomy'>

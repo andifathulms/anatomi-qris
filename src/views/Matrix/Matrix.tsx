@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { Build } from '../../engine/encode';
 import type { ModuleInfo } from '../../engine/provenance';
-import { useCopy } from '../../copy';
+import { useCopy, type Translate } from '../../copy';
 import { nodesCovering } from '../../qris/detect';
 import { STAGE_COUNT, useActions, useDamageSet, useHighlightSet, useStore } from '../../state/store';
 import { duration, useTimedValue } from '../../ui/useTimedValue';
@@ -187,6 +187,8 @@ export function Matrix({
 
   const readoutIndex = state.focusedModule ?? hovered;
   const readout = build && readoutIndex !== null ? build.modules[readoutIndex] : null;
+  const focusedReadout =
+    build && state.focusedModule !== null ? build.modules[state.focusedModule] : null;
 
   return (
     <figure className="matrix">
@@ -214,16 +216,43 @@ export function Matrix({
         <rect x={0} y={0} width={extent} height={extent} fill="#ffffff" />
         <g>{cells}</g>
       </svg>
-      <figcaption className="matrix__readout" id="matrix-readout" role="status">
+      {/*
+        No role here any more. As a status region this announced on every
+        hover as well as every arrow key — a continuous stream while a pointer
+        crosses a 57x57 grid — and putting a role on a figcaption also
+        replaces the native element that names the figure.
+      */}
+      <figcaption className="matrix__readout" id="matrix-readout">
         {readout && build ? <Readout module={readout} build={build} /> : (
           <span className="label">{t('matrix.none')}</span>
         )}
       </figcaption>
+
+      {/*
+        Announcement is driven by the focused module, never the hovered one.
+        Arrow keys and clicks are deliberate and worth speaking; a pointer
+        crossing the grid is not. aria-describedby only reads on focus, so
+        keyboard navigation does need this.
+      */}
+      <p className="visually-hidden" role="status">
+        {focusedReadout && build ? spokenReadout(focusedReadout, build, t) : ''}
+      </p>
     </figure>
   );
 }
 
 const EMPTY: Set<number> = new Set();
+
+/** One sentence, for the live region. The visible readout stays a table. */
+function spokenReadout(module: ModuleInfo, build: Build, t: Translate): string {
+  const role = module.role;
+  const carries =
+    role.kind === 'data' || role.kind === 'ecc'
+      ? `${t(roleLabelKey(role))} ${role.codeword}, ${t('matrix.bit')} ${role.bit}`
+      : t(roleLabelKey(role));
+  const value = module.value ? t('matrix.dark') : t('matrix.light');
+  return `${module.x},${module.y}. ${carries}. ${value}. ${build.size}×${build.size}.`;
+}
 
 function Readout({ module, build }: { module: ModuleInfo; build: Build }) {
   const { t } = useCopy();

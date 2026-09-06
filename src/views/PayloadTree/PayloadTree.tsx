@@ -98,6 +98,7 @@ export function PayloadTree() {
       )}
 
       <table className="tlv__table">
+        <caption className="visually-hidden">{t('tlv.heading')}</caption>
         <thead>
           <tr>
             <th scope="col">{t('tlv.tag')}</th>
