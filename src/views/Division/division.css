@@ -82,8 +82,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+/*
+ * The polynomial is the checkable arithmetic, not a caption for it. On
+ * --ink-soft it sat at the same weight as the eyebrow above it, so the label
+ * and the number competed instead of nesting. The label stays soft; the value
+ * steps up.
+ */
 .poly__term {
-  color: var(--ink-soft);
+  color: var(--ink-mid);
 }
 
 /* Changed bytes are marked by weight and an underline, not by colour: the
