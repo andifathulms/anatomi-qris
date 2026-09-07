@@ -161,6 +161,7 @@ function initialState(): AppState {
   const params = new URLSearchParams(window.location.search);
   const fromUrl = params.get('t');
   const ecParam = params.get('ec') as EcLevel | null;
+  const langParam = params.get('lang');
   return {
     input: fromUrl ?? SAMPLES[0].payload,
     ecLevel: ecParam && EC_LEVELS.includes(ecParam) ? ecParam : 'M',
@@ -168,7 +169,7 @@ function initialState(): AppState {
     stage: 1,
     stageTouched: false,
     rendering: 'printed',
-    locale: 'id',
+    locale: langParam === 'en' ? 'en' : 'id',
     theme: initialTheme(),
     highlight: null,
     focusedModule: null,
@@ -254,8 +255,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       url.searchParams.set('t', state.input);
       url.searchParams.set('ec', state.ecLevel);
     }
+    /*
+     * The locale rides in the URL because it is something the reader changes
+     * and nothing about it is sensitive — it is not a merchant identifier, so
+     * the reason PRD section 9 suppresses the payload does not apply here.
+     * Without it the English half of a bilingual app cannot be linked, shared
+     * or indexed, and there is no second URL for hreflang to point at.
+     */
+    if (state.locale === 'id') url.searchParams.delete('lang');
+    else url.searchParams.set('lang', state.locale);
     window.history.replaceState(null, '', url);
-  }, [state.input, state.ecLevel, lensActive]);
+  }, [state.input, state.ecLevel, state.locale, lensActive]);
+
+  /*
+   * <html lang> was a static "id" while the interface could be entirely in
+   * English — wrong for a screen reader, a translation tool and a crawler
+   * alike. It follows the locale now.
+   */
+  useEffect(() => {
+    document.documentElement.lang = state.locale;
+  }, [state.locale]);
 
   const value = useMemo<Store>(
     () => ({ state, dispatch, build, buildError, qris, lensActive, linkable: !lensActive }),
