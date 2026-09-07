@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One page, two locales. The locale is a query parameter rather than a path
+  because the app is a single client-rendered document; the alternates say so
+  explicitly rather than leaving a crawler to guess.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://andifathulms.github.io/anatomi-qris/</loc>
+    <xhtml:link rel="alternate" hreflang="id" href="https://andifathulms.github.io/anatomi-qris/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://andifathulms.github.io/anatomi-qris/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://andifathulms.github.io/anatomi-qris/"/>
+  </url>
+</urlset>

@@ -13,6 +13,10 @@ import { gzipSync } from 'node:zlib';
  * dist/brand is excluded on the same grounds: the touch icon is fetched only
  * when someone adds the app to a home screen, and the social card only by a
  * crawler that never runs the page. Neither is on the first-load path.
+ *
+ * robots.txt and sitemap.xml are excluded for the same reason: a crawler asks
+ * for them and the page never does. Counting them would make the budget
+ * discourage being findable, which is not what it is for.
  */
 const LIMIT = 250 * 1024;
 const DIST = 'dist';
@@ -24,8 +28,12 @@ function walk(dir) {
   });
 }
 
+const CRAWLER_ONLY = ['robots.txt', 'sitemap.xml'];
 const counted = walk(DIST).filter(
-  (path) => !path.endsWith('.woff') && !path.startsWith(join(DIST, 'brand')),
+  (path) =>
+    !path.endsWith('.woff') &&
+    !path.startsWith(join(DIST, 'brand')) &&
+    !CRAWLER_ONLY.some((name) => path === join(DIST, name)),
 );
 let total = 0;
 const rows = [];

@@ -1,0 +1,5 @@
+# Everything here is one page and it is all public.
+User-agent: *
+Allow: /
+
+Sitemap: https://andifathulms.github.io/anatomi-qris/sitemap.xml
