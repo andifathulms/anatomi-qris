@@ -1,4 +1,12 @@
 # Everything here is one page and it is all public.
+#
+# Honest caveat: this file sits at /anatomi-qris/robots.txt because the site is
+# a GitHub Pages project page. Crawlers only read robots.txt at the domain
+# root, which this repository does not control, so this file is advisory and
+# the Sitemap line below will not be discovered from it. The sitemap has to be
+# submitted directly, or referenced from a robots.txt at the root if one ever
+# exists. It is kept because it becomes authoritative the moment the site moves
+# to a domain of its own.
 User-agent: *
 Allow: /
 
