@@ -27,61 +27,94 @@
   cursor: crosshair;
 }
 
-/*
- * The readout strip is a fixed height and never collapses. A strip that
- * appeared on hover would make the whole column jump every time the pointer
- * crossed the matrix (DESIGN.md §4.3).
- */
+/* The stage positions the floating inspector against the matrix itself. */
+.matrix__stage {
+  position: relative;
+}
+
+/* One quiet line under the matrix, always the same height. */
 .matrix__readout {
-  /* The measured height of the six-cell grid at its tallest role, plus the
-     padding. The old floor was one row, so the first hover grew the strip by
-     38 px and pushed the codeword table down with it — the exact shift the
-     comment above says cannot happen. Reserve the maximum, not the minimum. */
-  min-height: 124px;
-  background: var(--ground-sunk);
-  border: 1px solid var(--rule);
-  padding: var(--space-2);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  color: var(--ink-soft);
+}
+
+/*
+ * The inspector: a lifted card beside the module under the pointer or the
+ * keyboard. It flips to the module's left on the right half of the grid and
+ * above it near the bottom, so it never leaves the matrix.
+ */
+.matrix__inspector {
+  position: absolute;
+  z-index: 5;
+  left: var(--mx);
+  top: var(--my);
+  width: 15.5rem;
+  max-width: 70%;
+  margin: 6px 8px;
+  padding: 10px 12px;
   border-radius: var(--r-well);
+  background: var(--surface-lift);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift-shadow);
+  pointer-events: none;
+}
+
+.matrix__inspector[data-side='left'] {
+  transform: translateX(calc(-100% - 16px));
+}
+
+.matrix__inspector[data-edge='bottom'] {
+  translate: 0 calc(-100% - 12px);
 }
 
 .readout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: var(--space-1) var(--space-2);
+  gap: 3px;
   margin: 0;
 }
 
+.readout > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
 .readout dt {
-  font-size: var(--t-micro);
-  line-height: var(--t-micro-lh);
+  font-size: 11px;
+  line-height: 1.4;
   font-weight: 600;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 
 .readout dd {
   margin: 0;
+  min-width: 0;
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: var(--t-data);
-  line-height: var(--t-data-lh);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: right;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* The role is the headline of the card. */
+.readout > div:nth-child(2) dd {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+.readout__field dd {
+  font-family: var(--font-sans);
+  color: var(--accent);
+  font-weight: 600;
 }
 
 @media (max-width: 719px) {
-  .readout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .matrix__inspector {
+    width: 13rem;
   }
-
-  /* Two columns means three rows for the same six cells. */
-  .matrix__readout {
-    min-height: 160px;
-  }
-}
-
-/* The field spans the readout grid: a meaning is prose, not a short value,
-   and wrapping it into a 120 px column would cost three lines. */
-.readout__field {
-  grid-column: 1 / -1;
 }

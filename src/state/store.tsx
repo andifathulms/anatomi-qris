@@ -13,6 +13,7 @@ import { EC_LEVELS, type EcLevel } from '../engine/tables';
 import { inspectQris, type QrisDetection } from '../qris/detect';
 import { SAMPLES } from '../../samples/index';
 import { type Locale } from '../copy';
+import type { RoleKey } from '../views/Matrix/palette';
 
 export const STAGE_COUNT = 9;
 
@@ -56,6 +57,11 @@ export interface AppState {
    * reports 'stages' whenever it is off, whatever this says.
    */
   view: View;
+  /** A module role picked in the legend: that role keeps its colour and
+      every other module fades. Null when nothing is isolated. */
+  isolatedRole: RoleKey | null;
+  /** The guided tour is scrubbing the stages on a timer. */
+  touring: boolean;
   locale: Locale;
   /** Dark is the instrument, light is the lab notebook. DESIGN.md §2.1. */
   theme: Theme;
@@ -76,6 +82,8 @@ type Action =
   | { type: 'setStage'; stage: number }
   | { type: 'setRendering'; rendering: 'printed' | 'anatomy' }
   | { type: 'setView'; view: View }
+  | { type: 'setIsolatedRole'; role: RoleKey | null }
+  | { type: 'setTouring'; touring: boolean }
   | { type: 'setLocale'; locale: Locale }
   | { type: 'setTheme'; theme: Theme }
   | { type: 'setHighlight'; highlight: Highlight | null }
@@ -119,6 +127,10 @@ function reducer(state: AppState, action: Action): AppState {
       };
     case 'setRendering':
       return { ...state, rendering: action.rendering };
+    case 'setTouring':
+      return { ...state, touring: action.touring };
+    case 'setIsolatedRole':
+      return { ...state, isolatedRole: action.role };
     case 'setView':
       // A highlight made in one view means nothing in the other.
       return { ...state, view: action.view, highlight: null };
@@ -184,6 +196,8 @@ function initialState(): AppState {
     stageTouched: false,
     rendering: 'printed',
     view: 'stages',
+    isolatedRole: null,
+    touring: false,
     locale: langParam === 'en' ? 'en' : 'id',
     theme: initialTheme(),
     highlight: null,
@@ -327,6 +341,8 @@ export function useActions() {
       setRendering: (rendering: 'printed' | 'anatomy') =>
         dispatch({ type: 'setRendering', rendering }),
       setView: (view: View) => dispatch({ type: 'setView', view }),
+      setIsolatedRole: (role: RoleKey | null) => dispatch({ type: 'setIsolatedRole', role }),
+      setTouring: (touring: boolean) => dispatch({ type: 'setTouring', touring }),
       setLocale: (locale: Locale) => dispatch({ type: 'setLocale', locale }),
       setTheme: (theme: Theme) => dispatch({ type: 'setTheme', theme }),
       setHighlight: (highlight: Highlight | null) => dispatch({ type: 'setHighlight', highlight }),

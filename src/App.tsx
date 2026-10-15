@@ -9,6 +9,8 @@ import { InputBar } from './ui/InputBar';
 import { MakerSignature } from './ui/MakerSignature';
 import { StageScrubber, StageSteps, stageIntroKey, stageNameKey } from './ui/StageScrubber';
 import { chapterOf } from './ui/chapters';
+import { TourButton, TourController } from './ui/Tour';
+import { Welcome } from './ui/Welcome';
 import { Legend } from './ui/Legend';
 import { CodewordTable } from './ui/CodewordTable';
 import { StagePanel } from './stages/StagePanel';
@@ -101,6 +103,8 @@ function Shell() {
   return (
     <div className="shell">
       <a className="skip-link" href="#matrix">{t('app.skipToMatrix')}</a>
+      <TourController />
+      <Welcome />
 
       <header className="topbar">
         <div className="topbar__identity">
@@ -178,7 +182,7 @@ function Shell() {
             />
           </div>
 
-          {state.rendering === 'anatomy' && <Legend />}
+          <Legend />
 
           <CodewordTable />
         </section>
@@ -188,8 +192,8 @@ function Shell() {
             {/* Two ways to read one build: by stage, or — when the payload is
                 a QRIS — by meaning. Not a mode switch: same input, same
                 matrix, same engine. */}
-            {lensActive && (
-              <div className="panel__tabs">
+            <div className="panel__tabs">
+              {lensActive && (
                 <Toggle<View>
                   label={t('view.label')}
                   value={view}
@@ -202,8 +206,9 @@ function Shell() {
                     },
                   ]}
                 />
-              </div>
-            )}
+              )}
+              <TourButton />
+            </div>
 
             {view === 'payload' ? (
               <PayloadTree />

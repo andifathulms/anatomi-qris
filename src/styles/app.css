@@ -176,6 +176,36 @@
   gap: 10px;
 }
 
+.panel__tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.tour-button {
+  margin-left: auto;
+  border-radius: var(--r-pill);
+  padding-inline: 12px 16px;
+}
+
+.tour-button__icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 9px;
+}
+
+.tour-button[aria-pressed='true'] {
+  border-color: var(--accent-line);
+  color: var(--ink);
+}
+
 .panel__chapter {
   font-size: var(--t-micro);
   line-height: var(--t-micro-lh);

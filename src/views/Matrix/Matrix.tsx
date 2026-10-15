@@ -78,6 +78,7 @@ export function Matrix({
     offences: offences ?? EMPTY,
     overrideGrid,
     tint,
+    isolatedRole: state.isolatedRole,
     paletteKey: state.theme,
   };
   useMatrixPainter(build, rects, paint);
@@ -196,6 +197,7 @@ export function Matrix({
 
   return (
     <figure className="matrix">
+      <div className="matrix__stage">
       <svg
         ref={svgRef}
         className="matrix__svg"
@@ -211,6 +213,7 @@ export function Matrix({
         onFocus={handleFocus}
         onPointerMove={handleMove}
         onPointerLeave={() => setHovered(null)}
+        onBlur={() => setFocusedModule(null)}
         data-paintable={onPaint ? '' : undefined}
         onPointerDown={handleDown}
         onPointerUp={handleUp}
@@ -221,15 +224,33 @@ export function Matrix({
         <g>{cells}</g>
       </svg>
       {/*
-        No role here any more. As a status region this announced on every
-        hover as well as every arrow key — a continuous stream while a pointer
-        crosses a 57x57 grid — and putting a role on a figcaption also
-        replaces the native element that names the figure.
+        The inspector floats beside the module it describes instead of in a
+        fixed strip below: the eye stays on the grid, and nothing below the
+        matrix moves. It is pointer-transparent and hidden from assistive
+        technology, which hears the focused module through the live region.
+      */}
+      {readout && build && (
+        <div
+          className="matrix__inspector"
+          aria-hidden="true"
+          data-side={readout.x > build.size / 2 ? 'left' : 'right'}
+          data-edge={readout.y > build.size * 0.6 ? 'bottom' : undefined}
+          style={{
+            '--mx': `${((readout.x + QUIET + (readout.x > build.size / 2 ? 0 : 1)) / extent) * 100}%`,
+            '--my': `${((readout.y + QUIET + (readout.y > build.size * 0.6 ? 1 : 0)) / extent) * 100}%`,
+          } as React.CSSProperties}
+        >
+          <Readout module={readout} build={build} />
+        </div>
+      )}
+      </div>
+      {/*
+        No role here. As a status region this announced on every hover as
+        well as every arrow key, and a role on a figcaption also replaces the
+        native element that names the figure.
       */}
       <figcaption className="matrix__readout" id="matrix-readout">
-        {readout && build ? <Readout module={readout} build={build} /> : (
-          <span className="label">{t('matrix.none')}</span>
-        )}
+        {t('matrix.none')}
       </figcaption>
 
       {/*

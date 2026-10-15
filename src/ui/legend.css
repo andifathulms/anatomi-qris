@@ -1,36 +1,91 @@
 /*
- * The ten roles, warm half then cool half — structure, then content. The
- * swatch is a square because a module is a square.
+ * The module budget under the matrix. The bar is drawn to scale; the chips
+ * are toggles that isolate one role in the matrix.
  */
 .legend {
   display: grid;
-  gap: var(--space-1);
-  border-top: 1px solid var(--rule);
-  padding-top: var(--space-2);
+  gap: 10px;
+}
+
+.legend__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  flex-wrap: wrap;
 }
 
 .legend__gloss {
-  margin-bottom: var(--space-1);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  color: var(--ink-soft);
+  max-width: 48ch;
+}
+
+.legend__bar {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+
+.legend__segment {
+  display: block;
+  min-width: 3px;
+  flex-basis: 0;
+  transition: opacity var(--dur-control) var(--ease-standard);
+}
+
+.legend__segment[data-dim] {
+  opacity: 0.18;
 }
 
 .legend__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--space-1) var(--space-2);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  color: var(--ink-mid);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .legend__item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-mid);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard);
 }
 
+.legend__item:hover {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.legend__item[aria-pressed='true'] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* A module is square, so its swatch is too. */
 .legend__swatch {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   display: block;
   flex: none;
+}
+
+.legend__count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
 }

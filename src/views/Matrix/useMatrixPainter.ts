@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Build } from '../../engine/encode';
-import { readPalette, isPlaced, roleKey, type Palette } from './palette';
+import { readPalette, isPlaced, roleKey, type Palette, type RoleKey } from './palette';
 
 export interface PaintState {
   /** 0 to 1: how far the zigzag has run. */
@@ -19,6 +19,8 @@ export interface PaintState {
   offences: Set<number>;
   /** Show the matrix as a mask candidate rather than the chosen build. */
   overrideGrid: Uint8Array | null;
+  /** A role picked in the legend: it keeps its hue, everything else fades. */
+  isolatedRole: RoleKey | null;
   /** Colour a module by something other than its role, e.g. its block. */
   tint: ((index: number) => string | null) | null;
   /** Changes when the token values behind the palette change, i.e. on a
@@ -111,6 +113,13 @@ export function useMatrixPainter(
 
       const tint = visible && state.tint ? state.tint(i) : null;
       if (tint) fill = dark ? tint : mixToward(tint, p.moduleLight, 0.62);
+
+      // An isolated role is the anatomy lens for one role only: its modules
+      // take their role tint whatever the rendering, and the rest fade.
+      if (state.isolatedRole && visible && !state.damage.has(i) && !state.repaired.has(i)) {
+        if (key === state.isolatedRole) fill = dark ? p.dark[key] : p.light[key];
+        else fill = dark ? p.dim : p.moduleLight;
+      }
 
       // A highlight is a figure on a faded ground: the selected modules take
       // the marker (solid on dark, washed on light, so the silhouette

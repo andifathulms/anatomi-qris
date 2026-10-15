@@ -1,0 +1,155 @@
+/*
+ * The first-visit welcome. A scrim over the bench and one lifted card with
+ * two doors: the primary one wears the accent.
+ */
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px))
+    max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: color-mix(in srgb, var(--ground) 72%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow-y: auto;
+  animation: welcome-in var(--dur-theme) var(--ease-standard);
+}
+
+.welcome__card {
+  width: min(44rem, 100%);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: calc(var(--r-card) + 6px);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift-shadow);
+}
+
+.welcome__hello {
+  display: grid;
+  gap: 10px;
+}
+
+.welcome__title {
+  font-size: var(--t-hero);
+  line-height: var(--t-hero-lh);
+  font-weight: var(--w-display);
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+  max-width: 18ch;
+}
+
+.welcome__lede {
+  color: var(--ink-mid);
+  max-width: 48ch;
+}
+
+.welcome__doors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.welcome__door {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 20px;
+  border-radius: var(--r-card);
+  border: 1px solid var(--rule-strong);
+  background: var(--surface-lift);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--dur-control) var(--ease-standard),
+    border-color var(--dur-control) var(--ease-standard);
+}
+
+.welcome__door:hover {
+  border-color: var(--ink-soft);
+  transform: translateY(-2px);
+}
+
+.welcome__door--main {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-ink);
+}
+
+.welcome__door--main:hover {
+  border-color: transparent;
+}
+
+.welcome__q {
+  font-size: 1.375rem;
+  line-height: 1.15;
+  font-weight: var(--w-display);
+  letter-spacing: -0.025em;
+}
+
+.welcome__body {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.welcome__go {
+  margin-top: 4px;
+  font-size: var(--t-small);
+  font-weight: var(--w-display);
+}
+
+.welcome__door:not(.welcome__door--main) .welcome__go {
+  color: var(--accent);
+}
+
+.welcome__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  flex-wrap: wrap;
+}
+
+.welcome__offline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--t-micro);
+  font-weight: 600;
+  color: var(--ink-mid);
+}
+
+@keyframes welcome-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 719px) {
+  .welcome {
+    place-items: end stretch;
+  }
+
+  .welcome__card {
+    padding: var(--space-3) var(--space-2);
+  }
+
+  .welcome__doors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome {
+    animation: none;
+  }
+
+  .welcome__door:hover {
+    transform: none;
+  }
+}
