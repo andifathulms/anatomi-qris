@@ -31,7 +31,7 @@
   width: 100%;
   background: var(--ground-sunk);
   border: 1px solid var(--rule-strong);
-  border-radius: 0;
+  border-radius: var(--r-ctl);
   color: var(--ink);
   padding: 9px var(--space-2);
   font-family: var(--font-mono);
@@ -65,7 +65,7 @@
 .input-bar__select {
   background: var(--surface-lift);
   border: 1px solid var(--rule-strong);
-  border-radius: 0;
+  border-radius: var(--r-ctl);
   color: var(--ink-mid);
   padding: 7px var(--space-2);
   font-size: var(--t-small);

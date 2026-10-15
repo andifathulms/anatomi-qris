@@ -36,6 +36,8 @@
   background: var(--surface-lift);
   border: 1px solid var(--rule-strong);
   padding: var(--space-2);
+  border-radius: var(--r-well);
+  box-shadow: var(--lift-shadow);
 }
 
 .cite__source {

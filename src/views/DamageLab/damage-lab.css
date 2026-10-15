@@ -23,6 +23,7 @@
   background: var(--ground-sunk);
   border: 1px solid var(--rule);
   padding: var(--space-2);
+  border-radius: var(--r-well);
 }
 
 .damage__meter-head {
@@ -41,6 +42,8 @@
   height: 10px;
   background: var(--rule);
   border: 1px solid var(--rule-strong);
+  border-radius: var(--r-pill);
+  overflow: hidden;
 }
 
 .damage__meter-fill {
@@ -56,7 +59,7 @@
 }
 
 .damage__headline {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: var(--t-figure);
   line-height: var(--t-figure-lh);
   font-weight: 600;

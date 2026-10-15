@@ -31,6 +31,7 @@
   text-align: left;
   transition: border-color var(--dur-control) var(--ease-standard),
     background var(--dur-control) var(--ease-standard);
+  border-radius: var(--r-well);
 }
 
 .mask-card:hover {

@@ -109,7 +109,7 @@
 }
 
 .scrubber__index {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: var(--t-micro);
   line-height: var(--t-micro-lh);
   font-weight: 500;

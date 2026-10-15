@@ -51,7 +51,7 @@
 }
 
 .topbar__wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: var(--t-title);
   line-height: var(--t-title-lh);
   font-weight: 600;

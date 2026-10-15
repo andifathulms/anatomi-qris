@@ -1,5 +1,5 @@
 /*
- * Design tokens. DESIGN.md revision 2 is the authority; this file is its
+ * Design tokens. DESIGN.md revision 3 is the authority; this file is its
  * transcription.
  *
  * The one rule that governs everything here: the matrix owns pure black and
@@ -12,56 +12,68 @@
   color-scheme: dark;
 
   /* ── Chrome, dark: the instrument ────────────────────── DESIGN.md §2.1 ──
-     Achromatic with a faint cool cast, so the white specimen reads warmer
-     than its surroundings and therefore closer to the eye. */
-  --ground: #0e1013;
-  --ground-sunk: #0a0b0e;
-  --surface: #16191e;
-  --surface-lift: #1d2128;
-  --surface-hover: #252a32;
-  --rule: #282d35;
-  --rule-strong: #3a414d;
-  --ink: #e9edf3;
-  --ink-mid: #aab3c0;
-  --ink-soft: #8b95a4;
+     Graphite with a faint indigo bias. Revision 2's achromatic grey was
+     correct and cold; a neutral that leans toward the accent reads as chosen,
+     and the warm white specimen still reads as the nearest thing on screen. */
+  --ground: #0d0c12;
+  --ground-sunk: #09080d;
+  --surface: #16151e;
+  --surface-lift: #1f1e2a;
+  --surface-hover: #292837;
+  --rule: #2c2a3a;
+  --rule-strong: #403d52;
+  --ink: #eeecf6;
+  --ink-mid: #b4b2c6;
+  --ink-soft: #8e8ca2;
 
-  /* The mark's own accent — cursor magenta, from the brand package. It is not
-     part of the chrome palette and nothing but the logo may use it; it keeps
-     its value in both themes, because that is what a brand colour is. */
+  /* The mark's own magenta. It keeps its value in both themes, because that
+     is what a brand colour is; --accent is its theme-tuned UI twin. */
   --brand-magenta: #f0328c;
+
+  /* ── The accent ──────────────────────────────────────── DESIGN.md §2.4 ──
+     One hue for "the tool": the active stage, the primary action, selection
+     and focus. It is the marker of revision 2 promoted, so a selected module,
+     a selected tab and the next-stage button all read as the same idea. */
+  --accent: #ff4f9e;
+  --accent-ink: #1a0711;
+  --accent-soft: rgb(255 79 158 / 0.14);
+  --accent-line: rgb(255 79 158 / 0.45);
 
   /* The artefact's own two colours. Nothing else in the app may use them. */
   --module-dark: #000000;
   --module-light: #ffffff;
+
+  /* The one light on the bench: a soft pool behind the specimen. It sits on
+     the ground, never on the paper. */
+  --bench-light: rgb(150 130 255 / 0.11);
+  /* Ground texture: a 16 px dot grid, two modules to the dot. */
+  --ground-dots: rgb(238 236 246 / 0.045);
+
+  /* Lifted chrome — popovers, the sheet, the floating inspector. */
+  --lift-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.7), 0 2px 6px -2px rgb(0 0 0 / 0.4);
 
   /* The edge cue on a scrolling well. Additive. */
   --well-shadow: rgb(0 0 0 / 0.55);
 
   /* ── The bitstream ramp ──────────────────────────────── DESIGN.md §5.2 ──
      Five spans told apart by value, not hue, because the colour budget
-     belongs to the ten module roles. Additive: nothing else reads these, and
-     removing them restores the previous behaviour exactly.
-
-     Five monotonic steps cannot all clear 2:1 — the usable range is under
-     21:1 once pure black and white are excluded, which caps an even step at
-     about 1.9:1. So the ramp is even, and the boundary that matters most,
-     where the header stops and the payload starts, gets a second cue: the
-     text flips from dark-on-light to light-on-dark at span-3. */
-  --span-1: #e9edf3;
-  --span-1-ink: #16191e;
-  --span-2: #97a1b0;
-  --span-2-ink: #16191e;
-  --span-3: #5b6674;
-  --span-3-ink: #e9edf3;
-  --span-4: #3b434f;
-  --span-4-ink: #dfe4ea;
-  --span-5: #1e2229;
-  --span-5-ink: #aab3c0;
+     belongs to the ten module roles. The ramp is even, and the boundary that
+     matters most, where the header stops and the payload starts, gets a
+     second cue: the text flips from dark-on-light to light-on-dark at span-3. */
+  --span-1: #eeecf6;
+  --span-1-ink: #16151e;
+  --span-2: #9d9bb0;
+  --span-2-ink: #16151e;
+  --span-3: #5f5d73;
+  --span-3-ink: #eeecf6;
+  --span-4: #3d3b50;
+  --span-4-ink: #e4e2ee;
+  --span-5: #1f1e2a;
+  --span-5-ink: #b4b2c6;
 
   /* ── The anatomy palette ─────────────────────────────── DESIGN.md §2.2 ──
-     Warm half is structure — the same for every payload at a given version.
-     Cool half is content — this payload and no other. A reader learns the
-     split without being told. */
+     Unchanged. Warm half is structure — the same for every payload at a given
+     version. Cool half is content — this payload and no other. */
   --role-finder: #e2452b;
   --role-separator: #c98f5e;
   --role-timing: #e8a317;
@@ -74,37 +86,32 @@
   --role-remainder: #64748b;
 
   /* ── Functional colour and the marker ────────────────── DESIGN.md §2.4 ──
-     Three hues outside the role palette. Nothing else may use them, and
-     there is no success green, warning yellow, or selection blue anywhere.
-
-     --marker exists because a pale-ink highlight stroke is invisible against
-     a white module. Magenta is the one hue the ten roles leave free and it
-     is legible over both black and white paper. */
+     Damage and repair are unchanged. The marker is the accent: legible over
+     both a black and a white module, which a pale ink stroke never was. */
   --damage: #ff4438;
   --repair: #2fd6a8;
-  --marker: #f0439a;
+  --marker: var(--accent);
 
   /* ── The anatomy lens ────────────────────────────────── DESIGN.md §2.3 ──
-     Tint rides on the value; it never replaces it. A tinted light module
-     stays lighter than a tinted dark one of the same hue, so the QR
-     silhouette survives being coloured in. If the silhouette dissolves the
-     coverage is wrong. */
+     Tint rides on the value; it never replaces it. If the silhouette
+     dissolves the coverage is wrong. */
   --lens-light-coverage: 0.32;
   --lens-dark-coverage: 0.65;
 
   /* ── Typography ────────────────────────────────────────── DESIGN.md §3 ──
-     Two faces, two jobs. Sans is anything a human reads as language; mono is
-     anything that is data, plus the wordmark and the figures, which are
-     data wearing a larger size. --font-display stays as a name so the display
-     role keeps its own token, but it resolves to the mono stack: a third face
-     was buying texture, not distinction, and cost a font download for it. */
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --font-display: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+     Plus Jakarta Sans is language and display: it was drawn for Jakarta's
+     own identity, and it holds at 800 for a stage name and at 15 px for a
+     gloss. JetBrains Mono is data — its 0/O and 1/l/I never collide, which
+     matters in a payload string — plus the wordmark and the figures. */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
+  --t-hero: clamp(2rem, 1.3rem + 2.4vw, 2.875rem);
+  --t-hero-lh: 1.02;
   --t-display: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
   --t-display-lh: 1.05;
-  --t-title: 1.375rem;
+  --t-title: 1.25rem;
   --t-title-lh: 1.2;
   --t-figure: 1.75rem;
   --t-figure-lh: 1;
@@ -115,21 +122,31 @@
   /* 16 px is the floor for anything that is a sentence. */
   --t-body: 1rem;
   --t-body-lh: 1.6;
-  --t-data: 0.875rem;
-  --t-data-lh: 1.55;
+  --t-data: 0.8125rem;
+  --t-data-lh: 1.6;
   --t-small: 0.8125rem;
   --t-small-lh: 1.45;
-  /* Twelve is the floor. Below that a monospace digit stops being a digit,
-     and an eyebrow stops being readable at arm's length. */
+  /* Twelve is the floor. */
   --t-micro: 0.75rem;
   --t-micro-lh: 1.35;
 
-  --track-tight: -0.02em;
-  --track-label: 0.09em;
+  --w-display: 800;
+  --w-strong: 700;
+
+  --track-tight: -0.03em;
+  --track-label: 0.1em;
+
+  /* ── Shape ───────────────────────────────────────────── DESIGN.md §4.6 ──
+     Chrome is soft; the specimen is not. The matrix, its paper and its
+     module grid keep radius 0, so the code is the one perfectly square
+     object on the page. */
+  --r-card: 16px;
+  --r-well: 12px;
+  --r-ctl: 10px;
+  --r-pill: 999px;
 
   /* ── Grid and rhythm ─────────────────────────────────── DESIGN.md §4.6 ──
-     8 px base, matching the module grid, so a byte highlighted in three
-     places is the same width in all three. */
+     8 px base, matching the module grid. */
   --unit: 8px;
   --space-1: 8px;
   --space-2: 16px;
@@ -139,7 +156,7 @@
   --space-6: 96px;
   --max-width: 96rem;
   --rail-width: 208px;
-  --specimen-width: 460px;
+  --specimen-width: 480px;
   --card-pad: var(--space-3);
 
   /* ── Motion ────────────────────────────────────────────── DESIGN.md §6 ── */
@@ -154,44 +171,51 @@
   --dur-popover: 140ms;
   --dur-theme: 200ms;
   --dur-control: 120ms;
+  --dur-tour-step: 6200ms;
 }
 
 /*
- * Chrome, light: the lab notebook. Same tokens, same contrast floors, same
- * specimen. The role palette and the three functional hues are re-tuned only
- * where a hue that reads on #0e1013 goes thin on #f7f8fa.
+ * Chrome, light: the lab notebook. A cool lilac paper rather than cream, so
+ * the specimen's white still reads as the brightest thing on the page.
  */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --ground: #e9ebef;
-  --ground-sunk: #dfe2e8;
-  --surface: #f7f8fa;
-  --surface-lift: #fcfcfd;
-  --surface-hover: #eef0f4;
-  --rule: #dadde4;
-  --rule-strong: #bcc2cd;
-  --ink: #14171c;
-  --ink-mid: #454c58;
-  --ink-soft: #58616e;
+  --ground: #f4f3f8;
+  --ground-sunk: #ebeaf2;
+  --surface: #fafafd;
+  --surface-lift: #fdfdfe;
+  --surface-hover: #efeef5;
+  --rule: #dddbe7;
+  --rule-strong: #c3c0d2;
+  --ink: #17161f;
+  --ink-mid: #474556;
+  --ink-soft: #5f5d70;
 
-  --well-shadow: rgb(20 23 28 / 0.22);
+  --accent: #c8156e;
+  --accent-ink: #fff5fa;
+  --accent-soft: rgb(200 21 110 / 0.09);
+  --accent-line: rgb(200 21 110 / 0.4);
+
+  --bench-light: rgb(120 100 220 / 0.1);
+  --ground-dots: rgb(23 22 31 / 0.065);
+  --lift-shadow: 0 18px 40px -20px rgb(40 30 80 / 0.35), 0 2px 6px -2px rgb(40 30 80 / 0.12);
+  --well-shadow: rgb(23 22 31 / 0.2);
 
   /* The bitstream ramp, light. Same even steps, same flip at span-3. */
-  --span-1: #14171c;
-  --span-1-ink: #fcfcfd;
-  --span-2: #545c6a;
-  --span-2-ink: #fcfcfd;
-  --span-3: #98a2b0;
-  --span-3-ink: #14171c;
-  --span-4: #cfd5dd;
-  --span-4-ink: #14171c;
-  --span-5: #edeff2;
-  --span-5-ink: #454c58;
+  --span-1: #17161f;
+  --span-1-ink: #fdfdfe;
+  --span-2: #545266;
+  --span-2-ink: #fdfdfe;
+  --span-3: #9b99ad;
+  --span-3-ink: #17161f;
+  --span-4: #d1cfdd;
+  --span-4-ink: #17161f;
+  --span-5: #eeedf4;
+  --span-5-ink: #474556;
 
   --damage: #d92c1f;
   --repair: #0b7d60;
-  --marker: #c2166f;
 }
 
 /*
@@ -210,5 +234,6 @@
     --dur-popover: 0ms;
     --dur-theme: 0ms;
     --dur-control: 0ms;
+    --dur-tour-step: 0ms;
   }
 }

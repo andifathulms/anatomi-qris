@@ -12,6 +12,7 @@
   background: var(--ground-sunk);
   border: 1px solid var(--rule);
   padding: var(--space-2);
+  border-radius: var(--r-well);
 }
 
 .interleave__row {

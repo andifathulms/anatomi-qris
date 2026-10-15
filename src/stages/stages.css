@@ -13,25 +13,26 @@
 .figures {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
-  gap: 1px;
+  gap: var(--space-1);
   margin: 0;
-  background: var(--rule);
-  border: 1px solid var(--rule);
+  border-radius: var(--r-well);
+  overflow: hidden;
 }
 
 .figures__item {
   display: grid;
-  gap: 4px;
-  background: var(--surface);
-  padding: var(--space-2);
+  gap: 6px;
+  background: var(--surface-lift);
+  border-radius: var(--r-well);
+  padding: 14px var(--space-2);
 }
 
 .figures__item dd {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: var(--t-figure);
   line-height: var(--t-figure-lh);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--track-tight);
   font-variant-numeric: tabular-nums;
   color: var(--ink);
@@ -112,6 +113,7 @@
   background: var(--ground-sunk);
   border: 1px solid var(--rule);
   padding: var(--space-2);
+  border-radius: var(--r-well);
 }
 
 /*
@@ -129,6 +131,7 @@
   height: var(--space-2);
   overflow: hidden;
   border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
 }
 
 .budget__segment {

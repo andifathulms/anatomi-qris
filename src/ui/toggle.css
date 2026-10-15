@@ -1,50 +1,40 @@
 /*
- * A segmented control. Selection is a lifted surface plus a --marker underline
- * — the same marker that carries every selection in the app, so a selected
- * segment and a selected module read as the same idea.
+ * A segmented control: a sunk track with the selected segment lifted out of
+ * it. Selection also carries a short accent bar under the label, so a
+ * selected segment and a selected module still read as the same idea.
  */
 .toggle {
   display: inline-flex;
-  border: 1px solid var(--rule-strong);
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--r-ctl);
   background: var(--ground-sunk);
+  border: 1px solid var(--rule);
 }
 
 .toggle__button {
   position: relative;
   background: transparent;
   border: 0;
-  border-right: 1px solid var(--rule);
+  border-radius: calc(var(--r-ctl) - 3px);
   color: var(--ink-soft);
-  padding: 7px var(--space-2);
+  padding: 6px 12px;
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: background var(--dur-control) var(--ease-standard),
-    color var(--dur-control) var(--ease-standard);
-}
-
-.toggle__button:last-child {
-  border-right: 0;
+    color var(--dur-control) var(--ease-standard),
+    box-shadow var(--dur-control) var(--ease-standard);
 }
 
 .toggle__button:hover {
-  color: var(--ink-mid);
-  background: var(--surface-hover);
+  color: var(--ink);
 }
 
 .toggle__button[aria-pressed='true'] {
   background: var(--surface-lift);
   color: var(--ink);
-}
-
-.toggle__button[aria-pressed='true']::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background: var(--marker);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.22), inset 0 0 0 1px var(--rule);
 }
