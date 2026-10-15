@@ -1,209 +1,259 @@
 /*
- * The stage rail — DESIGN.md §4.2.
+ * The filmstrip — DESIGN.md §4.2.
  *
- * Vertical on desktop: nine stations, each numbered and named, the whole
- * column draggable. Horizontal below 1180 px. Orientation is decided here and
- * measured by the component, so there is one implementation, not two.
+ * Nine frames in four chapter groups along the bottom edge. Each frame is a
+ * thumbnail of the symbol at the end of its stage; the strip as a whole is
+ * one slider. The playhead marks the exact, possibly fractional, position.
  */
 
-.scrubber {
-  display: grid;
-  gap: var(--space-2);
+.film {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
-.scrubber__head {
-  display: grid;
-  gap: 2px;
-  padding-left: var(--space-3);
-}
-
-.scrubber__hint {
-  color: var(--ink-soft);
-  font-size: var(--t-micro);
-  line-height: var(--t-micro-lh);
-  margin: 0;
-}
-
-.scrubber__track {
+.film__track {
   position: relative;
-  display: grid;
-  gap: 2px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
   cursor: pointer;
   touch-action: none;
+  min-width: 0;
+  border-radius: var(--r-well);
 }
 
-/* The rail and the fill run down the left edge, behind the dots. */
-.scrubber__rail,
-.scrubber__fill {
-  position: absolute;
-  left: 11px;
-  width: 1px;
-  pointer-events: none;
-}
-
-.scrubber__rail {
-  top: 0;
-  bottom: 0;
-  background: var(--rule);
-}
-
-.scrubber__fill {
-  top: 0;
-  height: calc(var(--progress) * 100%);
-  background: var(--ink-soft);
-}
-
-.scrubber__station {
-  position: relative;
+.film__chapter {
   display: grid;
-  grid-template-columns: 24px 3ch minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-1);
-  background: none;
-  border: 0;
-  border-left: 2px solid transparent;
-  padding: 6px var(--space-1) 6px 0;
-  text-align: left;
-  cursor: pointer;
-  color: var(--ink-soft);
-  transition: color var(--dur-control) var(--ease-standard),
-    background var(--dur-control) var(--ease-standard),
-    border-color var(--dur-control) var(--ease-standard);
+  gap: 6px;
+  min-width: 0;
 }
 
-.scrubber__station:hover {
-  color: var(--ink-mid);
-  background: var(--surface);
-}
-
-.scrubber__station[data-status='passed'] {
-  color: var(--ink-mid);
-}
-
-/* The active station is the only place --marker appears outside a selection. */
-.scrubber__station[data-status='current'] {
-  color: var(--ink);
-  background: var(--surface);
-  border-left-color: var(--marker);
-}
-
-.scrubber__dot {
-  width: 9px;
-  height: 9px;
-  justify-self: center;
-  background: var(--ground);
-  border: 1px solid var(--rule-strong);
-  display: block;
-  transition: background var(--dur-control) var(--ease-standard),
-    border-color var(--dur-control) var(--ease-standard);
-}
-
-.scrubber__station[data-status='passed'] .scrubber__dot {
-  background: var(--ink-soft);
-  border-color: var(--ink-soft);
-}
-
-.scrubber__dot[data-active='true'] {
-  background: var(--marker);
-  border-color: var(--marker);
-}
-
-.scrubber__index {
-  font-family: var(--font-mono);
-  font-size: var(--t-micro);
-  line-height: var(--t-micro-lh);
-  font-weight: 500;
+.film__chapter-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-left: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: var(--w-strong);
   letter-spacing: var(--track-label);
-  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
   color: var(--ink-soft);
+  white-space: nowrap;
+  transition: color var(--dur-control) var(--ease-standard);
 }
 
-.scrubber__station[data-status='current'] .scrubber__index {
+.film__numeral {
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+}
+
+.film__chapter[data-active] .film__chapter-name {
+  color: var(--accent);
+}
+
+.film__frames {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: calc(var(--r-well) + 2px);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+}
+
+.film__frame {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  width: 84px;
+  padding: 6px 3px 5px;
+  border: 0;
+  border-radius: var(--r-ctl);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard),
+    box-shadow var(--dur-control) var(--ease-standard);
+}
+
+.film__frame:hover {
+  background: var(--surface);
   color: var(--ink-mid);
 }
 
-.scrubber__label {
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-weight: 500;
+.film__frame[data-status='passed'] {
+  color: var(--ink-mid);
+}
+
+.film__frame[data-status='current'] {
+  background: var(--surface-lift);
+  color: var(--ink);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* The thumbnail is a piece of the specimen: square, on its own paper. */
+.film__thumb {
+  display: block;
+  width: 44px;
+  height: 44px;
+  background: var(--module-light);
+  image-rendering: pixelated;
+  transition: opacity var(--dur-control) var(--ease-standard);
+}
+
+.film__frame[data-status='ahead'] .film__thumb {
+  opacity: 0.55;
+}
+
+.film__label {
+  display: flex;
+  gap: 3px;
+  align-items: baseline;
+  max-width: 100%;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: var(--w-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Prev/next, which live in the console beside the payload field. */
-.scrubber__steps {
-  display: flex;
-  gap: var(--space-1);
-  align-items: center;
+.film__playhead {
+  position: absolute;
+  bottom: -7px;
+  width: 18px;
+  height: 3px;
+  margin-left: -9px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  pointer-events: none;
 }
 
-/*
- * Lying down. The track becomes a row: the rail runs horizontally behind the
- * stations and each station stacks its dot over its number. Nine names on one
- * row is what made revision 1's track unreadable on anything but a wide
- * desktop, so here they come off entirely.
- */
+.film__now {
+  display: none;
+}
+
+.film__hint {
+  flex: 1 1 10rem;
+  align-self: center;
+  max-width: 22ch;
+  margin-left: auto;
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* ── Previous / next, at the foot of the stage panel ──────────────────── */
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.steps__button {
+  gap: 10px;
+  padding: 9px 14px;
+  text-align: left;
+}
+
+.steps__text {
+  display: grid;
+  gap: 1px;
+  font-size: var(--t-small);
+  font-weight: var(--w-strong);
+  color: inherit;
+}
+
+.steps__text small {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.steps__button--next {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* ── Narrower: the strip tightens before it ever scrolls ──────────────── */
+
 @media (max-width: 1179px) {
-  .scrubber {
-    gap: var(--space-1);
-  }
-
-  .scrubber__head {
-    padding-left: 0;
-  }
-
-  .scrubber__track {
-    display: block;
-    height: var(--space-4);
-    padding-top: var(--space-1);
-    /* Stations are centred on their position, so the first and last hang half
-       their width past the track. Inset it, or 01 and 09 clip on a phone. */
-    margin-inline: var(--space-2);
-  }
-
-  .scrubber__rail,
-  .scrubber__fill {
-    left: 0;
-    top: 12px;
-    bottom: auto;
-    height: 1px;
-    width: auto;
-  }
-
-  .scrubber__rail {
-    right: 0;
-  }
-
-  .scrubber__fill {
-    width: calc(var(--progress) * 100%);
-    height: 1px;
-  }
-
-  .scrubber__station {
-    position: absolute;
-    top: var(--space-1);
-    left: var(--at);
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    border-left: 0;
-    border-top: 0;
-    padding: 0;
-    background: none;
-  }
-
-  .scrubber__station:hover,
-  .scrubber__station[data-status='current'] {
-    background: none;
-  }
-
-  /* Names come off the track entirely rather than being crammed onto it or
-     overflowing at the ends. The panel header already carries the current
-     stage at display size, so nothing is lost. */
-  .scrubber__label {
+  .film__hint {
     display: none;
+  }
+
+  .film__track {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 899px) {
+  .film__track {
+    gap: 6px;
+  }
+
+  .film__frame {
+    width: auto;
+    padding: 5px;
+  }
+
+  .film__thumb {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Names come off the frames; the panel header carries the current stage
+     at display size, so nothing is lost. */
+  .film__label {
+    display: none;
+  }
+
+  .film {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .film__chapter-name {
+    display: none;
+  }
+
+  .film__now {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: var(--t-micro);
+    font-weight: var(--w-strong);
+    color: var(--accent);
+  }
+}
+
+@media (max-width: 420px) {
+  .film__thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .film__frame {
+    padding: 4px;
+  }
+
+  .film__frames {
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .film__track {
+    gap: 4px;
   }
 }

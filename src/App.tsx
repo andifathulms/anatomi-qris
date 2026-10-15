@@ -6,7 +6,8 @@ import { Toggle } from './ui/Toggle';
 import { BrandMark } from './ui/BrandMark';
 import { InputBar } from './ui/InputBar';
 import { MakerSignature } from './ui/MakerSignature';
-import { StageScrubber, stageIntroKey, stageNameKey } from './ui/StageScrubber';
+import { StageScrubber, StageSteps, stageIntroKey, stageNameKey } from './ui/StageScrubber';
+import { chapterOf } from './ui/chapters';
 import { Legend } from './ui/Legend';
 import { CodewordTable } from './ui/CodewordTable';
 import { StagePanel } from './stages/StagePanel';
@@ -93,6 +94,7 @@ function Shell() {
   );
 
   const stage = Math.round(state.stage);
+  const chapter = chapterOf(state.stage);
 
   return (
     <div className="shell">
@@ -130,47 +132,41 @@ function Shell() {
         </div>
       </header>
 
-      <div className="shell__work">
-        <main className="workbench">
-          {/* The rail is the spine of the app: nine stations, always named,
-              always draggable. DESIGN.md §4.2. */}
-          <nav className="workbench__rail" aria-label={t('app.stages')}>
-            <StageScrubber />
-          </nav>
+      {/* The tray: where the specimen comes from, so it comes first. */}
+      <div className="tray">
+        <InputBar />
+      </div>
 
-          {/* The specimen never moves. Nine stages must read as one object being
-              transformed, not nine illustrations in a row. DESIGN.md §4.1. */}
-          {/* Named by its own heading rather than by a duplicate aria-label,
-              which made a reader hear "Spesimen" twice on entering. */}
-          <section className="specimen card" id="matrix" aria-labelledby="specimen-heading">
-            <div className="specimen__head">
-              <div className="specimen__head-row">
-                <h2 className="eyebrow" id="specimen-heading">{t('app.specimen')}</h2>
-                {/* The view control sits with the facts it applies to, and above
-                    the fold on a laptop, rather than below the readout. */}
-                <Toggle<'printed' | 'anatomy'>
-                  label={t('matrix.caption')}
-                  value={state.rendering}
-                  onChange={setRendering}
-                  options={[
-                    { value: 'printed', label: t('matrix.asPrinted') },
-                    { value: 'anatomy', label: t('matrix.anatomy') },
-                  ]}
-                />
-              </div>
-              {build && (
-                <p className="chips">
-                  <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
-                  <span className="chip">{t('summary.ec')} <b>{build.ecLevel}</b></span>
-                  <span className="chip">{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
-                  <span className="chip">{t('summary.mask')} <b>{build.chosenMask}</b></span>
-                  <span className="chip">
-                    {t('summary.size')} <b>{build.size}×{build.size}</b>
-                  </span>
-                </p>
-              )}
-            </div>
+      <main className="workbench">
+        {/* The specimen never moves. Nine stages must read as one object being
+            transformed, not nine illustrations in a row. DESIGN.md §4.1.
+            Named by its own heading rather than a duplicate aria-label. */}
+        <section className="specimen" id="matrix" aria-labelledby="specimen-heading">
+          <div className="specimen__head">
+            <h2 className="visually-hidden" id="specimen-heading">{t('app.specimen')}</h2>
+            {build && (
+              <p className="chips">
+                <span className="chip">{t('summary.version')} <b>{build.version}</b></span>
+                <span className="chip">{t('summary.ec')} <b>{build.ecLevel}</b></span>
+                <span className="chip">{t('summary.mode')} <b>{t(`mode.${build.mode}`)}</b></span>
+                <span className="chip">{t('summary.mask')} <b>{build.chosenMask}</b></span>
+                <span className="chip">
+                  {t('summary.size')} <b>{build.size}×{build.size}</b>
+                </span>
+              </p>
+            )}
+            <Toggle<'printed' | 'anatomy'>
+              label={t('matrix.caption')}
+              value={state.rendering}
+              onChange={setRendering}
+              options={[
+                { value: 'printed', label: t('matrix.asPrinted') },
+                { value: 'anatomy', label: t('matrix.anatomy') },
+              ]}
+            />
+          </div>
 
+          <div className="specimen__paper">
             <Matrix
               tint={tint}
               offences={offences}
@@ -178,52 +174,62 @@ function Shell() {
               repaired={repaired}
               {...(inDamageLab ? { onPaint: paint } : {})}
             />
+          </div>
 
-            {state.rendering === 'anatomy' && <Legend />}
+          {state.rendering === 'anatomy' && <Legend />}
 
-            <CodewordTable />
+          <CodewordTable />
+        </section>
+
+        <div className="workbench__column">
+          <section className="panel card" aria-labelledby="stage-heading">
+            <header className="panel__head">
+              <p className="panel__chapter">
+                {t('chapter.label', { n: chapter.numeral })} · {t(chapter.name)}
+              </p>
+              <h2 className="panel__step" id="stage-heading">
+                <span className="panel__index">
+                  {String(stage).padStart(2, '0')}
+                  <span className="panel__index-total">
+                    /{String(STAGE_COUNT).padStart(2, '0')}
+                  </span>
+                </span>
+                <span className="panel__step-name">{t(stageNameKey(state.stage))}</span>
+              </h2>
+              {/* The largest slot on the page states what the app is, on the
+                  one stage a first-time visitor arrives at. */}
+              {!state.stageTouched && stage === 1 && (
+                <p className="panel__lede">{t('app.lede')}</p>
+              )}
+              <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
+            </header>
+            <div className="panel__body">
+              <StagePanel />
+            </div>
+            <footer className="panel__foot">
+              <StageSteps />
+            </footer>
           </section>
 
-          <div className="workbench__column">
-            <section className="panel card" aria-labelledby="stage-heading">
-              <header className="panel__head">
-                <h2 className="panel__step" id="stage-heading">
-                  <span className="panel__index">
-                    {String(stage).padStart(2, '0')}
-                    <span className="panel__index-total">
-                      /{String(STAGE_COUNT).padStart(2, '0')}
-                    </span>
-                  </span>
-                  <span className="panel__step-name">{t(stageNameKey(state.stage))}</span>
-                </h2>
-                {/* The largest slot on the page states what the app is, on the
-                    one stage a first-time visitor arrives at. */}
-                {!state.stageTouched && stage === 1 && (
-                  <p className="display panel__lede">{t('app.lede')}</p>
-                )}
-                <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
-              </header>
-              <StagePanel />
+          {/* Present at every stage when the lens is active: the payload's
+              meaning does not change as the encoding proceeds, only its
+              representation. */}
+          {lensActive && (
+            <section className="card">
+              <PayloadTree />
             </section>
-
-            {/* Present at every stage when the lens is active: the payload's
-                meaning does not change as the encoding proceeds, only its
-                representation. */}
-            {lensActive && (
-              <section className="card">
-                <PayloadTree />
-              </section>
-            )}
-          </div>
-        </main>
-
-        <div className="console">
-          <InputBar />
+          )}
         </div>
-      </div>
+      </main>
 
-      {/* The maker's mark: personal credit, kept off the console and away from
-          the offline guarantee it must not be mistaken for. */}
+      {/* The filmstrip: the spine of the app, along the bottom edge where a
+          timeline lives. DESIGN.md §4.2. */}
+      <nav className="filmstrip" aria-label={t('app.stages')}>
+        <StageScrubber />
+      </nav>
+
+      {/* The maker's mark: personal credit, kept away from the offline
+          guarantee it must not be mistaken for. */}
       <footer className="colophon">
         <MakerSignature />
       </footer>

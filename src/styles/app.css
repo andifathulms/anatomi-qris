@@ -1,20 +1,17 @@
 /*
- * The frame — DESIGN.md §4. Three zones in DOM order: topbar, workbench,
- * console. The workbench is three columns: stage rail, specimen, panel.
+ * The frame — DESIGN.md §4. Five zones in DOM order: topbar, tray,
+ * workbench, filmstrip, colophon. The workbench is two columns: the bench
+ * with the specimen on it, and the stage panel.
  */
 
 .shell {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-}
-
-/* The console is sticky to the bottom of the work area, not of the document:
-   scrolling to the very end lets it lift and reveals the colophon under it. */
-.shell__work {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  min-height: 0;
+  /* The bench light spills past the column on purpose; clip, not hidden,
+     so it never widens the page and sticky children keep working. */
+  overflow-x: clip;
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* ── Topbar ────────────────────────────────────────────── DESIGN.md §4.1 ── */
@@ -26,16 +23,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
   flex-wrap: wrap;
-  background: var(--ground);
+  background: color-mix(in srgb, var(--ground) 86%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--rule);
-  padding: var(--space-2) var(--space-3);
+  padding: 12px var(--space-3);
 }
 
 /* The mark leads the wordmark by one module of clear space, per the brand
-   package's clear-space rule. It is optically centred against the two lines
-   of the identity rather than sitting on their baseline. */
+   package's clear-space rule. */
 .brand-mark {
   flex: 0 0 auto;
   align-self: center;
@@ -44,8 +42,8 @@
 
 .topbar__identity {
   display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
   min-width: 0;
 }
@@ -55,7 +53,7 @@
   font-size: var(--t-title);
   line-height: var(--t-title-lh);
   font-weight: 600;
-  letter-spacing: var(--track-tight);
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
@@ -64,34 +62,49 @@
   line-height: var(--t-small-lh);
   color: var(--ink-soft);
   border-left: 1px solid var(--rule);
-  padding-left: var(--space-2);
+  padding-left: 12px;
 }
 
 .topbar__controls {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   flex-wrap: wrap;
 }
 
 .topbar__offline {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  color: var(--ink-soft);
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule-strong);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 600;
+  color: var(--ink-mid);
   white-space: nowrap;
 }
 
-/* The one square of --repair outside the damage lab. It is the same claim:
+/* The one dot of --repair outside the damage lab. It is the same claim:
    nothing left this machine. */
 .topbar__offline-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
   background: var(--repair);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--repair) 22%, transparent);
   display: block;
   flex: none;
+}
+
+/* ── Tray ──────────────────────────────────────────────── DESIGN.md §4.5 ── */
+
+.tray {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-3) 0;
 }
 
 /* ── Workbench ─────────────────────────────────────────── DESIGN.md §4.1 ── */
@@ -102,18 +115,9 @@
   margin: 0 auto;
   padding: var(--space-3);
   display: grid;
-  grid-template-columns:
-    var(--rail-width)
-    minmax(0, var(--specimen-width))
-    minmax(0, 1fr);
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, var(--specimen-width)) minmax(0, 1fr);
+  gap: var(--space-4);
   align-items: start;
-}
-
-.workbench__rail {
-  position: sticky;
-  top: calc(var(--space-4) + var(--space-3));
-  align-self: start;
 }
 
 .workbench__column {
@@ -122,247 +126,218 @@
   min-width: 0;
 }
 
-/* ── Specimen card ─────────────────────────────────────── DESIGN.md §4.3 ── */
+/* ── The bench and the specimen ────────────────────────── DESIGN.md §4.3 ──
+   The specimen sits on the open bench, not in a card, under the one light
+   in the app: a soft pool on the ground behind it. The light never touches
+   the paper. */
 
 .specimen {
   position: sticky;
-  top: calc(var(--space-4) + var(--space-3));
+  top: 84px;
   display: grid;
   gap: var(--space-2);
   align-self: start;
   min-width: 0;
+  isolation: isolate;
+}
+
+.specimen::before {
+  content: '';
+  position: absolute;
+  inset: -40px -60px 20% -60px;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--bench-light), transparent);
+  pointer-events: none;
 }
 
 .specimen__head {
-  display: grid;
-  gap: var(--space-1);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--rule);
-}
-
-.specimen__head-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-1);
   flex-wrap: wrap;
+}
+
+.specimen__paper {
+  min-width: 0;
 }
 
 /* ── Panel ─────────────────────────────────────────────── DESIGN.md §4.4 ── */
 
 .panel {
   min-width: 0;
+  display: grid;
+  gap: var(--space-3);
+  padding: 28px;
 }
 
 .panel__head {
   display: grid;
-  gap: var(--space-1);
-  padding-bottom: var(--space-3);
-  margin-bottom: var(--space-3);
-  border-bottom: 1px solid var(--rule);
+  gap: 10px;
+}
+
+.panel__chapter {
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 /*
- * The step marker: position in the sequence and the name of the step, at one
- * size. It is a waypoint, not a title, and it no longer competes with the
- * wordmark for the reader's idea of what this page is called.
+ * The stage name is the headline of the page. Revision 2 set it at the
+ * wordmark's size, so nothing on screen was clearly the title; at 800 and
+ * display size it is, and the index rides beside it in mono at a whisper.
  */
 .panel__step {
   display: flex;
   align-items: baseline;
-  gap: var(--space-2);
+  gap: 14px;
   flex-wrap: wrap;
   font-family: var(--font-display);
-  font-size: var(--t-title);
-  line-height: var(--t-title-lh);
-  font-weight: 600;
+  font-size: var(--t-hero);
+  line-height: var(--t-hero-lh);
+  font-weight: var(--w-display);
   letter-spacing: var(--track-tight);
   color: var(--ink);
-  font-variant-numeric: tabular-nums;
 }
 
 .panel__index {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--ink-soft);
-  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
 }
 
 .panel__index-total {
-  color: var(--ink-soft);
+  opacity: 0.6;
 }
 
 .panel__step-name {
   color: var(--ink);
 }
 
-/*
- * The one sentence a stranger has five seconds to read. It is language, so it
- * is set in sans — the display face is mono and mono is for data. Four lines
- * of monospace at 40 px is a wall; three lines of sans is a sentence.
- */
-.panel__head .panel__lede {
-  font-family: var(--font-sans);
+/* The one sentence a stranger has five seconds to read. */
+.panel__lede {
+  font-size: var(--t-h2);
+  line-height: 1.45;
   font-weight: 600;
-  letter-spacing: -0.015em;
   color: var(--ink);
-  max-width: 30ch;
-  margin-top: var(--space-1);
+  max-width: 48ch;
 }
 
 .panel__intro {
   color: var(--ink-mid);
 }
 
-/* ── Console ───────────────────────────────────────────── DESIGN.md §4.5 ── */
+.panel__body {
+  min-width: 0;
+}
 
-.console {
+.panel__foot {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+}
+
+/* ── Filmstrip ─────────────────────────────────────────── DESIGN.md §4.2 ──
+   Sticky to the bottom edge, where a timeline lives. Glass over the ground
+   so panel content scrolls under it legibly. */
+
+.filmstrip {
   position: sticky;
   bottom: 0;
   z-index: 15;
-  background: var(--ground);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--rule);
-  padding: var(--space-2) var(--space-3);
+  padding: 10px var(--space-3) 14px;
 }
 
-/* ── Colophon ─────────────────────────────────────────────────────────────
-   The document's last line. One seam, shared with nothing above it. */
+/* ── Colophon ─────────────────────────────────────────────────────────── */
 
 .colophon {
-  background: var(--ground);
   border-top: 1px solid var(--rule);
   padding: var(--space-2) var(--space-3);
 }
 
 /* ── Breakpoints ───────────────────────────────────────── DESIGN.md §4.7 ── */
 
-/* The rail lies down above the panel; specimen and panel stay side by side. */
 @media (max-width: 1179px) {
+  :root {
+    --specimen-width: 400px;
+  }
+
   .workbench {
-    grid-template-columns: minmax(0, var(--specimen-width)) minmax(0, 1fr);
-    grid-template-areas:
-      'rail rail'
-      'specimen column';
+    gap: var(--space-3);
   }
 
-  .workbench__rail {
-    grid-area: rail;
-    position: static;
-  }
-
-  .specimen {
-    grid-area: specimen;
-  }
-
-  .workbench__column {
-    grid-area: column;
+  .topbar__tagline {
+    display: none;
   }
 }
 
-/*
- * Single column, and the two sticky positions swap roles: identity and
- * settings stop following the reader, and the stage rail takes the top edge
- * instead. Navigation stays one tap away at the top while the payload field
- * holds the bottom, which is the arrangement a thumb expects.
- */
+/* Single column. The specimen stops following the reader; the filmstrip
+   still holds the bottom edge. */
 @media (max-width: 899px) {
   :root {
     --card-pad: var(--space-2);
   }
 
-  .topbar {
-    position: static;
-  }
-
   .workbench {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'rail'
-      'specimen'
-      'column';
-    padding: 0 var(--space-2) var(--space-2);
+    padding: var(--space-2);
     gap: var(--space-2);
-  }
-
-  .workbench__rail {
-    position: sticky;
-    top: 0;
-    z-index: 18;
-    background: var(--ground);
-    border-bottom: 1px solid var(--rule);
-    margin: 0 calc(var(--space-2) * -1);
-    padding: var(--space-1) var(--space-2);
   }
 
   .specimen {
     position: static;
+    max-width: 520px;
+    width: 100%;
+    justify-self: center;
+  }
+
+  /* No spare gutter to spill the light into at this width. */
+  .specimen::before {
+    inset: -24px 0 20% 0;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  .tray {
+    padding: var(--space-2) var(--space-2) 0;
+  }
+
+  .filmstrip {
+    padding: 8px var(--space-2) 10px;
   }
 }
 
 @media (max-width: 719px) {
   .topbar {
-    padding: var(--space-2);
-    gap: var(--space-1) var(--space-2);
-  }
-
-  /*
-   * On a phone the tagline is the only thing on the first screen that says
-   * what this page is, so it stays. It used to be hidden here to save 30 px,
-   * which spent the stranger's only explanation to buy room for a theme
-   * switch.
-   *
-   * One column, three rows: identity, then the tagline at full width so the
-   * wordmark never wraps, then settings. Theme and locale are low-frequency
-   * settings and they sit below the sentence that explains the page, not
-   * beside it competing for 390 px of width.
-   */
-  .topbar {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--space-1);
-  }
-
-  .topbar__identity {
-    display: flex;
-    align-items: center;
+    position: static;
+    padding: 12px var(--space-2);
     gap: var(--space-1);
-    min-width: 0;
-  }
-
-  .topbar__wordmark {
-    border-bottom: 0;
-  }
-
-  .topbar__tagline {
-    border-left: 0;
-    padding-left: 0;
-    font-size: var(--t-small);
-    max-width: 42ch;
   }
 
   .topbar__controls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: var(--space-1) var(--space-2);
-    flex-wrap: wrap;
+    gap: 6px;
   }
 
-  /* The offline promise belongs with the payload box more than with the
-     settings, but it is cheap here and it anchors the row. */
   .topbar__offline {
     order: -1;
-    flex: 1 0 100%;
-  }
-
-  .console {
-    padding: var(--space-2);
   }
 
   .colophon {
     padding: var(--space-2);
   }
 
-  /* Four chips, as DESIGN.md 4.3 specifies. The fifth wrapped to a second
-     row and pushed the specimen further under the sticky console. */
+  /* Four chips; the fifth wrapped to a second row. */
   .chips .chip:nth-child(5) {
     display: none;
   }
@@ -371,12 +346,11 @@
 /* The quality floor is 380 px. Nothing may overflow or clip below it. */
 @media (max-width: 420px) {
   .workbench {
-    padding: 0 var(--space-1) var(--space-3);
+    padding: var(--space-2) 12px;
   }
 
-  .workbench__rail {
-    margin: 0 calc(var(--space-1) * -1);
-    padding: var(--space-1);
+  .panel {
+    padding: var(--space-2);
   }
 
   .topbar__wordmark {

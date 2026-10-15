@@ -1,125 +1,187 @@
 /*
- * The console — DESIGN.md §4.5.
+ * The tray — DESIGN.md §4.5.
  *
- * One row. The console is sticky, so every pixel it takes is a pixel of the
- * panel the reader cannot see. The payload field is set in mono because what
- * goes into it is data, not language.
- */
-/*
- * Flex rather than grid: an `auto` track for the controls will take whatever
- * it needs and starve the field down to a few characters at intermediate
- * widths. A flex basis with wrap gives the field a floor and moves the
- * controls to their own row when they no longer fit beside it.
+ * Top of the page, under the identity. One row for the field and the
+ * correction level, one quieter row for the samples and the link. The
+ * payload field is set in mono because what goes into it is data.
  */
 .input-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--space-1) var(--space-3);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
   max-width: var(--max-width);
   margin: 0 auto;
 }
 
+.input-bar__main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
 .input-bar__field {
   display: grid;
-  gap: 4px;
+  gap: 6px;
   flex: 1 1 24rem;
   min-width: 0;
 }
 
-.input-bar__input {
-  width: 100%;
-  background: var(--ground-sunk);
+/* The well holds the field and its badge, so the badge reads as the field's
+   own verdict rather than a separate control. */
+.input-bar__well {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: 5px 6px 5px 4px;
+  background: var(--surface);
   border: 1px solid var(--rule-strong);
-  border-radius: var(--r-ctl);
+  border-radius: var(--r-well);
+  transition: border-color var(--dur-control) var(--ease-standard),
+    box-shadow var(--dur-control) var(--ease-standard);
+}
+
+.input-bar__well:hover {
+  border-color: var(--ink-soft);
+}
+
+.input-bar__well:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.input-bar__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: 0;
   color: var(--ink);
-  padding: 9px var(--space-2);
+  padding: 7px 10px;
   font-family: var(--font-mono);
   font-size: var(--t-data);
   line-height: var(--t-data-lh);
-  transition: border-color var(--dur-control) var(--ease-standard);
+}
+
+/* The well carries the focus ring, so the field itself does not draw one. */
+.input-bar__input:focus-visible {
+  outline: none;
 }
 
 .input-bar__input::placeholder {
   color: var(--ink-soft);
 }
 
-.input-bar__input:hover {
-  border-color: var(--ink-soft);
+.input-bar__badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: calc(var(--r-well) - 4px);
+  background: var(--surface-lift);
+  color: var(--ink-mid);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: var(--w-strong);
+  white-space: nowrap;
 }
 
-.input-bar__controls {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-end;
-  flex-wrap: wrap;
-  flex: 0 1 auto;
+.input-bar__badge[data-lens] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.input-bar__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .input-bar__group {
   display: grid;
-  gap: 4px;
+  gap: 6px;
   justify-items: start;
 }
 
-.input-bar__select {
-  background: var(--surface-lift);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--r-ctl);
-  color: var(--ink-mid);
-  padding: 7px var(--space-2);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-weight: 500;
-  cursor: pointer;
-  max-width: 16rem;
-  transition: background var(--dur-control) var(--ease-standard),
-    border-color var(--dur-control) var(--ease-standard);
+.input-bar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  flex-wrap: wrap;
 }
 
-.input-bar__select:hover {
-  background: var(--surface-hover);
-  border-color: var(--ink-soft);
+.input-bar__samples {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 30rem;
 }
 
-/* The EC gloss and the offline guarantee share one quiet line under the row.
-   The guarantee belongs here because this is where someone pastes a real
-   payment payload. */
-.input-bar__note {
-  flex: 1 0 100%;
+.input-bar__samples-label {
+  font-size: var(--t-micro);
+  font-weight: 600;
   color: var(--ink-soft);
+  margin-right: 2px;
+}
+
+.input-bar__sample {
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-mid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard),
+    background var(--dur-control) var(--ease-standard);
+}
+
+.input-bar__sample:hover {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.input-bar__sample[aria-pressed='true'] {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .input-bar__suppressed {
-  max-width: 34ch;
-  align-self: center;
+  max-width: 40ch;
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+}
+
+.input-bar__note {
+  color: var(--ink-soft);
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
 }
 
 .input-bar__error {
-  flex: 1 0 100%;
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /*
- * On a phone the console must not eat half the screen. Four stacked control
- * groups with their own eyebrows took 40 % of an 844 px viewport; here the
- * controls share one row, their eyebrows go to screen readers only, and the
- * link-suppression note — which explains a thing rather than doing one — is
- * dropped.
+ * On a phone the tray must not eat the first screen. The eyebrows go to
+ * screen readers only, the samples become one scrolling row, and the
+ * guarantee — already stated in the topbar — is not repeated.
  */
 @media (max-width: 719px) {
-  .input-bar {
-    gap: var(--space-1) var(--space-2);
-  }
-
-  /* The console was 175 px of an 844 px phone, and the topbar another 134, so
-     the specimen — the one thing that has to be the hero here — was cut off
-     mid-code on first paint. The field is unmistakable without its eyebrow,
-     and the guarantee is already in the topbar. */
-  .input-bar__field .eyebrow {
+  .input-bar__main .eyebrow {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -130,47 +192,38 @@
     white-space: nowrap;
   }
 
-  .input-bar__guarantee {
-    display: none;
-  }
-
-  .input-bar__controls {
-    flex: 1 0 100%;
+  .input-bar__main {
     gap: var(--space-1);
-    align-items: center;
   }
 
-  .input-bar__group {
-    grid-template-rows: auto;
+  .input-bar__field {
+    flex-basis: 100%;
   }
 
-  .input-bar__controls .eyebrow {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
+  .input-bar__badge {
+    max-width: 40%;
     overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
-  .input-bar__select {
-    max-width: 9rem;
+  .input-bar__samples {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1 1 100%;
+    margin-inline: calc(var(--space-2) * -1);
+    padding-inline: var(--space-2);
+    max-width: calc(100% + var(--space-2) * 2);
   }
 
-  .input-bar__suppressed {
+  .input-bar__samples::-webkit-scrollbar {
     display: none;
   }
 
-  /* The rail is sticky to the top edge on a phone, so stage navigation is
-     already one tap away and does not need a second row down here. */
-  .input-bar__group--steps {
+  .input-bar__samples-label,
+  .input-bar__guarantee,
+  .input-bar__suppressed,
+  .input-bar__sample-note {
     display: none;
-  }
-
-  .input-bar__note {
-    font-size: var(--t-micro);
-    line-height: var(--t-micro-lh);
   }
 }

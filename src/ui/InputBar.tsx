@@ -4,30 +4,32 @@ import { useActions, useStore } from '../state/store';
 import { EC_LEVELS, type EcLevel } from '../engine/tables';
 import { SAMPLES } from '../../samples/index';
 import { Toggle } from './Toggle';
-import { StageSteps } from './StageScrubber';
 import type { CopyKey } from '../copy';
 import './input-bar.css';
 
 /**
- * Input and stage are the two things a user changes constantly, so they share
- * the bottom bar and everything else lives in the stage panel (DESIGN.md §4.2).
+ * The tray: where the specimen comes from. It sits at the top of the page,
+ * under the identity, because it is the first thing a visitor should touch
+ * and the thing every view below is derived from.
  *
- * The offline guarantee sits here as a plain statement of fact rather than a
- * badge, because this is where someone pastes a real payment payload.
+ * The badge in the field says what the engine made of the text — the mode
+ * for plain text, or that the QRIS lens is on — so typing gets an answer
+ * before the reader has looked anywhere else.
  */
 export function InputBar() {
-  const { state, buildError, linkable } = useStore();
+  const { state, build, buildError, linkable, lensActive, qris } = useStore();
   const { setInput, setEcLevel } = useActions();
   const { t } = useCopy();
   const [copied, setCopied] = useState(false);
   const field = useRef<HTMLInputElement | null>(null);
 
-  // Focused on load, but showing the start of the payload rather than its
-  // tail: the first thing in a QRIS string is the part that identifies it.
+  // Show the start of the payload rather than its tail: the first thing in a
+  // QRIS string is the part that identifies it. Not focused on load — the
+  // tray is at the top now, and a focused field on a phone opens a keyboard
+  // over the specimen before the reader has seen it.
   useEffect(() => {
     const el = field.current;
     if (!el) return;
-    el.focus();
     el.setSelectionRange(0, 0);
     el.scrollLeft = 0;
   }, []);
@@ -35,31 +37,48 @@ export function InputBar() {
   const activeSample = SAMPLES.find((s) => s.payload === state.input) ?? null;
 
   const copyLink = async () => {
-    await navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard refused; the address bar still holds the link.
+    }
   };
+
+  const badge = lensActive
+    ? `${t('lens.on')}${qris?.crcOk ? ` · ${t('tlv.crcOk')}` : ''}`
+    : build
+      ? `${t('summary.mode')} ${t(`mode.${build.mode}`)} · ${t('summary.version')} ${build.version}`
+      : null;
 
   return (
     <div className="input-bar">
-      <div className="input-bar__field">
-        <label className="eyebrow" htmlFor="payload">{t('input.label')}</label>
-        <input
-          id="payload"
-          ref={field}
-          className="input-bar__input"
-          type="text"
-          autoComplete="off"
-          spellCheck={false}
-          placeholder={t('input.placeholder')}
-          value={state.input}
-          onChange={(event) => setInput(event.target.value)}
-        />
-      </div>
+      <div className="input-bar__main">
+        <div className="input-bar__field">
+          <label className="visually-hidden" htmlFor="payload">{t('input.label')}</label>
+          <div className="input-bar__well" data-lens={lensActive || undefined}>
+            <input
+              id="payload"
+              ref={field}
+              className="input-bar__input"
+              type="text"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder={t('input.placeholder')}
+              value={state.input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+            {badge && (
+              <span className="input-bar__badge" data-lens={lensActive || undefined}>
+                {lensActive && <span className="input-bar__badge-dot" aria-hidden="true" />}
+                {badge}
+              </span>
+            )}
+          </div>
+        </div>
 
-      <div className="input-bar__controls">
         <div className="input-bar__group">
-          <span className="eyebrow" id="ec-label">{t('ec.label')}</span>
           <Toggle<EcLevel>
             label={t('ec.label')}
             value={state.ecLevel}
@@ -67,45 +86,28 @@ export function InputBar() {
             options={EC_LEVELS.map((ec) => ({ value: ec, label: ec }))}
           />
         </div>
+      </div>
 
-        <div className="input-bar__group">
-          <label className="eyebrow" htmlFor="sample">{t('input.samples')}</label>
-          <select
-            id="sample"
-            className="input-bar__select"
-            value={activeSample?.id ?? ''}
-            onChange={(event) => {
-              const sample = SAMPLES.find((s) => s.id === event.target.value);
-              if (sample) setInput(sample.payload);
-            }}
-          >
-            <option value="">—</option>
-            {/* The length is in the label because it is the one fact that
-                tells a newcomer which of these is a gentle place to start. */}
-            {SAMPLES.map((sample) => (
-              <option key={sample.id} value={sample.id}>
-                {sample.label} — {t('input.chars', { n: sample.payload.length })}
-              </option>
-            ))}
-          </select>
-          {/*
-            Every sample has carried a sentence saying what it demonstrates
-            since the file was written, and none of them was ever rendered.
-            "Mode numerik: tiga digit muat dalam sepuluh bit" is the whole
-            lesson of stage two in one line, attached to the thing it explains.
-          */}
-          {activeSample && <p className="input-bar__note">{activeSample.note}</p>}
+      <div className="input-bar__meta">
+        <div className="input-bar__samples" role="group" aria-label={t('input.samples')}>
+          <span className="input-bar__samples-label">{t('input.samples')}</span>
+          {SAMPLES.map((sample) => (
+            <button
+              key={sample.id}
+              type="button"
+              className="input-bar__sample"
+              aria-pressed={activeSample?.id === sample.id}
+              title={`${sample.note} ${t('input.chars', { n: sample.payload.length })}`}
+              onClick={() => setInput(sample.payload)}
+            >
+              {sample.label}
+            </button>
+          ))}
         </div>
 
-        <div className="input-bar__group input-bar__group--steps">
-          <span className="eyebrow">{t('stage.scrubber')}</span>
-          <StageSteps />
-        </div>
-
-        <div className="input-bar__group input-bar__group--link">
-          <span className="eyebrow" aria-hidden="true">&nbsp;</span>
+        <div className="input-bar__link">
           {linkable ? (
-            <button type="button" className="button" onClick={copyLink}>
+            <button type="button" className="button button--quiet" onClick={copyLink}>
               {copied ? t('input.copied') : t('input.copyLink')}
             </button>
           ) : (
@@ -117,10 +119,10 @@ export function InputBar() {
       </div>
 
       <p className="input-bar__note label">
+        {/* Every sample carries a sentence saying what it demonstrates; it
+            belongs next to the thing it explains. */}
+        {activeSample && <span className="input-bar__sample-note">{activeSample.note} · </span>}
         {t(`ec.${state.ecLevel}` as 'ec.L')}
-        {/* The topbar chip now states the guarantee in its own words, so on a
-            phone — where the console is a third of the viewport — this
-            repeats it rather than adding to it. */}
         <span className="input-bar__guarantee"> · {t('app.offlineNote')}</span>
       </p>
 
