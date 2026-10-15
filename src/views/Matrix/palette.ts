@@ -64,6 +64,10 @@ export interface Palette {
   repair: string;
   /** Selection and focus. Legible over both a white and a black module. */
   marker: string;
+  /** A highlighted light module: the marker, washed toward paper. */
+  markerSoft: string;
+  /** A dark module outside the highlight, faded so the highlight carries. */
+  dim: string;
   moduleLight: string;
   moduleDark: string;
   inkSoft: string;
@@ -98,6 +102,9 @@ export function readPalette(root: HTMLElement = document.documentElement): Palet
     stroke[key] = toCss(mix(rgb, WHITE, 0.2));
   }
 
+  const marker = read('--marker') || '#f0439a';
+  const markerRgb = marker.startsWith('#') ? parseHex(marker) : parseHex('#f0439a');
+
   return {
     light,
     dark,
@@ -105,7 +112,9 @@ export function readPalette(root: HTMLElement = document.documentElement): Palet
     hue,
     damage: read('--damage') || '#ff4438',
     repair: read('--repair') || '#2fd6a8',
-    marker: read('--marker') || '#f0439a',
+    marker,
+    markerSoft: toCss(mix(WHITE, markerRgb, 0.3)),
+    dim: toCss(mix(WHITE, BLACK, 0.2)),
     moduleLight: read('--module-light') || '#ffffff',
     moduleDark: read('--module-dark') || '#000000',
     inkSoft: read('--ink-soft') || '#8b95a4',

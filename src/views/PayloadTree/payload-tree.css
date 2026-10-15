@@ -1,3 +1,7 @@
+/*
+ * The receipt — DESIGN.md §5.7. A struk: the merchant's name as the
+ * headline, a dashed tear line, then one line item per tag.
+ */
 .tlv {
   display: grid;
   gap: var(--space-2);
@@ -5,194 +9,287 @@
 }
 
 .tlv__head {
+  display: grid;
+  gap: 10px;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.tlv__verdict {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: var(--w-strong);
+  color: var(--repair);
+}
+
+.tlv__verdict-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* The glyph sits on its own disc in the surface colour. */
+.tlv__verdict-dot {
+  color: var(--surface);
+  background: var(--repair);
+}
+
+.tlv__crc-bad .tlv__verdict-dot {
+  background: var(--damage);
+}
+
+.tlv__merchant {
+  font-size: var(--t-hero);
+  line-height: var(--t-hero-lh);
+  font-weight: var(--w-display);
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 .tlv__crc-bad {
   color: var(--damage);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
-  font-weight: 500;
-}
-
-.tlv__table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tlv__table th,
-.tlv__table td {
-  text-align: left;
-  font-weight: 400;
-  padding: 5px var(--space-1) 5px 0;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-  font-family: var(--font-mono);
-  font-size: var(--t-data);
-  line-height: var(--t-data-lh);
-  font-variant-numeric: tabular-nums;
-}
-
-.tlv__table thead th {
-  font-family: var(--font-sans);
-  font-size: var(--t-micro);
-  line-height: var(--t-micro-lh);
   font-weight: 600;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  border-bottom-color: var(--rule-strong);
 }
 
-/* The row is the target. The whole row lights on hover, so the whole row has
-   to be clickable: a 16 x 20 px tag button under a 626 x 31 px hover state is
-   a lie about where to click, and it is under WCAG 2.5.8's 24 x 24 px floor
-   besides. The click handler is on the row and the button stays the control,
-   so pointer users get the whole row and keyboard users keep a real button
-   inside real table semantics. */
-/*
- * The row no longer carries a click handler, so it must not keep implying it
- * is a target. It still lights up — but driven by the button inside it, so
- * the highlight follows the thing that is actually clickable, for hover and
- * for keyboard focus alike.
- */
+.tlv__gloss-line {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+/* ── Line items ───────────────────────────────────────────────────────── */
+
+.tlv__list {
+  display: grid;
+  gap: 2px;
+  margin: 0 calc(var(--space-1) * -1);
+}
+
 .tlv__row {
-  transition: background var(--dur-control) var(--ease-standard);
+  border-radius: var(--r-ctl);
+  transition: background var(--dur-control) var(--ease-standard),
+    box-shadow var(--dur-control) var(--ease-standard);
 }
 
-.tlv__row:has(.tlv__button:hover),
+/* The whole line is the button, so the whole line is the target. */
+.tlv__button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--space-4);
+  padding: 7px 10px;
+  background: none;
+  border: 0;
+  border-radius: inherit;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tlv__row[data-depth='1'] .tlv__button {
+  padding-left: 30px;
+}
+
+.tlv__row[data-depth='2'] .tlv__button {
+  padding-left: 50px;
+}
+
+.tlv__row:hover,
 .tlv__row:has(.tlv__button:focus-visible) {
   background: var(--surface-hover);
 }
 
-/* The selected node is marked the way a selected module is: the marker, on
-   the leading edge, so the two selections read as one idea. */
 .tlv__row[data-selected] {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.tlv__tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  line-height: 1.6;
+  text-align: center;
+  border-radius: 6px;
   background: var(--surface-lift);
-  box-shadow: inset 2px 0 0 var(--marker);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 
-/*
- * 17x22 failed the 24x24 minimum, and these are standalone controls in table
- * cells, not links inside a sentence, so the inline exception does not apply.
- * Both dimensions come from --space-3, which is 24.
- *
- * An earlier attempt stretched the hit area across the whole row with an
- * absolutely positioned ::after. It silently did nothing: a <tr> is not a
- * reliable containing block, so the overlay had nothing to size against and a
- * click on the right of a row selected nothing.
- */
-.tlv__button {
-  background: none;
-  border: 0;
-  min-height: var(--space-3);
-  min-width: var(--space-3);
-  padding: 0;
-  color: var(--ink);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: inherit;
-  font-size: inherit;
+.tlv__row[data-selected] .tlv__tag {
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
-
-/* Nested templates indent by one 8 px unit with a hairline connector. */
-.tlv__connector {
-  width: var(--unit);
-  height: 1px;
-  background: var(--rule-strong);
-  display: inline-block;
-}
-
-.tlv__value {
-  word-break: break-all;
-  max-width: 32ch;
-  color: var(--ink-mid);
-}
-
-.tlv__meaning {
-  font-family: var(--font-sans);
+.tlv__name {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
+  font-weight: 600;
   color: var(--ink-mid);
+}
+
+.tlv__row[data-depth='0'] .tlv__name,
+.tlv__row[data-selected] .tlv__name {
+  color: var(--ink);
+}
+
+.tlv__row[data-depth='1'] .tlv__name,
+.tlv__row[data-depth='2'] .tlv__name {
+  font-weight: 500;
 }
 
 .tlv__gloss {
+  font-size: var(--t-micro);
+  line-height: var(--t-micro-lh);
+  font-weight: 500;
   color: var(--ink-soft);
 }
+
+.tlv__value {
+  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--t-data);
+  color: var(--ink);
+  text-align: right;
+}
+
+.tlv__row[data-template] .tlv__value {
+  color: var(--ink-soft);
+}
+
+/* ── The chain ────────────────────────────────────────────────────────── */
+
+.tlv__chain {
+  display: grid;
+  padding: var(--space-2);
+  border-radius: var(--r-well);
+  background: var(--ground-sunk);
+  border: 1px solid var(--rule);
+}
+
+.tlv__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  padding-bottom: 14px;
+}
+
+.tlv__link:last-child {
+  padding-bottom: 0;
+}
+
+.tlv__link::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  background: var(--rule-strong);
+}
+
+.tlv__link:last-child::before {
+  display: none;
+}
+
+.tlv__link-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.tlv__link > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.tlv__link b {
+  font-size: var(--t-h3);
+  font-weight: var(--w-display);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.tlv__link span {
+  font-size: var(--t-micro);
+  color: var(--ink-mid);
+}
+
+.tlv__link code {
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.tlv__hint {
+  padding: 12px var(--space-2);
+  border-radius: var(--r-well);
+  border: 1px dashed var(--rule-strong);
+}
+
+/* ── The raw string ───────────────────────────────────────────────────── */
 
 .tlv__raw {
   display: grid;
   gap: var(--space-1);
-  border-top: 1px solid var(--rule);
+  border-top: 1px dashed var(--rule-strong);
   padding-top: var(--space-2);
 }
 
 /* Seeing the string and the structure at once is what teaches TLV. */
 .tlv__raw-string {
   font-family: var(--font-mono);
-  font-size: var(--t-data);
-  line-height: var(--t-data-lh);
+  font-size: var(--t-micro);
+  line-height: 1.75;
   word-break: break-all;
   color: var(--ink-soft);
-  background: var(--ground-sunk);
-  border: 1px solid var(--rule);
-  padding: var(--space-2);
-  border-radius: var(--r-well);
 }
 
-/* --ground, not --module-light: white on the dark marker is 3.51:1, under the
-   4.6:1 floor DESIGN.md 8 sets. The ground reads 5.42:1 in dark and 4.84:1 in
-   light, because the marker and the ground invert together. */
 .tlv__mark {
-  background: var(--marker);
-  color: var(--ground);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 3px;
+  padding: 1px 2px;
 }
 
-@media (max-width: 719px) {
-  .tlv__table td:nth-child(2),
-  .tlv__table th:nth-child(2),
-  .tlv__table td:nth-child(3),
-  .tlv__table th:nth-child(3) {
-    display: none;
-  }
-}
+/* ── The CRC verdict ──────────────────────────────────────────────────── */
 
-/*
- * 62x20 is four pixels short of the 24x24 minimum. The inline exception does
- * not cover it: it sits alone in its own span rather than inside a sentence,
- * unlike the citation marker beside it. Height from --space-3, which is 24.
- */
-.tlv__crc-button {
-  min-height: var(--space-3);
-}
-
-/*
- * The verdict and its citation are two separate controls that rendered as
- * "CRC cocok Sumber" — a dotted underline immediately followed by a solid one,
- * with nothing between them, reading as a single broken link. A separator and
- * a little space make two controls look like two.
- */
 .tlv__crc {
   display: inline-flex;
   align-items: baseline;
-  gap: var(--space-1);
-}
-
-.tlv__crc::after {
-  content: '';
-  width: 1px;
-  align-self: stretch;
-  background: var(--rule-strong);
 }
 
 .tlv__crc-button {
+  min-height: var(--space-3);
   background: none;
   border: 0;
   padding: 0;
@@ -203,6 +300,12 @@
 }
 
 .tlv__crc-button[aria-pressed='true'] {
-  color: var(--marker);
+  color: var(--accent);
   border-bottom-style: solid;
+}
+
+@media (max-width: 719px) {
+  .tlv__value {
+    max-width: 12ch;
+  }
 }

@@ -112,13 +112,22 @@ export function useMatrixPainter(
       const tint = visible && state.tint ? state.tint(i) : null;
       if (tint) fill = dark ? tint : mixToward(tint, p.moduleLight, 0.62);
 
+      // A highlight is a figure on a faded ground: the selected modules take
+      // the marker (solid on dark, washed on light, so the silhouette
+      // survives) and everything else fades. A 1px stroke alone was lost in a
+      // 57×57 grid; this is visible across the room.
+      const highlighting = state.highlight.size > 0;
+      if (highlighting && visible && !state.damage.has(i) && !state.repaired.has(i)) {
+        if (state.highlight.has(i)) fill = dark ? p.marker : p.markerSoft;
+        else fill = dark ? p.dim : p.moduleLight;
+      }
+
       if (state.offences.has(i)) fill = p.damage;
 
       let stroke = 'none';
       // --marker, not --ink: a pale ink stroke is invisible on a white
       // module, so half of every highlight simply did not render.
       if (state.focused === i) stroke = p.marker;
-      else if (state.highlight.has(i)) stroke = p.marker;
       else if (
         anatomy > 0 &&
         visible &&

@@ -36,7 +36,7 @@ export function Matrix({
   overrideGrid = null,
   tint = null,
 }: MatrixProps) {
-  const { state, build } = useStore();
+  const { state, build, view } = useStore();
   const { setFocusedModule } = useActions();
   const { t } = useCopy();
   const highlight = useHighlightSet();
@@ -53,7 +53,11 @@ export function Matrix({
   // Stage one is genuinely a bare skeleton — that is what the stage means —
   // but a stranger landing on an empty frame reads it as a broken render, and
   // the app's whole claim is that this thing can be taken apart.
-  const stageProgress = useStageProgress(state.stageTouched ? state.stage : STAGE_COUNT);
+  // Read by meaning, the payload view always shows the finished symbol: a
+  // field's modules cannot light up in a data region not yet written.
+  const stageProgress = useStageProgress(
+    state.stageTouched && view === 'stages' ? state.stage : STAGE_COUNT,
+  );
   const anatomyProgress = useTimedValue(
     state.rendering === 'anatomy' ? 1 : 0,
     duration('--dur-anatomy', 480),

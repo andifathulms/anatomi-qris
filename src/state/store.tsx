@@ -18,6 +18,8 @@ export const STAGE_COUNT = 9;
 
 export type Theme = 'dark' | 'light';
 
+export type View = 'stages' | 'payload';
+
 /**
  * What is currently highlighted, and where the highlight came from. One
  * structure, so a selection made in the tree, the ribbon or the matrix binds
@@ -48,6 +50,12 @@ export interface AppState {
    */
   stageTouched: boolean;
   rendering: 'printed' | 'anatomy';
+  /**
+   * What the panel shows: the nine-stage construction, or the payload read by
+   * meaning. The second only exists while the QRIS lens is on; the store
+   * reports 'stages' whenever it is off, whatever this says.
+   */
+  view: View;
   locale: Locale;
   /** Dark is the instrument, light is the lab notebook. DESIGN.md §2.1. */
   theme: Theme;
@@ -67,6 +75,7 @@ type Action =
   | { type: 'setEcLevel'; ecLevel: EcLevel }
   | { type: 'setStage'; stage: number }
   | { type: 'setRendering'; rendering: 'printed' | 'anatomy' }
+  | { type: 'setView'; view: View }
   | { type: 'setLocale'; locale: Locale }
   | { type: 'setTheme'; theme: Theme }
   | { type: 'setHighlight'; highlight: Highlight | null }
@@ -105,9 +114,14 @@ function reducer(state: AppState, action: Action): AppState {
         ...state,
         stage: Math.min(STAGE_COUNT, Math.max(1, action.stage)),
         stageTouched: true,
+        // Moving through the stages means the reader wants the stages back.
+        view: 'stages',
       };
     case 'setRendering':
       return { ...state, rendering: action.rendering };
+    case 'setView':
+      // A highlight made in one view means nothing in the other.
+      return { ...state, view: action.view, highlight: null };
     case 'setLocale':
       return { ...state, locale: action.locale };
     case 'setTheme':
@@ -169,6 +183,7 @@ function initialState(): AppState {
     stage: 1,
     stageTouched: false,
     rendering: 'printed',
+    view: 'stages',
     locale: langParam === 'en' ? 'en' : 'id',
     theme: initialTheme(),
     highlight: null,
@@ -206,6 +221,8 @@ export interface Store {
   qris: QrisDetection | null;
   /** True when the payload parses as EMVCo Merchant-Presented Mode. */
   lensActive: boolean;
+  /** The view actually showing: 'payload' only while the lens is on. */
+  view: View;
   linkable: boolean;
 }
 
@@ -277,7 +294,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [state.locale]);
 
   const value = useMemo<Store>(
-    () => ({ state, dispatch, build, buildError, qris, lensActive, linkable: !lensActive }),
+    () => ({
+      state,
+      dispatch,
+      build,
+      buildError,
+      qris,
+      lensActive,
+      view: lensActive ? state.view : 'stages',
+      linkable: !lensActive,
+    }),
     [state, build, buildError, qris, lensActive],
   );
 
@@ -300,6 +326,7 @@ export function useActions() {
       setStage: (stage: number) => dispatch({ type: 'setStage', stage }),
       setRendering: (rendering: 'printed' | 'anatomy') =>
         dispatch({ type: 'setRendering', rendering }),
+      setView: (view: View) => dispatch({ type: 'setView', view }),
       setLocale: (locale: Locale) => dispatch({ type: 'setLocale', locale }),
       setTheme: (theme: Theme) => dispatch({ type: 'setTheme', theme }),
       setHighlight: (highlight: Highlight | null) => dispatch({ type: 'setHighlight', highlight }),

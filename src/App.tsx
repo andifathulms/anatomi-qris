@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { LocaleContext, translator, useCopy } from './copy';
-import { STAGE_COUNT, StoreProvider, useActions, useStore, type Theme } from './state/store';
+import { STAGE_COUNT, StoreProvider, useActions, useStore, type Theme, type View } from './state/store';
+import { flatten } from './qris/tlv';
 import { Matrix } from './views/Matrix/Matrix';
 import { Toggle } from './ui/Toggle';
 import { BrandMark } from './ui/BrandMark';
@@ -38,8 +39,9 @@ function Localised({ children }: { children: React.ReactNode }) {
 }
 
 function Shell() {
-  const { state, build, lensActive } = useStore();
-  const { setRendering, setLocale, setTheme, damage } = useActions();
+  const { state, build, lensActive, qris, view } = useStore();
+  const { setRendering, setLocale, setTheme, setView, damage } = useActions();
+  const fieldCount = useMemo(() => (qris ? flatten(qris.nodes).length : 0), [qris]);
   const { t, locale } = useCopy();
 
   // At the interleave stage the matrix carries the same block tints as the
@@ -182,43 +184,60 @@ function Shell() {
         </section>
 
         <div className="workbench__column">
-          <section className="panel card" aria-labelledby="stage-heading">
-            <header className="panel__head">
-              <p className="panel__chapter">
-                {t('chapter.label', { n: chapter.numeral })} · {t(chapter.name)}
-              </p>
-              <h2 className="panel__step" id="stage-heading">
-                <span className="panel__index">
-                  {String(stage).padStart(2, '0')}
-                  <span className="panel__index-total">
-                    /{String(STAGE_COUNT).padStart(2, '0')}
-                  </span>
-                </span>
-                <span className="panel__step-name">{t(stageNameKey(state.stage))}</span>
-              </h2>
-              {/* The largest slot on the page states what the app is, on the
-                  one stage a first-time visitor arrives at. */}
-              {!state.stageTouched && stage === 1 && (
-                <p className="panel__lede">{t('app.lede')}</p>
-              )}
-              <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
-            </header>
-            <div className="panel__body">
-              <StagePanel />
-            </div>
-            <footer className="panel__foot">
-              <StageSteps />
-            </footer>
-          </section>
+          <section className="panel card" aria-labelledby={view === 'payload' ? undefined : 'stage-heading'} aria-label={view === 'payload' ? t('view.payload') : undefined}>
+            {/* Two ways to read one build: by stage, or — when the payload is
+                a QRIS — by meaning. Not a mode switch: same input, same
+                matrix, same engine. */}
+            {lensActive && (
+              <div className="panel__tabs">
+                <Toggle<View>
+                  label={t('view.label')}
+                  value={view}
+                  onChange={setView}
+                  options={[
+                    { value: 'stages', label: t('app.stages') },
+                    {
+                      value: 'payload',
+                      label: `${t('view.payload')} · ${t('view.parts', { n: fieldCount })}`,
+                    },
+                  ]}
+                />
+              </div>
+            )}
 
-          {/* Present at every stage when the lens is active: the payload's
-              meaning does not change as the encoding proceeds, only its
-              representation. */}
-          {lensActive && (
-            <section className="card">
+            {view === 'payload' ? (
               <PayloadTree />
-            </section>
-          )}
+            ) : (
+              <>
+                <header className="panel__head">
+                  <p className="panel__chapter">
+                    {t('chapter.label', { n: chapter.numeral })} · {t(chapter.name)}
+                  </p>
+                  <h2 className="panel__step" id="stage-heading">
+                    <span className="panel__index">
+                      {String(stage).padStart(2, '0')}
+                      <span className="panel__index-total">
+                        /{String(STAGE_COUNT).padStart(2, '0')}
+                      </span>
+                    </span>
+                    <span className="panel__step-name">{t(stageNameKey(state.stage))}</span>
+                  </h2>
+                  {/* The largest slot on the page states what the app is, on
+                      the one stage a first-time visitor arrives at. */}
+                  {!state.stageTouched && stage === 1 && (
+                    <p className="panel__lede">{t('app.lede')}</p>
+                  )}
+                  <p className="prose panel__intro">{t(stageIntroKey(state.stage))}</p>
+                </header>
+                <div className="panel__body">
+                  <StagePanel />
+                </div>
+                <footer className="panel__foot">
+                  <StageSteps />
+                </footer>
+              </>
+            )}
+          </section>
         </div>
       </main>
 

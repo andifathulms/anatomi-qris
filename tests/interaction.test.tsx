@@ -71,6 +71,11 @@ describe('working through the app', () => {
   });
 
   it('shows the TLV tree for a QRIS payload and highlights a node', () => {
+    // The receipt lives in its own tab beside the stages, present only while
+    // the QRIS lens is on.
+    const tabs = container.querySelectorAll('.panel__tabs .toggle__button');
+    expect(tabs).toHaveLength(2);
+    click(tabs[1]);
     const rows = container.querySelectorAll('.tlv__row');
     expect(rows.length).toBeGreaterThan(5);
 
