@@ -46,29 +46,35 @@ those bytes light up in the matrix. That mapping is the product.
 | 8 | Final | Format and version information, written last and unmasked |
 | 9 | Damage | Break it, and watch Reed-Solomon put it back |
 
-The stage rail is a slider, not a row of tabs: dragging it moves through the
-stages continuously, so halfway between *place* and *mask* shows the zigzag
-complete and the mask half applied.
+The nine stages are grouped into four chapters (text into bits, protection,
+drawing, stress test) on a filmstrip of live thumbnails along the bottom edge.
+The strip is a slider, not a row of tabs: dragging it moves through the stages
+continuously, so halfway between *place* and *mask* shows the zigzag complete
+and the mask half applied. A 60-second guided tour drives the same slider.
 
 ## The interface
 
 Two registers that never blur. The **specimen** is pure black on pure white
 with hard pixel edges, no radius and no shadow, because a QR code is a printed
 object and anything else would be a lie about the material. The **instrument**
-is everything around it: dark by default, light on request, and forbidden from
-using either pure black or pure white — when you see white on this screen you
-are looking at paper.
+is everything around it: soft-cornered chrome in tinted graphite (dark) or
+lilac paper (light), following the system theme, and forbidden from using
+either pure black or pure white — when you see white on this screen you are
+looking at paper. Type is Plus Jakarta Sans for language and JetBrains Mono for
+data, both self-hosted.
 
-The specimen sits in the middle and never moves, because nine stages must read
+The payload field sits at the top, because everything is derived from it. The
+specimen sits on the bench below and never moves, because nine stages must read
 as one object being transformed rather than nine illustrations in a row. The
-panel on the right changes around it, and the payload field holds the bottom
-edge.
+panel beside it changes around it. When the payload is a QRIS, the panel gains
+a second tab that reads the payload back as a receipt, and picking a line lights
+the modules that carry it.
 
 Colour has a budget: ten module roles split warm for structure and cool for
-content, two functional colours for damage and repair, and one marker hue for
-selection — which is the same magenta whether the thing selected is a codeword
-in the ribbon, a row in the payload tree, a mask card, or a module in the
-matrix. Nothing else gets a hue.
+content, two functional colours for damage and repair, and one accent for the
+tool itself — the same magenta whether it marks a selected codeword, a line on
+the receipt, the current stage, or the next-stage button. Nothing else gets a
+hue.
 
 ## Running it
 

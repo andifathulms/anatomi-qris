@@ -126,7 +126,7 @@ describe('working through the app', () => {
   it('switches locale without losing the payload', () => {
     const input = container.querySelector<HTMLInputElement>('#payload')!;
     expect(input.value).toBe(SAMPLES[0].payload);
-    click(container.querySelector('.topbar__controls .button'));
+    click(container.querySelector('.topbar__controls .topbar__locale'));
     expect(container.textContent).toContain('Everything runs on this device');
     expect(container.querySelector<HTMLInputElement>('#payload')!.value).toBe(SAMPLES[0].payload);
   });

@@ -32,7 +32,7 @@ const CSS_VAR: Record<RoleKey, string> = {
 export function Legend() {
   const { build, state } = useStore();
   const { setIsolatedRole } = useActions();
-  const { t } = useCopy();
+  const { t, locale } = useCopy();
 
   const counts = useMemo(() => {
     const out = Object.fromEntries(ROLE_KEYS.map((k) => [k, 0])) as Record<RoleKey, number>;
@@ -75,7 +75,7 @@ export function Legend() {
                 aria-hidden="true"
               />
               {t(roleKindKey(key))}
-              <span className="legend__count">{counts[key].toLocaleString()}</span>
+              <span className="legend__count">{counts[key].toLocaleString(locale === 'id' ? 'id-ID' : 'en-GB')}</span>
             </button>
           </li>
         ))}

@@ -8,6 +8,7 @@ export const en: Record<CopyKey, string> = {
   'app.offlineNote': 'Everything runs on this device. Nothing is sent anywhere.',
   'app.skipToMatrix': 'Skip to the matrix',
   'app.locale': 'Bahasa Indonesia',
+  'app.localeShort': 'ID',
   'app.theme': 'Theme',
   'app.themeDark': 'Dark',
   'app.themeLight': 'Light',

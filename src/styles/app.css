@@ -72,6 +72,11 @@
   flex-wrap: wrap;
 }
 
+.topbar__theme-compact,
+.topbar__locale-short {
+  display: none;
+}
+
 .topbar__offline {
   display: inline-flex;
   align-items: center;
@@ -349,22 +354,68 @@
 }
 
 @media (max-width: 719px) {
+  /* One row: identity left, two compact settings right. The offline
+     promise drops to its own quiet line beneath, full width. */
   .topbar {
     position: static;
-    padding: 12px var(--space-2);
-    gap: var(--space-1);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding: 10px var(--space-2);
+    gap: 8px var(--space-1);
   }
 
   .topbar__controls {
-    gap: 6px;
+    display: contents;
+  }
+
+  .topbar__controls .toggle,
+  .topbar__locale-long {
+    display: none;
+  }
+
+  .topbar__theme-compact,
+  .topbar__locale-short {
+    display: inline-flex;
+  }
+
+  .topbar__theme-compact,
+  .topbar__locale {
+    width: 40px;
+    padding-inline: 0;
   }
 
   .topbar__offline {
-    order: -1;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    order: 1;
+    justify-self: start;
+    border: 0;
+    padding: 0;
   }
 
   .colophon {
     padding: var(--space-2);
+  }
+
+  /* The panel reads as a sheet pulled up under the specimen: a grip, a
+     larger top radius, and a shadow cast upward onto the bench. */
+  .panel {
+    position: relative;
+    border-radius: 24px 24px var(--r-card) var(--r-card);
+    padding-top: 26px;
+    box-shadow: 0 -16px 36px -22px rgb(0 0 0 / 0.45);
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: var(--r-pill);
+    background: var(--rule-strong);
   }
 
   /* Four chips; the fifth wrapped to a second row. */

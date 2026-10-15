@@ -3,12 +3,12 @@
 The visual and interaction specification. PRD.md is what and why. CLAUDE.md is how it is
 built. This is how it looks, moves, and feels.
 
-**Revision 2.** Revision 1 established the right instincts — the matrix as a fixed spine,
-a role palette split warm/cool, no shadows, no rounding — and then under-served them. The
-chrome was a single muddy green-grey; every word in the interface was set in the same 13 px
-monospace, so nothing had rank; the nine stages were nine cramped stations on a horizontal
-track; and there was only ever one theme. Revision 2 keeps every principle and rebuilds the
-execution.
+**Revision 3.** Revision 2 got the principles right and the first ten seconds wrong: it read
+as lab equipment when it should feel like an exhibit. Revision 3 keeps the specimen exactly as
+it was — pure black on pure white, hard edges, never remounted — and redesigns everything
+around it: a tinted palette with one accent, a typeface with a local voice, soft chrome, the
+input at the top, the nine stages grouped into four chapters on a filmstrip, the QRIS payload
+read back as a receipt in its own tab, and a first-visit welcome and guided tour.
 
 ---
 
@@ -30,8 +30,8 @@ So the app has two registers and they must never blur:
 **The governing rule, unchanged from revision 1:** the matrix owns pure black and pure
 white. No interface surface, rule, or text may be `#000000` or `#ffffff`. When you see pure
 white on this screen you are looking at paper, and when you see pure black you are looking
-at ink. That is what makes the specimen pop off an otherwise unremarkable page without a
-single glow, gradient, or drop shadow.
+at ink. That is what makes the specimen pop off the page. The one light in the app, a soft
+pool on the ground behind the bench, says where to look; it never touches the paper.
 
 ---
 
@@ -39,17 +39,17 @@ single glow, gradient, or drop shadow.
 
 Five moves, in the order they matter.
 
-1. **Two registers, one white rectangle.** The specimen sits on its own card and never
-   moves. Everything else is instrument chrome that changes around it.
-2. **Rank the type.** Sans for anything a human reads as language. Mono for anything that
-   is data — bits, hex, coordinates, payload strings. Display mono only for the wordmark,
-   stage numerals, and figures. Revision 1 set all three in the same face at the same size,
-   which is why every panel read as an undifferentiated wall.
-3. **Give the nine stages a spine you can read.** A vertical rail on the left with full
-   stage names, always visible, always draggable. Nine labels on a horizontal track meant
-   eight of them were hidden on any screen narrower than a desktop.
-4. **Colour with a budget.** Ten role hues, two functional colours, one marker. Nothing
-   else gets a hue. Chrome is achromatic.
+1. **The specimen stays sacred; the chrome gets friendly.** The matrix keeps radius 0, pure
+   black and pure white. Everything else is soft-cornered, so the code is the one perfectly
+   square object on the page and the contrast does the work.
+2. **One path, four chapters.** The nine stages are grouped by the question each answers —
+   text into bits, protection, drawing, stress test — and shown as a filmstrip of live
+   thumbnails. Every stage ends with a button that names where it goes next.
+3. **Meaning before mechanism.** For a QRIS payload, the first thing you can see is the
+   merchant's name, laid out as a receipt. The mechanism is one tab away and every number
+   in it is still checkable.
+4. **Colour with a budget.** Ten role hues, two functional colours, one accent. The chrome
+   neutrals carry a faint indigo bias; nothing else gets a hue.
 5. **Both themes, one system.** Dark is the instrument. Light is the lab notebook. Same
    tokens, same contrast floors, same specimen.
 
@@ -59,47 +59,47 @@ Five moves, in the order they matter.
 
 ### 2.1 Chrome
 
-Chrome is achromatic with a faint cool cast — barely a hue, just enough that the white
-specimen reads as warmer than its surroundings and therefore closer to the eye. Warm chrome
-would fight the paper; neutral grey next to pure white looks dirty.
+Graphite with a faint indigo bias in dark, lilac paper in light. Revision 2's achromatic grey
+was correct and cold; a neutral that leans toward the accent reads as chosen. The white
+specimen still reads as the warmest, nearest thing on screen.
 
-Dark (default):
-
-| Token | Value | Use |
-| --- | --- | --- |
-| `--ground` | `#0e1013` | Page. Not black — the specimen owns black. |
-| `--ground-sunk` | `#0a0b0e` | Wells: input fields, scroll regions, tracks. |
-| `--surface` | `#16191e` | Cards and panels. |
-| `--surface-lift` | `#1d2128` | Raised: popovers, active segments, table stripes. |
-| `--surface-hover` | `#252a32` | Pointer feedback only. |
-| `--rule` | `#282d35` | Hairlines. |
-| `--rule-strong` | `#3a414d` | Borders that must be seen: card edges, focus wells. |
-| `--ink` | `#e9edf3` | Primary text. Not white. |
-| `--ink-mid` | `#aab3c0` | Secondary text, data values. |
-| `--ink-soft` | `#8b95a4` | Labels, captions, disabled. AA against `--surface`. |
-
-Light:
+Dark (default when the system is dark):
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--ground` | `#e9ebef` | Page. |
-| `--ground-sunk` | `#dfe2e8` | Wells. |
-| `--surface` | `#f7f8fa` | Cards and panels. Not white. |
-| `--surface-lift` | `#fcfcfd` | Raised. Still not white. |
-| `--surface-hover` | `#eef0f4` | Pointer feedback. |
-| `--rule` | `#dadde4` | Hairlines. |
-| `--rule-strong` | `#bcc2cd` | Seen borders. |
-| `--ink` | `#14171c` | Primary text. Not black. |
-| `--ink-mid` | `#454c58` | Secondary. |
-| `--ink-soft` | `#58616e` | Labels. Meets 4.6:1 on `--ground-sunk`, the tightest pairing. |
+| `--ground` | `#0d0c12` | Page, under a 16 px dot grid (`--ground-dots`). |
+| `--ground-sunk` | `#09080d` | Wells, segmented-control tracks, filmstrip groups. |
+| `--surface` | `#16151e` | Cards and panels. |
+| `--surface-lift` | `#1f1e2a` | Raised: chips, figures, selected segments, popovers. |
+| `--surface-hover` | `#292837` | Pointer feedback only. |
+| `--rule` | `#2c2a3a` | Hairlines. |
+| `--rule-strong` | `#403d52` | Borders that must be seen. |
+| `--ink` | `#eeecf6` | Primary text. 14.1:1 at worst. |
+| `--ink-mid` | `#b4b2c6` | Secondary text. 7.9:1 at worst. |
+| `--ink-soft` | `#8e8ca2` | Labels, captions. 5.0:1 at worst. |
+
+Light (default when the system is light):
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--ground` | `#f4f3f8` | Page. |
+| `--ground-sunk` | `#ebeaf2` | Wells. |
+| `--surface` | `#fafafd` | Cards and panels. Not white. |
+| `--surface-lift` | `#fdfdfe` | Raised. Still not white. |
+| `--surface-hover` | `#efeef5` | Pointer feedback. |
+| `--rule` | `#dddbe7` | Hairlines. |
+| `--rule-strong` | `#c3c0d2` | Seen borders. |
+| `--ink` | `#17161f` | Primary text. 15.0:1 at worst. |
+| `--ink-mid` | `#474556` | Secondary. 7.8:1 at worst. |
+| `--ink-soft` | `#5f5d70` | Labels. 5.4:1 at worst. |
 
 The theme follows the system by default and can be overridden; the choice persists in
 `localStorage`, which is not a network request.
 
-**Depth without shadows.** Elevation is expressed by ground → surface → surface-lift value
-steps plus a 1 px rule, never by a shadow. One exception, and it is not a shadow: a popover
-carries a 1 px `--rule-strong` border and sits on `--surface-lift`, which is enough
-separation because it is always over a darker card.
+**Depth.** Elevation is a value step plus a hairline. Two exceptions, both for things that
+genuinely float: lifted chrome (the welcome card, the module inspector, citation popovers,
+the phone sheet) carries `--lift-shadow`, and the bench carries `--bench-light`, a soft
+radial pool on the ground behind the specimen. Neither ever touches the paper.
 
 ### 2.2 The anatomy palette
 
@@ -143,7 +143,7 @@ Within any role the light variant stays clearly lighter than the dark one, so th
 silhouette survives being coloured in. You can still read the code by eye in anatomy view.
 That is the test: if the silhouette dissolves, the coverage is wrong.
 
-### 2.4 Functional colour, and the marker
+### 2.4 Functional colour, and the accent
 
 Three colours outside the role palette, and nothing else in the app may use them.
 
@@ -151,64 +151,61 @@ Three colours outside the role palette, and nothing else in the app may use them
 | --- | --- | --- | --- |
 | `--damage` | `#ff4438` | `#d92c1f` | A module the user broke, or a mask-penalty offence. |
 | `--repair` | `#2fd6a8` | `#0b7d60` | A module Reed-Solomon just put back. |
-| `--marker` | `#f0439a` | `#c2166f` | Selection and focus. Nothing else. |
+| `--accent` | `#ff4f9e` | `#c8156e` | The tool: selection, focus, the active stage, the primary action. |
 
-`--marker` is new in revision 2 and it fixes a real defect. Revision 1 stroked the selected
-and hovered modules in `--ink` — a pale grey. On a dark module that read; on a light module
-it was invisible against white paper. Half of every highlight simply did not render.
-Magenta is the one hue the ten roles leave free, it is legible over both black and white
-modules, and it is the conventional cursor colour in instrument software, so it reads as
-"the tool" rather than "part of the specimen".
+Revision 2 confined magenta to the logo and the selection marker. Revision 3 promotes it to
+the one UI accent: `--marker` now resolves to `--accent`, so a selected module, a selected
+tab, the current filmstrip frame and the next-stage button all read as the same idea. It is
+the one hue the ten roles leave free, it is legible over both black and white modules, and
+it is the brand's own colour (`--brand-magenta` stays fixed for the mark).
 
 There is no success green, no warning yellow, no selection blue. A thing is either the
-specimen, an instrument, damage, a repair, or the marker.
+specimen, an instrument, damage, a repair, or the accent.
 
 ---
 
 ## 3. Typography
 
-Three faces, three jobs, no overlap. Revision 1's single failure mode was setting all three
-jobs in the same face at the same size.
+Two families, three jobs.
 
-- **`--font-sans` — IBM Plex Sans.** Everything a human reads as language: prose, glosses,
-  labels, buttons, headings, table headers. This is the default for `body`.
-- **`--font-mono` — IBM Plex Mono.** Everything that is data: bits, hex, codeword indices,
-  coordinates, the raw payload string, TLV values, GF(256) terms. Tabular numerals always.
-- **`--font-display` — Martian Mono.** The wordmark, stage numerals, and figures. Nothing
-  else. It is a strong face and it is used sparingly on purpose.
+- **`--font-sans` and `--font-display` — Plus Jakarta Sans.** Everything a human reads as
+  language, and every headline. It was drawn by Tokotype for Jakarta's own identity, which
+  is the right voice for an app about QRIS, and it holds at 800 for a stage name and at
+  13 px for a gloss.
+- **`--font-mono` — JetBrains Mono.** Everything that is data — bits, hex, codeword indices,
+  coordinates, the payload string, TLV values — plus the wordmark and the figures. Its 0/O
+  and 1/l/I never collide, which matters in a payload. Tabular numerals always.
+
+Both are self-hosted Latin subsets from `@fontsource`: five sans weights, two mono weights.
 
 ### 3.1 Scale
 
 | Token | Size | Line | Face | Use |
 | --- | --- | --- | --- | --- |
-| `--t-display` | `clamp(1.75rem, 1.2rem + 2vw, 2.75rem)` | 1.02 | display | Stage name. |
-| `--t-title` | `1.375rem` | 1.15 | display | Wordmark. |
-| `--t-figure` | `1.75rem` | 1 | display | Big numbers in stage panels. |
-| `--t-h2` | `1.0625rem` | 1.3 | sans 600 | Panel and card headings. |
-| `--t-h3` | `0.875rem` | 1.35 | sans 600 | Sub-headings. |
-| `--t-body` | `0.9375rem` | 1.65 | sans | Prose and glosses. |
-| `--t-data` | `0.8125rem` | 1.5 | mono | Data. |
-| `--t-small` | `0.75rem` | 1.45 | sans | Captions, control text. |
-| `--t-micro` | `0.6875rem` | 1.3 | mono | Bit cells, dense grids. |
+| `--t-hero` | `clamp(2rem, 1.3rem + 2.4vw, 2.875rem)` | 1.02 | sans 800 | Stage name, merchant name, welcome. |
+| `--t-display` | `clamp(1.75rem, 1.2rem + 2vw, 2.5rem)` | 1.05 | sans 800 | Large display, where used. |
+| `--t-title` | `1.25rem` | 1.2 | mono 600 | Wordmark. |
+| `--t-figure` | `1.75rem` | 1 | mono 600 | Big numbers in stage panels. |
+| `--t-h2` | `1.125rem` | 1.35 | sans 700 | Card headings, the lede. |
+| `--t-h3` | `1rem` | 1.4 | sans 700 | Sub-headings. |
+| `--t-body` | `1rem` | 1.6 | sans | Prose and glosses. |
+| `--t-data` | `0.8125rem` | 1.6 | mono | Data. |
+| `--t-small` | `0.8125rem` | 1.45 | sans | Control text. |
+| `--t-micro` | `0.75rem` | 1.35 | sans | Eyebrows, chips, captions. The floor. |
 
-Revision 1's `--t-micro` was 10 px. Eleven is the floor; below that a monospace digit stops
-being a digit.
+**The eyebrow.** 12 px sans 700, `0.1em` tracking, uppercase via `text-transform`. The
+chapter eyebrow above a stage name is the one eyebrow in `--accent`.
 
-**The eyebrow.** Every card and every section within a panel is introduced by an eyebrow:
-11 px sans, `0.09em` tracking, uppercase via `text-transform`, `--ink-soft`. Never uppercase
-in the copy files — the copy register forbids shouting, and this is presentation.
-
-Tracking tokens: `--track-tight: -0.02em` on display sizes, `--track-label: 0.09em` on
-eyebrows, `0` everywhere else.
+Tracking: `--track-tight: -0.03em` on headlines, `--track-label: 0.1em` on eyebrows, `0`
+everywhere else.
 
 ### 3.2 Prohibitions
 
-- No italics. There is no italic in the mono faces and a synthesised one is a smear.
-- No font-weight above 600. Martian Mono at 500 already carries every heavy moment.
+- No italics.
+- 800 is the ceiling and is for headlines only; 700 for eyebrows, labels and buttons.
 - No letter-spacing on body copy.
 - No text over 66ch measure.
-- No mono for running prose, ever. That was revision 1's mistake and it made a teaching app
-  read like a log file.
+- No mono for running prose.
 
 ---
 
@@ -216,102 +213,96 @@ eyebrows, `0` everywhere else.
 
 ### 4.1 The frame
 
-Three zones, in DOM order: topbar, workbench, console.
+Five zones, in DOM order: topbar, tray, workbench, filmstrip, colophon.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ TOPBAR   wordmark · tagline          offline · ID/EN · theme │
-├───────────┬────────────────────┬─────────────────────────────┤
-│ STAGE     │ SPECIMEN           │ PANEL                       │
-│ RAIL      │ (sticky)           │  01/09                      │
-│           │                    │  Stage name (display)       │
-│ 01 Input  │  ┌──────────────┐  │  Intro prose                │
-│ 02 Bits   │  │   matrix     │  │  ─────────────────────      │
-│ 03 …      │  │  (white)     │  │  stage content              │
-│ …         │  └──────────────┘  │                             │
-│ 09 Damage │  readout strip     │  ┌───────────────────────┐  │
-│           │  as-printed/anatomy│  │ payload tree (lens)   │  │
-│           │  legend            │  └───────────────────────┘  │
-├───────────┴────────────────────┴─────────────────────────────┤
-│ CONSOLE  [ payload ................. ]  EC · samples · link  │
+│ TOPBAR   mark · wordmark · tagline     offline · theme · ID/EN│
+├──────────────────────────────────────────────────────────────┤
+│ TRAY   [ payload ……………………………  (QRIS terbaca) ]   L M Q H    │
+│        samples as chips …                         copy link   │
+├───────────────────────────┬──────────────────────────────────┤
+│ BENCH (sticky)            │ PANEL                            │
+│  chips · printed/anatomy  │  [Tahapan | Isi QRIS]   ▶ tour   │
+│  ┌─────────────────────┐  │  BAB III · MENGGAMBAR            │
+│  │  matrix (white)     │  │  06/09 Penempatan                │
+│  │   + inspector card  │  │  intro · stage content           │
+│  └─────────────────────┘  │  ← 05 Interleave   07 Mask →     │
+│  module budget legend     │                                  │
+├───────────────────────────┴──────────────────────────────────┤
+│ FILMSTRIP  I ▢▢▢   II ▢▢   III ▣▢▢   IV ▢          hint      │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-Grid: `208px | minmax(0, 460px) | minmax(0, 1fr)`, `--max-width: 96rem`. Revision 1 used
-two columns inside 78 rem and left a third of a wide screen empty while the stage panel
-scrolled.
+Grid: `minmax(0, 480px) | minmax(0, 1fr)`, `--max-width: 96rem`.
 
-**The specimen never moves.** This is still the single most important layout decision. It
-is sticky within the workbench and its card does not resize, reflow, or remount between
-stages. Nine stages must read as one object being transformed, not nine illustrations in a
-row.
+**The specimen never moves.** Still the single most important layout decision. It is sticky
+within the workbench and its rects are never remounted between stages or views.
 
-### 4.2 The stage rail
+### 4.2 The filmstrip
 
-Nine stations, numbered `01`–`09`, each with its full name. The rail is a slider: dragging
-it moves through stages continuously, clicking a station jumps. Fractional positions are
-real — halfway between *place* and *mask* shows the zigzag complete and the mask half
-applied. That continuity is what makes it an instrument rather than a row of tabs, and it
-is why `encode()` has an 8 ms budget.
+Nine frames in four chapter groups, sticky to the bottom edge where a timeline lives. Each
+frame is a canvas thumbnail of the symbol at the end of its stage, painted from the same
+`Build` the matrix paints and repainted only when the build or theme changes.
 
-The active station carries a filled marker, `--ink` text, and a 2 px `--marker` bar on its
-leading edge. Passed stations are `--ink-mid`; unreached ones are `--ink-soft`.
+| Chapter | Question | Stages |
+| --- | --- | --- |
+| I · Teks jadi bit | How does text become numbers? | 01 Masukan, 02 Encode, 03 Codeword |
+| II · Perlindungan | How does a code survive a scratch? | 04 Koreksi galat, 05 Interleave |
+| III · Menggambar | How do bits become squares? | 06 Penempatan, 07 Mask, 08 Final |
+| IV · Uji ketahanan | Prove it. | 09 Kerusakan |
 
-Below 1100 px the rail lies down: it becomes a horizontal track above the panel, station
-labels reduced to numerals with the active one named. Below 720 px it becomes a
-horizontally scrollable chip strip that scrolls the active chip into view.
+The strip is one slider. Frames are unevenly spaced (chapter gaps), so the pointer is mapped
+piecewise-linearly between measured frame centres; fractional positions remain real. A
+playhead under the strip marks the exact position. The current frame carries a 2 px accent
+ring; the current chapter's name is in the accent. Below 900 px the names come off the
+frames and one line above the strip names the chapter and stage.
 
-### 4.3 The specimen card
+The roman numerals live in code, not in the copy files: they are notation, and the copy
+register forbids capitals.
 
-Card header: the four facts that identify this build — version, EC level, mode, mask — as
-chips, mono values on sans labels. Then the matrix. Then a fixed-height readout strip that
-never collapses, because a strip that appears and disappears on hover makes the whole
-column jump. Then the as-printed / anatomy segmented control, and the legend when anatomy
-is on.
+### 4.3 The bench
 
-The matrix is a fixed 460 px on desktop regardless of version, so a version 3 code has
-chunky modules and a version 15 code has fine ones. That is honest: it is the actual
-difference between them.
+The specimen sits on the open ground, not in a card, under `--bench-light`. Above the matrix:
+the build's facts as chips and the printed/anatomy control. Below it: one quiet hint line
+and the module-budget legend (§5.8). The matrix is up to 480 px wide; a version 3 code has
+chunky modules and a version 15 code has fine ones.
 
 ### 4.4 The panel
 
-Header: stage index in display mono at `--ink-soft` (`01/09`), stage name at
-`--t-display`, intro prose at `--t-body` capped to 60ch, then a full-bleed hairline. The
-content below is the stage component. Every distinct section inside it opens with an
-eyebrow.
+A card. On top, a bar: the Tahapan / Isi QRIS tabs while the QRIS lens is on, and the tour
+button. Then, for stages: the chapter eyebrow, the stage index in mono at a whisper beside
+the stage name at `--t-hero` 800, the first-visit lede, the intro, the stage content, and a
+footer with previous/next buttons that name their destination. The last stage of a chapter
+says the chapter is done and names the next one. For Isi QRIS: the receipt (§5.7).
 
-The payload tree is a separate card beneath the panel, present at every stage while the
-lens is active — the payload's meaning does not change as the encoding proceeds, only its
-representation.
+### 4.5 The tray
 
-### 4.5 The console
+Under the topbar, because it is the first thing a visitor should touch and everything below
+is derived from it. The payload field is mono, inside a well that also holds a badge stating
+what the engine made of the text: mode and version for plain text, or "QRIS terbaca · CRC
+cocok" in the accent while the lens is on. Then the EC level, the samples as chips, and the
+copy-link control (suppressed while the lens is on, PRD §9).
 
-Sticky to the bottom edge, on `--ground` with a top rule so panel content scrolls under it
-cleanly. One row: the payload field takes the remaining width and is set in mono because
-what goes in it is data; then EC level, samples, and copy-link.
+### 4.6 Shape and rhythm
 
-Revision 1 also put the scrubber here, which meant the two things a user changes constantly
-competed for the same 96 px of a sticky bar. The rail took that job.
-
-### 4.6 Grid and rhythm
-
-8 px base, matching the module grid, so a byte highlighted in three places is the same
-width in all three.
+8 px base, matching the module grid.
 
 `--space-1: 8px`, `-2: 16px`, `-3: 24px`, `-4: 40px`, `-5: 64px`, `-6: 96px`.
 
-Cards use `--space-3` padding on desktop, `--space-2` below 900 px. Card radius is `0`
-everywhere. Everything here is a square cell.
+Radii: `--r-card: 16px`, `--r-well: 12px`, `--r-ctl: 10px`, `--r-pill: 999px`. The matrix,
+its paper, its module grid, filmstrip thumbnails and mask-gallery thumbnails are radius 0:
+anything that depicts the specimen is square.
 
 ### 4.7 Breakpoints
 
 | Width | Change |
 | --- | --- |
-| ≥ 1180 px | Three columns as drawn. |
-| 900–1179 px | Rail lies down above the panel; specimen and panel side by side. |
-| 720–899 px | Single column. Specimen first, then panel, then tree. |
-| < 720 px | Rail becomes a chip strip. Console stacks: field on its own row, controls below. Matrix full width. |
-| < 380 px | Quality floor. Nothing overflows, nothing clips, nothing is smaller than 11 px. |
+| ≥ 1180 px | Two columns as drawn; filmstrip with names and hint. |
+| 900–1179 px | Specimen 400 px; tagline and filmstrip hint come off. |
+| 720–899 px | Single column: bench, then panel. Filmstrip frames lose their names. |
+| < 720 px | Topbar is one row (compact theme and locale buttons) plus the offline line. Samples scroll sideways. The panel becomes a sheet with a grip. A sideways swipe on the matrix moves one stage (touch only, never in the damage lab). |
+| < 380 px | Quality floor. Nothing overflows, nothing clips, nothing is smaller than 12 px. |
 
 ---
 
@@ -322,8 +313,8 @@ Unchanged in intent from revision 1; restated with the new tokens.
 ### 5.1 Matrix
 SVG, one `<rect>` per module, `shapeRendering="crispEdges"`, no per-module listeners — one
 listener on the group, hit-tested by dividing pointer coordinates by module size. The rects
-are created once per build and never remounted; the paint loop mutates fills. Focus and
-highlight are a `--marker` inset stroke.
+are created once per build and never remounted; the paint loop mutates fills. Focus is a
+`--marker` inset stroke; a highlight is a filled figure on a faded ground (§5.8).
 
 ### 5.2 Bitstream ribbon
 Five spans told apart by value, not hue: mode, count, payload, terminator, padding. The
@@ -350,13 +341,41 @@ back removes damage rather than leaving it behind. Damage is `--damage`; repaire
 pulse `--repair` then snap to their true value. The capacity meter turns `--damage` when the
 block is past saving.
 
+### 5.7 The receipt (Isi QRIS)
+A second tab beside the stages, present only while the lens is on. The payload is laid out
+as a struk: the CRC verdict, the merchant name (tag 59) at `--t-hero`, city, postal code and
+initiation method as chips, a dashed tear line, then one full-width line item per tag with
+its dictionary meaning and gloss. Selecting a line lights its modules and shows the chain —
+field, bytes in hex, codewords, modules — read off the provenance map. The matrix shows the
+finished symbol in this view, whatever stage the slider is at.
+
+### 5.8 Highlight, isolation and the legend
+A highlight (from the receipt, the bitstream or anywhere else) is a figure on a faded ground:
+selected modules take the accent, solid on dark modules and washed on light ones, and every
+other dark module fades to a pale grey. The legend is a module budget drawn to scale from the
+provenance map; each role is a toggle that isolates it the same way, in its role tint.
+
+### 5.9 The inspector
+Hovering or arrowing to a module shows a lifted card beside it: coordinates, role, value,
+mask flip, what it carries, the payload field (lens on) and placement order. It flips side
+in the right half of the grid and above the module near the bottom. It is pointer-
+transparent and hidden from assistive technology, which hears the focused module through a
+live region instead.
+
+### 5.10 Welcome and tour
+First visit only, and never on a shared link: a card with the app's two questions as two
+doors. One loads the QRIS sample and opens the receipt; the other starts the tour. The tour
+moves the stage slider on a timer — hold, then scrub continuously to the next stage, with the
+zigzag given its own longer transition — and any stage change it did not make hands control
+back to the reader.
+
 ---
 
 ## 6. Motion
 
 ### 6.1 The rule
 
-**Continuous control → direct mapping.** The stage rail and the damage slider follow the
+**Continuous control → direct mapping.** The filmstrip and the damage slider follow the
 pointer with zero easing.
 
 **Discrete control → timed transition.** EC level, forced mask, anatomy toggle, theme —
@@ -366,7 +385,8 @@ these animate over a duration because the user needs to see what changed.
 
 `--dur-zigzag: 2400ms`, `--dur-anatomy: 480ms`, `--dur-mask: 360ms`,
 `--dur-interleave-col: 90ms`, `--dur-division: 220ms`, `--dur-repair: 300ms`,
-`--dur-popover: 140ms`, `--dur-theme: 200ms`, `--dur-control: 120ms`.
+`--dur-popover: 140ms`, `--dur-theme: 200ms`, `--dur-control: 120ms`,
+`--dur-tour-step: 6200ms` (how long the tour holds each stage).
 
 Easing: `--ease-standard: cubic-bezier(0.4, 0, 0.2, 1)` for chrome,
 `--ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1)` for the matrix.
@@ -379,7 +399,9 @@ animations on panels. No spring physics anywhere — this is a measuring instrum
 ### 6.4 Reduced motion
 
 `prefers-reduced-motion: reduce` sets every duration token to `0ms` and turns the zigzag
-into a step-through. The animation loop reads the same preference.
+into a step-through. The animation loop reads the same preference. The tour never runs a
+loop under reduced motion: its button advances one stage per press. The welcome card
+appears without fading and its doors do not lift on hover.
 
 ---
 
@@ -403,17 +425,18 @@ Uppercase is never in the copy. Eyebrows are `text-transform` and nothing else.
 
 - Contrast: `--ink` ≥ 12:1 on `--surface`, `--ink-mid` ≥ 7:1, `--ink-soft` ≥ 4.6:1. Both
   themes.
-- Focus: 2 px `--marker` outline at 2 px offset on every interactive element. Never removed.
+- Focus: 2 px `--accent` outline at 2 px offset on every interactive element. Never removed.
 - Every control reachable and operable by keyboard, including the rail and the matrix.
-- Nothing below 11 px.
-- No layout shift when the readout, the legend, or the tree appears.
+- Nothing below 12 px.
+- No layout shift when the inspector, the legend, or the receipt appears.
 - 380 px wide with no overflow.
 - Empty network tab after load, in both themes.
 
 ---
 
-## 9. What revision 2 does not change
+## 9. What revision 3 does not change
 
-The engine, the provenance map, the division trace, the nine stages, the specimen's black
-and white, the absence of shadows and radii, the offline guarantee, and the refusal to let
-the app edit a payload. Those were right. Only the surface was wrong.
+The engine, the provenance map, the division trace, the nine stages and their order, the
+continuous slider, the specimen's black and white and hard edges, the one persistent set of
+rects, the offline guarantee, and the refusal to let the app edit a payload. Those were
+right. Only the surface and the way in were wrong.

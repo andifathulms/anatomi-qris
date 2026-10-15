@@ -49,13 +49,16 @@ TLV-node-to-module highlighting above.
 
 ## Operating Context
 
-- One input field and one engine. There is no mode selector. The engine encodes any
+- One input field and one engine. There is no mode selector. The first-visit welcome and the
+  "Isi QRIS" tab make the two questions visible as ways in, but both lead into the same view
+  of the same build; neither forks the app. The engine encodes any
   string; a **QRIS lens** activates automatically when the input parses as a valid EMVCo
   Merchant-Presented Mode payload, adding the TLV tree and making the highlighting
   semantic rather than positional.
 - The page is not a scroll of sections. It is one matrix with a nine-stage scrubber:
-  input, encode, codewords, error correction, interleave, place, mask, final, damage.
-  Stages 1-8 are the construction, stage 9 is the payoff.
+  input, encode, codewords, error correction, interleave, place, mask, final, damage,
+  grouped into four chapters (text into bits, protection, drawing, stress test) on a
+  filmstrip. Stages 1-8 are the construction, stage 9 is the payoff.
 - People paste real payment payloads into this. The offline guarantee is architectural,
   stated where the input is, and load-bearing for trust.
 - Indonesian first, English second. Terms of art with no settled Indonesian equivalent

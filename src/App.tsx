@@ -42,7 +42,10 @@ function Localised({ children }: { children: React.ReactNode }) {
 
 function Shell() {
   const { state, build, lensActive, qris, view } = useStore();
-  const { setRendering, setLocale, setTheme, setView, damage } = useActions();
+  const { setRendering, setLocale, setTheme, setView, setStage, damage } = useActions();
+  // On a phone, a sideways swipe across the matrix moves one stage. Touch
+  // only, and never in the damage lab, where touch is the brush.
+  const swipe = useRef<{ x: number; y: number } | null>(null);
   const fieldCount = useMemo(() => (qris ? flatten(qris.nodes).length : 0), [qris]);
   const { t, locale } = useCopy();
 
@@ -119,6 +122,16 @@ function Shell() {
             <span className="topbar__offline-dot" aria-hidden="true" />
             {t('app.offline')}
           </p>
+          {/* On a phone the two-label toggle does not fit beside the
+              wordmark; one button that names the other theme does. */}
+          <button
+            type="button"
+            className="button button--quiet topbar__theme-compact"
+            aria-label={`${t('app.theme')}: ${state.theme === 'dark' ? t('app.themeLight') : t('app.themeDark')}`}
+            onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')}
+          >
+            <span aria-hidden="true">{state.theme === 'dark' ? '☀' : '☾'}</span>
+          </button>
           <Toggle<Theme>
             label={t('app.theme')}
             value={state.theme}
@@ -130,10 +143,12 @@ function Shell() {
           />
           <button
             type="button"
-            className="button button--quiet"
+            className="button button--quiet topbar__locale"
             onClick={() => setLocale(locale === 'id' ? 'en' : 'id')}
+            aria-label={t('app.locale')}
           >
-            {t('app.locale')}
+            <span className="topbar__locale-long">{t('app.locale')}</span>
+            <span className="topbar__locale-short" aria-hidden="true">{t('app.localeShort')}</span>
           </button>
         </div>
       </header>
@@ -172,7 +187,26 @@ function Shell() {
             />
           </div>
 
-          <div className="specimen__paper">
+          <div
+            className="specimen__paper"
+            onPointerDown={(event) => {
+              swipe.current =
+                event.pointerType === 'touch' && !inDamageLab
+                  ? { x: event.clientX, y: event.clientY }
+                  : null;
+            }}
+            onPointerUp={(event) => {
+              const start = swipe.current;
+              swipe.current = null;
+              if (!start) return;
+              const dx = event.clientX - start.x;
+              const dy = event.clientY - start.y;
+              // A deliberate sideways stroke, not a tap or a wobble.
+              if (Math.abs(dx) > 56 && Math.abs(dy) < Math.abs(dx) * 0.6) {
+                setStage(stage + (dx < 0 ? 1 : -1));
+              }
+            }}
+          >
             <Matrix
               tint={tint}
               offences={offences}

@@ -11,6 +11,7 @@ export const id = {
   'app.offlineNote': 'Semua diproses di perangkat ini. Tidak ada data yang dikirim.',
   'app.skipToMatrix': 'Lewati ke matriks',
   'app.locale': 'English',
+  'app.localeShort': 'EN',
   'app.theme': 'Tampilan',
   'app.themeDark': 'Gelap',
   'app.themeLight': 'Terang',
