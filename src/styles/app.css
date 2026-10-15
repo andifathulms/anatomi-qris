@@ -72,7 +72,8 @@
   flex-wrap: wrap;
 }
 
-.topbar__theme-compact,
+/* Phone-only controls. Two classes, so the base .button display cannot win. */
+.button.topbar__theme-compact,
 .topbar__locale-short {
   display: none;
 }
@@ -373,7 +374,7 @@
     display: none;
   }
 
-  .topbar__theme-compact,
+  .button.topbar__theme-compact,
   .topbar__locale-short {
     display: inline-flex;
   }
